@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
+@theme {
+  --color-cream: #F7F6F2;
+  --color-cream-dark: #EEECEA;
+  --color-teal: #1A6363;
+  --color-teal-hover: #144F4F;
+  --color-teal-light: #E8F3F3;
+  --color-coral: #D95740;
+  --color-coral-light: #FEF0ED;
+  --color-coral-muted: #F2A897;
+  --color-sage: #4A7C5E;
+  --color-sage-light: #EEF6F1;
+  --color-stone-warm: #C6C1B9;
+  --color-ink: #1C1917;
+  --color-ink-soft: #44403C;
+  --color-ink-muted: #78716C;
+  --color-border: #E5E2DA;
+  --color-amber: #C4872A;
+  --color-amber-light: #FDF4E7;
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-dm-sans);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F7F6F2;
+  --foreground: #1C1917;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+::selection {
+  background: #D95740;
+  color: white;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #C6C1B9;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A8A29E;
+}
+
+/* ── Print styles ── */
+@media print {
+  /* Hide navigation and interactive chrome */
+  nav,
+  aside,
+  .print\\:hidden,
+  button,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+    font-size: 11pt;
+  }
+
+  /* Full-width content */
+  .max-w-7xl { max-width: 100% !important; padding: 0 !important; }
+
+  /* Two-pane collapses to single column */
+  .xl\\:flex-row { flex-direction: column !important; }
+  .xl\\:sticky { position: static !important; }
+
+  /* White backgrounds print cleanly */
+  .bg-cream { background: white !important; }
+  .bg-white  { background: white !important; }
+
+  /* Keep color swatches on calendar for print */
+  .bg-coral  { background: #D95740 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .bg-sage   { background: #4A7C5E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .bg-stone-warm { background: #C6C1B9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .bg-coral-light { background: #FEF0ED !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Page breaks */
+  .space-y-8 > * { break-inside: avoid; }
+
+  @page {
+    margin: 1.5cm;
+    size: A4 landscape;
+  }
 }
