@@ -100,6 +100,8 @@ export interface DestinationIdea {
   exampleCities: string[];
   priceOutlook: 'great' | 'good' | 'fair' | 'pricey';
   reason: string;
+  avgTempC?: number;       // average high temp during the window
+  dailyBudgetUSD?: number; // rough per-day cost (hotel + food + transport)
 }
 
 export interface OptimizationResult {

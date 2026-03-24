@@ -41,3 +41,39 @@ export function downloadICS(startStr: string, endStr: string, label: string, pto
   a.click();
   URL.revokeObjectURL(url);
 }
+
+/** Export multiple vacation windows as a single .ics file */
+export function downloadAllICS(
+  windows: { startStr: string; endStr: string; label: string; ptoDaysUsed: number }[]
+): void {
+  const events = windows.map((w) => {
+    const dtStart = toICSDate(w.startStr);
+    const dtEnd = nextDay(w.endStr);
+    const summary = `Vacation – ${w.label}`;
+    const description = `Leavewise optimized window. ${w.ptoDaysUsed} PTO ${w.ptoDaysUsed === 1 ? 'day' : 'days'} used.`;
+    return [
+      'BEGIN:VEVENT',
+      `DTSTART;VALUE=DATE:${dtStart}`,
+      `DTEND;VALUE=DATE:${dtEnd}`,
+      `SUMMARY:${summary}`,
+      `DESCRIPTION:${description}`,
+      'END:VEVENT',
+    ].join('\r\n');
+  });
+
+  const content = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Leavewise//EN',
+    ...events,
+    'END:VCALENDAR',
+  ].join('\r\n');
+
+  const blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'leavewise-all-windows.ics';
+  a.click();
+  URL.revokeObjectURL(url);
+}

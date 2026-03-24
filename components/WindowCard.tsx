@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { VacationWindow, FlightDeal } from '@/lib/types';
-import { buildKiwiLink, buildTripComLink, buildBookingComLink } from '@/lib/affiliates';
+import { buildFlightSearchLink, buildHotelSearchLink, buildFlightCompareLink, buildGoogleCalendarLink } from '@/lib/affiliates';
 import { downloadICS } from '@/lib/ics';
+import { useToast } from '@/components/Toast';
 
 const WINDOW_COLORS = [
   'border-l-teal',
@@ -41,10 +41,10 @@ interface WindowCardProps {
   flightDeal?: FlightDeal | 'loading' | 'error';
   origin?: string;
   currency?: string;
-  tripComAffiliateId?: string;
-  bookingComAffiliateId?: string;
+  tpMarker?: string;
   onAdjustPTO?: (id: number, delta: number) => void;
   remainingBudget?: number;
+  isBestWindow?: boolean;
 }
 
 export function WindowCard({
@@ -54,34 +54,47 @@ export function WindowCard({
   flightDeal,
   origin = '',
   currency = 'USD',
-  tripComAffiliateId = '',
-  bookingComAffiliateId = '',
+  tpMarker = '',
   onAdjustPTO,
   remainingBudget = 0,
+  isBestWindow = false,
 }: WindowCardProps) {
   const accentColor = WINDOW_COLORS[(w.id - 1) % WINDOW_COLORS.length];
   const deal = flightDeal !== 'loading' && flightDeal !== 'error' ? flightDeal : undefined;
-  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
 
   function handleCopyDates() {
-    const text = `${formatDate(w.startStr)} – ${formatDateLong(w.endStr)}`;
+    const text = `${formatDate(w.startStr)} – ${formatDateLong(w.endStr)} (${w.totalDays} days, ${w.ptoDaysUsed} PTO) · ${w.label}`;
     navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      toast('Dates copied to clipboard');
     });
   }
 
+  function handleDownloadICS() {
+    downloadICS(w.startStr, w.endStr, w.label, w.ptoDaysUsed);
+    toast('Calendar event downloaded');
+  }
+
   return (
-    <div
+    <article
+      role="article"
+      aria-label={`${w.label} — ${w.totalDays} days off using ${w.ptoDaysUsed} PTO${isBestWindow ? ' (best value)' : ''}`}
       className={`bg-white rounded-2xl border-l-4 border border-border ${accentColor} p-5 transition-all duration-200 cursor-default ${
-        isHighlighted ? 'shadow-md border-opacity-100' : 'hover:shadow-sm'
-      }`}
+        isHighlighted ? 'shadow-md ring-1 ring-teal/20' : 'hover:shadow-sm'
+      } ${isBestWindow ? 'ring-2 ring-sage/20' : ''}`}
       onMouseEnter={() => onHover(w.id)}
       onMouseLeave={() => onHover(null)}
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
-          <div className="text-xs text-ink-muted font-medium mb-1 truncate">{w.label}</div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs text-ink-muted font-medium truncate">{w.label}</span>
+            {isBestWindow && (
+              <span className="bg-sage text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0 leading-none">
+                Best value
+              </span>
+            )}
+          </div>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-display font-semibold text-ink">
               {w.totalDays}
@@ -99,20 +112,22 @@ export function WindowCard({
             <div className="flex items-center gap-1">
               <button
                 type="button"
+                aria-label="Use fewer PTO days"
                 onClick={(e) => { e.stopPropagation(); onAdjustPTO(w.id, -1); }}
                 disabled={w.ptoDaysUsed <= 1}
-                className="w-6 h-6 rounded-md border border-border bg-cream text-ink-muted hover:border-coral/40 hover:text-coral disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-xs font-medium"
+                className="w-7 h-7 rounded-md border border-border bg-cream text-ink-muted hover:border-coral/40 hover:text-coral disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-xs font-medium"
               >
                 −
               </button>
-              <span className="w-6 text-center text-sm font-display font-semibold text-coral">
+              <span className="w-7 text-center text-sm font-display font-semibold text-coral">
                 {w.ptoDaysUsed}
               </span>
               <button
                 type="button"
+                aria-label="Use more PTO days"
                 onClick={(e) => { e.stopPropagation(); onAdjustPTO(w.id, +1); }}
                 disabled={remainingBudget <= 0}
-                className="w-6 h-6 rounded-md border border-border bg-cream text-ink-muted hover:border-teal/40 hover:text-teal disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-xs font-medium"
+                className="w-7 h-7 rounded-md border border-border bg-cream text-ink-muted hover:border-teal/40 hover:text-teal disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-xs font-medium"
               >
                 +
               </button>
@@ -130,16 +145,18 @@ export function WindowCard({
       <div className="flex flex-wrap items-center gap-2 mb-3">
         <span
           title="Days off per PTO day used"
-          className="inline-flex items-center gap-1 bg-sage-light text-sage text-[11px] font-semibold px-2 py-0.5 rounded-full cursor-help"
+          className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full cursor-help ${
+            isBestWindow ? 'bg-sage text-white' : 'bg-sage-light text-sage'
+          }`}
         >
-          {w.efficiency.toFixed(1)}× efficiency
+          {w.efficiency.toFixed(1)}x efficiency
         </span>
         {w.bookendRisks && w.bookendRisks.length > 0 && (
           <span
             title={`Holiday pay risk: ${w.bookendRisks.map((r) => r.holidayName).join(', ')}`}
             className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold px-2 py-0.5 rounded-full cursor-help"
           >
-            ⚠ Pay risk
+            Pay risk
           </span>
         )}
         {w.premiumPayDays && w.premiumPayDays.length > 0 && (
@@ -163,60 +180,57 @@ export function WindowCard({
       {/* Flight deal: loading skeleton */}
       {flightDeal === 'loading' && (
         <div className="mb-3 flex items-center gap-2">
-          <div className="h-5 w-28 bg-border/60 rounded-full animate-pulse" />
-          <div className="h-5 w-16 bg-border/60 rounded-full animate-pulse" />
+          <div className="h-5 w-28 bg-border/60 rounded-full animate-skeleton" />
+          <div className="h-5 w-16 bg-border/60 rounded-full animate-skeleton" />
         </div>
       )}
 
       {/* Flight deal: loaded */}
       {deal && (
         <div className="mb-3 space-y-2">
-          {/* Price badge */}
           <div className="flex items-center gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1 bg-teal-light text-teal text-[11px] font-semibold px-2 py-0.5 rounded-full border border-teal/20">
               From {formatPrice(deal.price, deal.currency)} · {deal.destination}
             </span>
           </div>
 
-          {/* Booking CTAs */}
           <div className="flex flex-wrap gap-2">
+            {origin && (
+              <a
+                href={buildFlightSearchLink(origin, w.startStr, w.endStr, tpMarker || undefined, w.label)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold bg-teal text-white px-2.5 py-1.5 rounded-lg hover:bg-teal-hover transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Search flights
+                <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </a>
+            )}
+            {origin && (
+              <a
+                href={buildFlightCompareLink(origin, w.startStr, w.endStr, tpMarker || undefined, w.label)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold bg-cream text-ink-soft px-2.5 py-1.5 rounded-lg border border-border hover:border-teal/40 hover:text-teal transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Compare
+              </a>
+            )}
             <a
-              href={buildKiwiLink(deal.deeplink)}
+              href={buildHotelSearchLink(deal.destination, w.startStr, w.endStr, tpMarker || undefined, w.label)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold bg-teal text-white px-2.5 py-1 rounded-lg hover:bg-teal-hover transition-colors"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold bg-cream text-ink-soft px-2.5 py-1.5 rounded-lg border border-border hover:border-teal/40 hover:text-teal transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
-              Book on Kiwi
-              <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
+              Hotels
             </a>
-            {origin && (
-              <a
-                href={buildTripComLink(origin, w.startStr, currency, tripComAffiliateId)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[11px] font-semibold bg-cream text-ink-soft px-2.5 py-1 rounded-lg border border-border hover:border-teal/40 hover:text-teal transition-colors"
-                onClick={(e) => e.stopPropagation()}
-              >
-                Trip.com
-              </a>
-            )}
-            {origin && (
-              <a
-                href={buildBookingComLink(origin, w.startStr, w.endStr, bookingComAffiliateId)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[11px] font-semibold bg-cream text-ink-soft px-2.5 py-1 rounded-lg border border-border hover:border-teal/40 hover:text-teal transition-colors"
-                onClick={(e) => e.stopPropagation()}
-              >
-                Booking.com
-              </a>
-            )}
           </div>
 
-          {/* Cheaper-day prompt */}
           {deal.cheaperAlternative && (
             <div className="text-[11px] text-ink-muted bg-cream rounded-lg px-2.5 py-1.5 border border-border leading-snug">
               Flights are{' '}
@@ -235,7 +249,6 @@ export function WindowCard({
       {((w.crowdInsights && w.crowdInsights.length > 0) ||
         (w.destinationIdeas && w.destinationIdeas.length > 0)) && (
         <div className="mt-3 pt-3 border-t border-border space-y-2.5">
-          {/* Travel value score + crowd warnings */}
           {w.travelValueScore !== undefined && (
             <div className="flex items-center gap-2 flex-wrap">
               <span
@@ -248,15 +261,14 @@ export function WindowCard({
                 }`}
               >
                 {w.travelValueScore >= 70
-                  ? '✦ Great travel value'
+                  ? 'Great travel value'
                   : w.travelValueScore >= 40
-                    ? '~ Moderate travel value'
-                    : '⚠ Peak travel period'}
+                    ? 'Moderate travel value'
+                    : 'Peak travel period'}
               </span>
             </div>
           )}
 
-          {/* Crowd warnings (up to 2) */}
           {w.crowdInsights && w.crowdInsights.length > 0 && (
             <div className="space-y-1">
               {w.crowdInsights.slice(0, 2).map((ci) => (
@@ -289,7 +301,6 @@ export function WindowCard({
             </div>
           )}
 
-          {/* Destination ideas */}
           {w.destinationIdeas && w.destinationIdeas.length > 0 && (
             <div>
               <div className="text-[9px] font-bold uppercase tracking-widest text-ink-muted/60 mb-1.5">
@@ -311,56 +322,67 @@ export function WindowCard({
                     }`}
                   >
                     {idea.flag} {idea.region}
+                    {idea.avgTempC != null && <span className="text-ink-muted/70">{idea.avgTempC}°</span>}
+                    {idea.dailyBudgetUSD != null && <span className="text-ink-muted/70">~${idea.dailyBudgetUSD}/d</span>}
                   </span>
                 ))}
               </div>
+              {w.destinationIdeas[0].dailyBudgetUSD && (
+                <div className="text-[10px] text-ink-muted mt-1.5">
+                  Est. trip cost for {w.totalDays} nights in {w.destinationIdeas[0].region}: ~{formatPrice(w.destinationIdeas[0].dailyBudgetUSD * w.totalDays, 'USD')}
+                  {deal && <> + {formatPrice(deal.price, deal.currency)} flights</>}
+                </div>
+              )}
             </div>
           )}
         </div>
       )}
 
       {/* Footer actions */}
-      <div className="flex items-center justify-between pt-3 border-t border-border gap-2 flex-wrap">
-        <div className="flex items-center gap-2">
-          {/* Copy dates */}
+      <div className="flex items-center justify-between pt-3 border-t border-border gap-2 flex-wrap mt-3">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); handleCopyDates(); }}
-            title="Copy date range"
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors"
+            aria-label="Copy date range to clipboard"
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors py-1"
           >
-            {copied ? (
-              'Copied ✓'
-            ) : (
-              <>
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                Copy dates
-              </>
-            )}
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            Copy
           </button>
 
-          {/* Add to calendar */}
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              downloadICS(w.startStr, w.endStr, w.label, w.ptoDaysUsed);
-            }}
-            title="Download .ics calendar event"
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors"
+            onClick={(e) => { e.stopPropagation(); handleDownloadICS(); }}
+            aria-label="Download calendar event"
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors py-1"
           >
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            Add to calendar
+            Calendar
           </button>
+
+          <a
+            href={buildGoogleCalendarLink(w.startStr, w.endStr, w.label, w.ptoDaysUsed)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            aria-label="Add to Google Calendar"
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors py-1"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+            Google Cal
+          </a>
         </div>
 
-        {!deal && flightDeal !== 'loading' && (
+        {!deal && flightDeal !== 'loading' && origin && (
           <a
-            href={w.skyscannerUrl}
+            href={buildFlightSearchLink(origin, w.startStr, w.endStr, tpMarker || undefined, w.label)}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs font-semibold text-teal hover:text-teal-hover transition-colors"
@@ -373,6 +395,6 @@ export function WindowCard({
           </a>
         )}
       </div>
-    </div>
+    </article>
   );
 }

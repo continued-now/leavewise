@@ -8,6 +8,7 @@ const MONTH_NAMES = [
   'May', 'June', 'July', 'August',
   'September', 'October', 'November', 'December',
 ];
+const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const DAY_ABBR = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
 function getDayClasses(
@@ -21,14 +22,13 @@ function getDayClasses(
   isToday: boolean
 ): string {
   const base =
-    'aspect-square flex items-center justify-center text-[10px] rounded transition-all duration-100 select-none font-medium';
+    'aspect-square flex items-center justify-center text-[11px] rounded-md transition-all duration-100 select-none font-medium';
   const todayRing = isToday ? ' ring-2 ring-teal ring-offset-1' : '';
 
   if (isPast) {
     return `${base}${todayRing} text-ink-muted/25 cursor-default`;
   }
 
-  // Window card hover — scale and glow by day type
   if (isHighlighted) {
     if (day.isPTO || isSelected || day.isPrebooked) {
       return `${base}${todayRing} bg-coral text-white scale-110 shadow-sm cursor-pointer`;
@@ -42,7 +42,6 @@ function getDayClasses(
     return `${base}${todayRing} bg-coral-light text-ink scale-105 border border-coral/40 cursor-pointer`;
   }
 
-  // Active holiday (panel open)
   if (isActive && day.isHoliday) {
     return `${base}${todayRing} bg-sage text-white ring-2 ring-white ring-offset-1 ring-offset-sage scale-110 z-10 cursor-pointer`;
   }
@@ -56,7 +55,7 @@ function getDayClasses(
   }
 
   if (day.isHoliday) {
-    return `${base}${todayRing} bg-sage text-white cursor-pointer hover:opacity-85 hover:scale-105`;
+    return `${base}${todayRing} bg-sage text-white cursor-pointer hover:scale-110 hover:shadow-md shadow-sm ring-1 ring-sage/30`;
   }
 
   if (day.isCompanyHoliday) {
@@ -84,12 +83,13 @@ interface MonthGridProps {
   hoveredWindow: number | null;
   onHoverWindow: (id: number | null) => void;
   today: string;
+  windowLabels: Map<number, string>;
 }
 
 function MonthGrid({
   month, days, selectedPTO, previewDates,
   activeHolidayDateStr, onDayClick,
-  hoveredWindow, onHoverWindow, today,
+  hoveredWindow, onHoverWindow, today, windowLabels,
 }: MonthGridProps) {
   const monthDays = days.filter((d) => d.date.getMonth() === month);
   if (monthDays.length === 0) return null;
@@ -101,9 +101,9 @@ function MonthGrid({
       <div className="text-[11px] font-semibold text-ink-muted uppercase tracking-widest mb-2">
         {MONTH_NAMES[month]}
       </div>
-      <div className="grid grid-cols-7 gap-px">
+      <div className="grid grid-cols-7 gap-0.5" role="grid" aria-label={MONTH_NAMES[month]}>
         {DAY_ABBR.map((d) => (
-          <div key={d} className="text-[9px] text-ink-muted/50 text-center pb-1">
+          <div key={d} className="text-[9px] text-ink-muted/50 text-center pb-1" role="columnheader">
             {d}
           </div>
         ))}
@@ -117,20 +117,43 @@ function MonthGrid({
           const isHighlighted = !isPast && isInWindow && day.windowId === hoveredWindow;
           const isToday = day.dateStr === today;
 
-          const tooltip = day.holidayName
-            ? day.holidayName
-            : day.isPrebooked ? 'Pre-booked'
-            : day.isCompanyHoliday ? 'Company holiday'
-            : isSelected ? 'PTO — click to remove'
-            : isPast ? undefined
-            : day.isFree ? undefined
-            : 'Click to add PTO';
+          const windowLabel = isInWindow && day.windowId != null ? windowLabels.get(day.windowId) : undefined;
+
+          let tooltip: string | undefined;
+          if (day.holidayName) {
+            tooltip = windowLabel
+              ? `${day.holidayName} · ${windowLabel}`
+              : `${day.holidayName} — click for suggestions`;
+          } else if (day.isPrebooked) {
+            tooltip = windowLabel ? `Pre-booked · ${windowLabel}` : 'Pre-booked';
+          } else if (day.isCompanyHoliday) {
+            tooltip = 'Company holiday';
+          } else if (isSelected) {
+            tooltip = windowLabel ? `PTO · ${windowLabel} — click to remove` : 'PTO — click to remove';
+          } else if (isPast) {
+            tooltip = undefined;
+          } else if (day.isFree) {
+            tooltip = windowLabel ? windowLabel : undefined;
+          } else if (isInWindow && windowLabel) {
+            tooltip = `${windowLabel} — click to toggle PTO`;
+          } else {
+            tooltip = 'Click to add PTO';
+          }
 
           return (
             <div
               key={day.dateStr}
+              role="gridcell"
+              aria-label={`${MONTH_NAMES[month]} ${day.date.getDate()}${day.holidayName ? ` — ${day.holidayName}` : ''}${isSelected ? ' (PTO)' : ''}`}
               title={tooltip}
+              tabIndex={day.isHoliday || (!isPast && !day.isFree) ? 0 : -1}
               onClick={() => !isPast && onDayClick?.(day)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  !isPast && onDayClick?.(day);
+                }
+              }}
               onMouseEnter={() => !isPast && isInWindow && onHoverWindow(day.windowId!)}
               onMouseLeave={() => onHoverWindow(null)}
               className={getDayClasses(day, isSelected, isPreview, isActive, isInWindow, isPast, isHighlighted, isToday)}
@@ -153,6 +176,8 @@ interface InteractiveCalendarProps {
   showCompanyHolidays?: boolean;
   hoveredWindow?: number | null;
   onHoverWindow?: (id: number | null) => void;
+  /** Map from windowId → label string, shown in hover tooltips */
+  windowLabels?: Map<number, string>;
   /** YYYY-MM-DD — days before this date are dimmed */
   today?: string;
   /** 0-indexed month to start the view on */
@@ -168,11 +193,13 @@ export function InteractiveCalendar({
   showCompanyHolidays = false,
   hoveredWindow = null,
   onHoverWindow,
+  windowLabels = new Map(),
   today,
   defaultStartMonth = 0,
 }: InteractiveCalendarProps) {
   const todayStr = today ?? new Date().toISOString().slice(0, 10);
   const [startMonth, setStartMonth] = useState(defaultStartMonth);
+  const [showMonthPicker, setShowMonthPicker] = useState(false);
 
   useEffect(() => {
     setStartMonth(defaultStartMonth);
@@ -197,34 +224,64 @@ export function InteractiveCalendar({
         <button
           onClick={() => setStartMonth((m) => Math.max(0, m - 1))}
           disabled={startMonth === 0}
-          className="flex items-center gap-1 text-xs font-semibold text-ink-muted hover:text-teal disabled:opacity-25 disabled:cursor-not-allowed transition-colors px-2 py-1 rounded-lg hover:bg-cream disabled:hover:bg-transparent"
+          aria-label="Previous month"
+          className="flex items-center gap-1 text-xs font-semibold text-ink-muted hover:text-teal disabled:opacity-25 disabled:cursor-not-allowed transition-colors px-2 py-1.5 rounded-lg hover:bg-cream disabled:hover:bg-transparent"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
-          {startMonth > 0 ? MONTH_NAMES[startMonth - 1] : 'Jan'}
+          <span className="hidden sm:inline">{startMonth > 0 ? MONTH_ABBR[startMonth - 1] : 'Jan'}</span>
         </button>
 
-        <div className="flex items-center gap-3">
-          {startMonth > 0 && (
-            <button
-              onClick={() => setStartMonth(0)}
-              className="text-[10px] text-ink-muted/60 hover:text-teal transition-colors underline underline-offset-2"
-            >
-              Show all
-            </button>
+        <div className="flex items-center gap-2 relative">
+          <button
+            onClick={() => setShowMonthPicker((v) => !v)}
+            className="text-xs font-semibold text-ink-muted hover:text-teal transition-colors px-2 py-1 rounded-lg hover:bg-cream flex items-center gap-1"
+            aria-label="Jump to month"
+          >
+            {startMonth > 0 ? `${MONTH_ABBR[startMonth]} – Dec` : 'All months'}
+            <svg className={`w-3 h-3 transition-transform ${showMonthPicker ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {/* Month quick-jump dropdown */}
+          {showMonthPicker && (
+            <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-white rounded-xl border border-border shadow-lg p-2 z-20 grid grid-cols-4 gap-1 min-w-[200px]">
+              <button
+                onClick={() => { setStartMonth(0); setShowMonthPicker(false); }}
+                className={`text-[10px] font-semibold px-2 py-1.5 rounded-lg transition-colors ${
+                  startMonth === 0
+                    ? 'bg-teal text-white'
+                    : 'text-ink-muted hover:bg-cream hover:text-teal'
+                }`}
+              >
+                All
+              </button>
+              {MONTH_ABBR.map((name, i) => (
+                <button
+                  key={i}
+                  onClick={() => { setStartMonth(i); setShowMonthPicker(false); }}
+                  className={`text-[10px] font-semibold px-2 py-1.5 rounded-lg transition-colors ${
+                    startMonth === i && startMonth !== 0
+                      ? 'bg-teal text-white'
+                      : 'text-ink-muted hover:bg-cream hover:text-teal'
+                  }`}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
           )}
-          <span className="text-xs font-semibold text-ink-muted">
-            {MONTH_NAMES[startMonth].slice(0, 3)} – Dec
-          </span>
         </div>
 
         <button
           onClick={() => setStartMonth((m) => Math.min(11, m + 1))}
           disabled={startMonth >= 11}
-          className="flex items-center gap-1 text-xs font-semibold text-ink-muted hover:text-teal disabled:opacity-25 disabled:cursor-not-allowed transition-colors px-2 py-1 rounded-lg hover:bg-cream disabled:hover:bg-transparent"
+          aria-label="Next month"
+          className="flex items-center gap-1 text-xs font-semibold text-ink-muted hover:text-teal disabled:opacity-25 disabled:cursor-not-allowed transition-colors px-2 py-1.5 rounded-lg hover:bg-cream disabled:hover:bg-transparent"
         >
-          {startMonth < 11 ? MONTH_NAMES[startMonth + 1] : 'Dec'}
+          <span className="hidden sm:inline">{startMonth < 11 ? MONTH_ABBR[startMonth + 1] : 'Dec'}</span>
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
@@ -241,8 +298,8 @@ export function InteractiveCalendar({
         ))}
       </div>
 
-      {/* Month grid — 3 columns fits well in the right pane */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
+      {/* Month grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6">
         {visibleMonths.map((m) => (
           <MonthGrid
             key={m}
@@ -255,6 +312,7 @@ export function InteractiveCalendar({
             hoveredWindow={hoveredWindow}
             onHoverWindow={handleHoverWindow}
             today={todayStr}
+            windowLabels={windowLabels}
           />
         ))}
       </div>

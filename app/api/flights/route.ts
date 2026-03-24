@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { buildKiwiLink } from '@/lib/affiliates';
 import type { FlightDeal } from '@/lib/types';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 // Kiwi Tequila date format: DD/MM/YYYY
 function toKiwiDate(isoDate: string): string {
@@ -75,6 +76,22 @@ export async function GET(request: NextRequest) {
 
   if (!origin || !dateFrom || !dateTo) {
     return NextResponse.json({ error: 'Missing origin, dateFrom, or dateTo' }, { status: 400 });
+  }
+
+  // Rate limit: 30 requests per minute per IP
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'anonymous';
+  const rl = checkRateLimit(`flights:${ip}`, 30);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again shortly.' },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+          'X-RateLimit-Remaining': '0',
+        },
+      }
+    );
   }
 
   // Basic input sanitation

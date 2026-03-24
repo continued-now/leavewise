@@ -49,6 +49,31 @@ h1, h2, h3, .font-display {
   color: white;
 }
 
+/* ── Dark mode (opt-in only via data-theme="dark") ── */
+/* Default is always light/cream regardless of system preference */
+html[data-theme="dark"] {
+  --background: #1C1917;
+  --foreground: #F7F6F2;
+  --color-cream: #1C1917;
+  --color-cream-dark: #292524;
+  --color-teal-light: #1A3333;
+  --color-coral-light: #3D2520;
+  --color-sage-light: #1E3328;
+  --color-amber-light: #3D2F1A;
+  --color-border: #3D3835;
+  --color-ink: #F7F6F2;
+  --color-ink-soft: #D6D3D1;
+  --color-ink-muted: #A8A29E;
+  --color-stone-warm: #57534E;
+}
+html[data-theme="dark"] .bg-white { background: #292524; }
+html[data-theme="dark"] ::selection { background: #D95740; color: white; }
+html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #57534E; }
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #78716C; }
+html[data-theme="dark"] input[type="range"] { background: #3D3835; }
+html[data-theme="dark"] input[type="range"]::-webkit-slider-thumb { border-color: #292524; }
+html[data-theme="dark"] input[type="range"]::-moz-range-thumb { border-color: #292524; }
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -65,17 +90,137 @@ h1, h2, h3, .font-display {
   background: #A8A29E;
 }
 
+/* ── Toast animations ── */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-8px) scale(0.95); }
+}
+
+/* ── Slide-in panel ── */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-slide-in-right {
+  animation: slide-in-right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* ── Skeleton pulse ── */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.2; }
+}
+.animate-skeleton {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Custom range slider ── */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #E5E2DA;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #1A6363;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.05);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #1A6363;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(26, 99, 99, 0.3);
+}
+
+/* ── Mobile touch targets & responsiveness ── */
+@media (pointer: coarse) {
+  /* Calendar day cells — increase tap area on touch */
+  .grid-cols-7 > div[class*="aspect-square"] {
+    min-height: 36px;
+    min-width: 36px;
+    font-size: 12px;
+  }
+
+  /* Range slider thumb — larger for touch */
+  input[type="range"]::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Prevent horizontal overflow on all devices */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Smooth scrolling for non-reduced-motion users */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* Safe area insets for notched/Island devices */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 /* ── Print styles ── */
 @media print {
   /* Hide navigation and interactive chrome */
   nav,
   aside,
-  .print\\:hidden,
+  [class*="print:hidden"],
   button,
   [data-print-hide] {
     display: none !important;
   }
 
+  html {
+    --background: #F7F6F2 !important;
+    --foreground: #1C1917 !important;
+    --color-cream: #F7F6F2 !important;
+    --color-ink: #1C1917 !important;
+    --color-border: #E5E2DA !important;
+  }
   body {
     background: white;
     color: black;
@@ -86,8 +231,8 @@ h1, h2, h3, .font-display {
   .max-w-7xl { max-width: 100% !important; padding: 0 !important; }
 
   /* Two-pane collapses to single column */
-  .xl\\:flex-row { flex-direction: column !important; }
-  .xl\\:sticky { position: static !important; }
+  [class*="xl:flex-row"] { flex-direction: column !important; }
+  [class*="xl:sticky"] { position: static !important; }
 
   /* White backgrounds print cleanly */
   .bg-cream { background: white !important; }
