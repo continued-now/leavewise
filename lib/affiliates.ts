@@ -150,6 +150,93 @@ export function buildGoogleCalendarLink(
 }
 
 /**
+ * Build a Klook activities search link (tours, day trips, experiences).
+ * Travelpayouts affiliate tracking via tp.media redirect.
+ * Verify your program link format in TP dashboard → Tools → Deep Links.
+ */
+export function buildKlookLink(
+  destination: string,
+  marker?: string,
+  windowLabel?: string,
+): string {
+  const klookUrl = new URL('https://www.klook.com/en-US/search/');
+  klookUrl.searchParams.set('query', destination);
+  klookUrl.searchParams.set('utm_source', UTM_PARAMS.utm_source);
+  klookUrl.searchParams.set('utm_medium', UTM_PARAMS.utm_medium);
+  klookUrl.searchParams.set('utm_campaign', 'pto_optimizer');
+  if (windowLabel) klookUrl.searchParams.set('utm_content', buildSubId(windowLabel));
+
+  if (!marker) return klookUrl.toString();
+
+  const params = new URLSearchParams({
+    shmarker: marker,
+    p: '4044', // Klook program ID on Travelpayouts
+    source_type: 'link',
+    type: 'click',
+    u: klookUrl.toString(),
+  });
+  return `https://tp.media/r?${params.toString()}`;
+}
+
+/**
+ * Build a Tiqets attractions/tickets search link.
+ */
+export function buildTiqetsLink(
+  destination: string,
+  marker?: string,
+  windowLabel?: string,
+): string {
+  const tiqetsUrl = new URL('https://www.tiqets.com/en/search/');
+  tiqetsUrl.searchParams.set('q', destination);
+  tiqetsUrl.searchParams.set('utm_source', UTM_PARAMS.utm_source);
+  tiqetsUrl.searchParams.set('utm_medium', UTM_PARAMS.utm_medium);
+  tiqetsUrl.searchParams.set('utm_campaign', 'pto_optimizer');
+  if (windowLabel) tiqetsUrl.searchParams.set('utm_content', buildSubId(windowLabel));
+
+  if (!marker) return tiqetsUrl.toString();
+
+  const params = new URLSearchParams({
+    shmarker: marker,
+    p: '5816', // Tiqets program ID on Travelpayouts
+    source_type: 'link',
+    type: 'click',
+    u: tiqetsUrl.toString(),
+  });
+  return `https://tp.media/r?${params.toString()}`;
+}
+
+/**
+ * Build an Airalo eSIM link — travel prep CTA.
+ * Shown on window cards where a destination is known.
+ */
+export function buildAiraloLink(
+  destination?: string,
+  marker?: string,
+  windowLabel?: string,
+): string {
+  const base = destination
+    ? `https://www.airalo.com/search?query=${encodeURIComponent(destination)}`
+    : 'https://www.airalo.com/';
+
+  const airaloUrl = new URL(base);
+  airaloUrl.searchParams.set('utm_source', UTM_PARAMS.utm_source);
+  airaloUrl.searchParams.set('utm_medium', UTM_PARAMS.utm_medium);
+  airaloUrl.searchParams.set('utm_campaign', 'pto_optimizer');
+  if (windowLabel) airaloUrl.searchParams.set('utm_content', buildSubId(windowLabel));
+
+  if (!marker) return airaloUrl.toString();
+
+  const params = new URLSearchParams({
+    shmarker: marker,
+    p: '5763', // Airalo program ID on Travelpayouts
+    source_type: 'link',
+    type: 'click',
+    u: airaloUrl.toString(),
+  });
+  return `https://tp.media/r?${params.toString()}`;
+}
+
+/**
  * Append Kiwi affiliate ID + UTM tracking to their booking deep-link.
  * Kept for the server-side flight API route which still fetches from Kiwi.
  */

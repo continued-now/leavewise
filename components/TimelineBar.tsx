@@ -44,14 +44,14 @@ export function TimelineBar({ days, hoveredWindow, onHoverWindow, today }: Timel
   }
 
   return (
-    <div className="mb-5 print:hidden">
+    <div className="mb-4 print:hidden">
       {/* Month labels */}
       <div className="flex mb-1">
         {months.map(({ month, count }) => (
           <div
             key={month}
             style={{ flex: count }}
-            className="text-center text-[8px] font-medium text-ink-muted/60 tracking-wide overflow-hidden"
+            className="text-center text-[10px] font-medium text-ink-muted/60 tracking-wide overflow-hidden"
           >
             {MONTH_ABBR[month]}
           </div>
@@ -59,7 +59,7 @@ export function TimelineBar({ days, hoveredWindow, onHoverWindow, today }: Timel
       </div>
 
       {/* Day strip */}
-      <div className="flex h-4 rounded-lg overflow-hidden gap-px">
+      <div className="flex h-6 rounded-lg overflow-hidden gap-px">
         {days.map((day) => {
           const isPast = day.dateStr < today;
           const isToday = day.dateStr === today;
@@ -89,21 +89,6 @@ export function TimelineBar({ days, hoveredWindow, onHoverWindow, today }: Timel
             />
           );
         })}
-      </div>
-
-      {/* Legend inline */}
-      <div className="flex gap-4 mt-2">
-        {[
-          { color: 'bg-coral', label: 'PTO' },
-          { color: 'bg-sage', label: 'Holiday' },
-          { color: 'bg-stone-warm/60', label: 'Weekend' },
-          { color: 'bg-coral/25', label: 'Window days' },
-        ].map((l) => (
-          <span key={l.label} className="flex items-center gap-1 text-[10px] text-ink-muted/70">
-            <span className={`w-2 h-2 rounded-sm ${l.color}`} />
-            {l.label}
-          </span>
-        ))}
       </div>
     </div>
   );

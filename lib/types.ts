@@ -85,6 +85,12 @@ export interface FlightDeal {
   };
 }
 
+export interface HotelDeal {
+  minPrice: number;
+  currency: string;
+  cityName: string;
+}
+
 export interface CrowdInsight {
   eventName: string;
   crowdLevel: 'peak' | 'high' | 'moderate';
@@ -111,3 +117,40 @@ export interface OptimizationResult {
   remainingLeave: number;
   totalDaysOff: number;
 }
+
+// ── App-level form types ──────────────────────────────────────────────────────
+
+export type CountryCode = 'US' | 'KR';
+
+export interface FormState {
+  country: CountryCode;
+  usState: string;
+  year: number;
+  leavePool: LeavePool;
+  daysToAllocate: number;
+  maxDaysPerWindow: number;
+  companyName: string;
+  companyHolidaysRaw: string;
+  prebookedRaw: string;
+  homeAirport: string;
+  airportManuallySet: boolean;
+  travelValueWeight: 0 | 0.4 | 0.8;
+}
+
+export interface StoredState {
+  version: 1;
+  form: FormState;
+  selectedPTO: string[];
+  timestamp: number;
+}
+
+export interface ShareableSnapshot {
+  v: 1;
+  c: string; s: string; y: number;
+  lp: [number, number, number];
+  da: number; mx: number;
+  ch: string; pb: string;
+  tw: number; ha: string;
+}
+
+export type Strategy = 'short' | 'balanced' | 'long';

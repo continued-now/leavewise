@@ -3,6 +3,8 @@ export interface USState {
   name: string;
 }
 
+export const COUNTRY_CURRENCY: Record<string, string> = { US: 'USD', KR: 'KRW' };
+
 export const US_STATES: USState[] = [
   { code: 'US-AL', name: 'Alabama' },
   { code: 'US-AK', name: 'Alaska' },

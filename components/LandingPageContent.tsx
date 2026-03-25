@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { trackEmailSignup } from '@/lib/analytics';
 
 // ── i18n ──────────────────────────────────────────────────────────
 
@@ -117,6 +118,13 @@ const t = {
     calMonth: 'April 2026',
     calPto: 'PTO', calHol: 'Holiday', calWknd: 'Weekend',
     calDaysOff: 'days off', calPtoUsed: 'PTO used',
+
+    emailTitle: 'Get your free 2026 PTO calendar',
+    emailSub: 'A printable calendar with every holiday and optimized window highlighted. No spam, unsubscribe anytime.',
+    emailPlaceholder: 'you@company.com',
+    emailCta: 'Get it free',
+    emailSuccess: 'Check your inbox — your calendar is on its way!',
+    emailError: 'Something went wrong. Please try again.',
   },
   ko: {
     navCta: '무료로 시작하기',
@@ -226,6 +234,13 @@ const t = {
     calMonth: '2026년 4월',
     calPto: '연차', calHol: '공휴일', calWknd: '주말',
     calDaysOff: '일 휴가', calPtoUsed: '연차 사용',
+
+    emailTitle: '2026 연차 캘린더 무료 다운로드',
+    emailSub: '모든 공휴일과 최적화된 구간이 표시된 인쇄용 캘린더입니다. 스팸 없음, 언제든 구독 취소 가능.',
+    emailPlaceholder: '이메일을 입력하세요',
+    emailCta: '무료로 받기',
+    emailSuccess: '받은 편지함을 확인하세요 — 캘린더가 전송되었습니다!',
+    emailError: '문제가 발생했습니다. 다시 시도해 주세요.',
   },
 };
 
@@ -313,6 +328,8 @@ interface LandingPageContentProps {
 
 export function LandingPageContent({ initialLocale, country = 'US' }: LandingPageContentProps) {
   const [ptoDays, setPtoDays] = useState(15);
+  const [emailInput, setEmailInput] = useState('');
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [locale, setLocale] = useState<Locale>(() => {
     if (initialLocale) return initialLocale;
     if (typeof window === 'undefined') return 'en';
@@ -362,6 +379,27 @@ export function LandingPageContent({ initialLocale, country = 'US' }: LandingPag
     setLocale(next);
     try { localStorage.setItem('leavewise_locale', next); } catch { /* ok */ }
   };
+
+  const handleEmailSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailInput.trim() || emailStatus === 'loading') return;
+    setEmailStatus('loading');
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailInput.trim(), locale }),
+      });
+      if (res.ok) {
+        trackEmailSignup();
+        setEmailStatus('success');
+      } else {
+        setEmailStatus('error');
+      }
+    } catch {
+      setEmailStatus('error');
+    }
+  }, [emailInput, emailStatus, locale]);
 
   const trustItems = [
     { label: l.trustBrowser, sub: l.trustBrowserSub },
@@ -658,6 +696,38 @@ export function LandingPageContent({ initialLocale, country = 'US' }: LandingPag
           {faqItems.map((item) => (
             <FAQItem key={item.q} q={item.q} a={item.a} />
           ))}
+        </div>
+      </section>
+
+      {/* EMAIL CAPTURE */}
+      <section className="max-w-2xl mx-auto px-6 pb-20">
+        <div className="bg-white rounded-2xl border border-border p-8 text-center">
+          <h2 className="text-2xl font-display font-semibold text-ink mb-2">{l.emailTitle}</h2>
+          <p className="text-sm text-ink-muted mb-6 leading-relaxed">{l.emailSub}</p>
+          {emailStatus === 'success' ? (
+            <p className="text-sm font-semibold text-sage">{l.emailSuccess}</p>
+          ) : (
+            <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="email"
+                required
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                placeholder={l.emailPlaceholder}
+                className="flex-1 text-sm px-4 py-2.5 rounded-xl border border-border bg-cream text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal/50"
+              />
+              <button
+                type="submit"
+                disabled={emailStatus === 'loading'}
+                className="px-5 py-2.5 bg-teal text-white text-sm font-semibold rounded-xl hover:bg-teal-hover transition-colors disabled:opacity-60"
+              >
+                {emailStatus === 'loading' ? '...' : l.emailCta}
+              </button>
+            </form>
+          )}
+          {emailStatus === 'error' && (
+            <p className="text-xs text-coral mt-2">{l.emailError}</p>
+          )}
         </div>
       </section>
 

@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { buildKiwiLink } from '@/lib/affiliates';
 import type { FlightDeal } from '@/lib/types';
 import { checkRateLimit } from '@/lib/rate-limit';
+
+const QuerySchema = z.object({
+  origin: z.string().regex(/^[A-Z]{3}$/i).transform((s) => s.toUpperCase()),
+  dateFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  dateTo: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  currency: z.string().regex(/^[A-Z]{3}$/i).transform((s) => s.toUpperCase()).default('USD'),
+});
 
 // Kiwi Tequila date format: DD/MM/YYYY
 function toKiwiDate(isoDate: string): string {
@@ -69,14 +77,11 @@ async function searchKiwi(
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const origin = searchParams.get('origin');
-  const dateFrom = searchParams.get('dateFrom');
-  const dateTo = searchParams.get('dateTo');
-  const currency = searchParams.get('currency') ?? 'USD';
-
-  if (!origin || !dateFrom || !dateTo) {
-    return NextResponse.json({ error: 'Missing origin, dateFrom, or dateTo' }, { status: 400 });
+  const parsed = QuerySchema.safeParse(Object.fromEntries(searchParams));
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Invalid query parameters', details: parsed.error.flatten() }, { status: 400 });
   }
+  const { origin, dateFrom, dateTo, currency } = parsed.data;
 
   // Rate limit: 30 requests per minute per IP
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'anonymous';
@@ -94,19 +99,11 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Basic input sanitation
-  const originClean = origin.replace(/[^A-Z]/gi, '').slice(0, 3).toUpperCase();
-  const currClean = currency.replace(/[^A-Z]/gi, '').slice(0, 3).toUpperCase();
-
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateFrom) || !/^\d{4}-\d{2}-\d{2}$/.test(dateTo)) {
-    return NextResponse.json({ error: 'Invalid date format' }, { status: 400 });
-  }
-
   const affiliateId = process.env.KIWI_AFFILIATE_ID ?? '';
 
   try {
     // Primary search: flights departing within the window
-    const primary = await searchKiwi(originClean, dateFrom, dateTo, currClean, 5);
+    const primary = await searchKiwi(origin, dateFrom, dateTo, currency, 5);
 
     if (primary.length === 0) {
       return NextResponse.json(null);
@@ -115,7 +112,7 @@ export async function GET(request: NextRequest) {
     const cheapest = primary[0];
     const deal: FlightDeal = {
       price: cheapest.price,
-      currency: currClean,
+      currency,
       deeplink: buildKiwiLink(cheapest.deep_link, affiliateId),
       destination: cheapest.cityTo,
     };
@@ -123,7 +120,7 @@ export async function GET(request: NextRequest) {
     // Cheaper-day check: look at 3 days *before* the window starts
     const earlyFrom = subtractDays(dateFrom, 3);
     const earlyTo = subtractDays(dateFrom, 1);
-    const early = await searchKiwi(originClean, earlyFrom, earlyTo, currClean, 5);
+    const early = await searchKiwi(origin, earlyFrom, earlyTo, currency, 5);
 
     if (early.length > 0) {
       const cheapestEarly = early[0];
@@ -140,7 +137,8 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(deal);
-  } catch {
-    return NextResponse.json(null);
+  } catch (err) {
+    console.error('[flights] Kiwi API error:', err);
+    return NextResponse.json({ error: 'api_error' }, { status: 502 });
   }
 }

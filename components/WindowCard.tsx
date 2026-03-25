@@ -1,9 +1,10 @@
 'use client';
 
-import { VacationWindow, FlightDeal } from '@/lib/types';
-import { buildFlightSearchLink, buildHotelSearchLink, buildFlightCompareLink, buildGoogleCalendarLink } from '@/lib/affiliates';
+import { VacationWindow, FlightDeal, HotelDeal } from '@/lib/types';
+import { buildFlightSearchLink, buildHotelSearchLink, buildFlightCompareLink, buildGoogleCalendarLink, buildKlookLink, buildTiqetsLink, buildAiraloLink } from '@/lib/affiliates';
 import { downloadICS } from '@/lib/ics';
 import { useToast } from '@/components/Toast';
+import { trackAffiliateClick } from '@/lib/analytics';
 
 const WINDOW_COLORS = [
   'border-l-teal',
@@ -39,6 +40,7 @@ interface WindowCardProps {
   isHighlighted: boolean;
   onHover: (id: number | null) => void;
   flightDeal?: FlightDeal | 'loading' | 'error';
+  hotelDeal?: HotelDeal | 'loading' | 'error';
   origin?: string;
   currency?: string;
   tpMarker?: string;
@@ -52,6 +54,7 @@ export function WindowCard({
   isHighlighted,
   onHover,
   flightDeal,
+  hotelDeal,
   origin = '',
   currency = 'USD',
   tpMarker = '',
@@ -181,7 +184,7 @@ export function WindowCard({
       {flightDeal === 'loading' && (
         <div className="mb-3 flex items-center gap-2">
           <div className="h-5 w-28 bg-border/60 rounded-full animate-skeleton" />
-          <div className="h-5 w-16 bg-border/60 rounded-full animate-skeleton" />
+          <div className="h-5 w-20 bg-border/60 rounded-full animate-skeleton" />
         </div>
       )}
 
@@ -190,8 +193,16 @@ export function WindowCard({
         <div className="mb-3 space-y-2">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1 bg-teal-light text-teal text-[11px] font-semibold px-2 py-0.5 rounded-full border border-teal/20">
-              From {formatPrice(deal.price, deal.currency)} · {deal.destination}
+              ✈ {formatPrice(deal.price, deal.currency)} · {deal.destination}
             </span>
+            {hotelDeal === 'loading' && (
+              <div className="h-5 w-20 bg-border/60 rounded-full animate-skeleton" />
+            )}
+            {hotelDeal && hotelDeal !== 'loading' && hotelDeal !== 'error' && (
+              <span className="inline-flex items-center gap-1 bg-cream text-ink-soft text-[11px] font-semibold px-2 py-0.5 rounded-full border border-border">
+                🏨 {formatPrice(hotelDeal.minPrice, hotelDeal.currency)}/night
+              </span>
+            )}
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -201,7 +212,7 @@ export function WindowCard({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-[11px] font-semibold bg-teal text-white px-2.5 py-1.5 rounded-lg hover:bg-teal-hover transition-colors"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'flight'); }}
               >
                 Search flights
                 <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -215,7 +226,7 @@ export function WindowCard({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-[11px] font-semibold bg-cream text-ink-soft px-2.5 py-1.5 rounded-lg border border-border hover:border-teal/40 hover:text-teal transition-colors"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'compare'); }}
               >
                 Compare
               </a>
@@ -225,9 +236,40 @@ export function WindowCard({
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-[11px] font-semibold bg-cream text-ink-soft px-2.5 py-1.5 rounded-lg border border-border hover:border-teal/40 hover:text-teal transition-colors"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'hotel'); }}
             >
-              Hotels
+              {hotelDeal && hotelDeal !== 'loading' && hotelDeal !== 'error'
+                ? `Hotels from ${formatPrice(hotelDeal.minPrice, hotelDeal.currency)}/night`
+                : 'Hotels'}
+            </a>
+          </div>
+
+          {/* Activities row — Klook + Tiqets */}
+          <div className="flex flex-wrap gap-1.5 pt-0.5">
+            <a
+              href={buildKlookLink(deal.destination, tpMarker || undefined, w.label)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[10px] font-medium text-ink-muted hover:text-teal transition-colors"
+              onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'activities'); }}
+            >
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+              </svg>
+              Things to do
+            </a>
+            <span className="text-ink-muted/30 text-[10px] select-none">·</span>
+            <a
+              href={buildTiqetsLink(deal.destination, tpMarker || undefined, w.label)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[10px] font-medium text-ink-muted hover:text-teal transition-colors"
+              onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'attractions'); }}
+            >
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z" />
+              </svg>
+              Attractions
             </a>
           </div>
 
@@ -378,21 +420,41 @@ export function WindowCard({
             </svg>
             Google Cal
           </a>
+          {deal && (
+            <a
+              href={buildAiraloLink(deal.destination, tpMarker || undefined, w.label)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'esim'); }}
+              aria-label="Get eSIM for this destination"
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors py-1"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3" />
+              </svg>
+              eSIM
+            </a>
+          )}
         </div>
 
         {!deal && flightDeal !== 'loading' && origin && (
-          <a
-            href={buildFlightSearchLink(origin, w.startStr, w.endStr, tpMarker || undefined, w.label)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-teal hover:text-teal-hover transition-colors"
-            onClick={(e) => e.stopPropagation()}
-          >
-            Find flights
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-            </svg>
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href={buildFlightSearchLink(origin, w.startStr, w.endStr, tpMarker || undefined, w.label)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-teal hover:text-teal-hover transition-colors"
+              onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'flight'); }}
+            >
+              Find flights
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+            {flightDeal === 'error' && (
+              <span className="text-[10px] text-ink-muted">Flight prices unavailable</span>
+            )}
+          </div>
         )}
       </div>
     </article>

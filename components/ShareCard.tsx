@@ -1,7 +1,22 @@
 'use client';
 
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect, useState } from 'react';
 import { useToast } from '@/components/Toast';
+import { trackSharePlan, trackKakaoShare } from '@/lib/analytics';
+
+declare global {
+  interface Window {
+    Kakao?: {
+      isInitialized: () => boolean;
+      Share: {
+        sendDefault: (params: {
+          objectType: string;
+          content: { title: string; description: string; imageUrl: string; link: { mobileWebUrl: string; webUrl: string } };
+        }) => void;
+      };
+    };
+  }
+}
 
 export interface ShareCardProps {
   year: number;
@@ -153,6 +168,7 @@ export function ShareCard(props: ShareCardProps) {
   const { year, totalLeave, totalDaysOff, windows, onClose } = props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
+  const [kakaoReady, setKakaoReady] = useState(false);
 
   const multiplier = totalLeave > 0
     ? (totalDaysOff / totalLeave).toFixed(1)
@@ -169,6 +185,11 @@ export function ShareCard(props: ShareCardProps) {
     }
   }, [props]);
 
+  // Detect Kakao SDK availability after mount
+  useEffect(() => {
+    setKakaoReady(typeof window !== 'undefined' && !!window.Kakao?.isInitialized());
+  }, []);
+
   const handleDownload = useCallback(() => {
     if (!canvasRef.current) return;
     // Re-draw to ensure canvas is fresh
@@ -177,6 +198,7 @@ export function ShareCard(props: ShareCardProps) {
     link.download = `pto-plan-${year}.png`;
     link.href = canvasRef.current.toDataURL('image/png');
     link.click();
+    trackSharePlan();
     toast('Image downloaded');
   }, [props, year, toast]);
 
@@ -193,9 +215,28 @@ export function ShareCard(props: ShareCardProps) {
     }
     lines.push('', 'Planned with leavewise.co');
     navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      trackSharePlan();
       toast('Summary copied to clipboard');
     });
   }, [year, totalLeave, totalDaysOff, multiplier, sortedWindows, toast]);
+
+  const handleKakaoShare = useCallback(() => {
+    if (!window.Kakao?.isInitialized() || !canvasRef.current) return;
+    const imageUrl = canvasRef.current.toDataURL('image/png');
+    window.Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: `내 ${year}년 연차 플랜`,
+        description: `${totalLeave}일 연차 → ${totalDaysOff}일 휴가 (${multiplier}x)`,
+        imageUrl,
+        link: {
+          mobileWebUrl: window.location.href,
+          webUrl: window.location.href,
+        },
+      },
+    });
+    trackKakaoShare();
+  }, [year, totalLeave, totalDaysOff, multiplier]);
 
   return (
     <div
@@ -345,6 +386,18 @@ export function ShareCard(props: ShareCardProps) {
         </div>
 
         {/* Action buttons */}
+        <div className="flex flex-col gap-2">
+        {kakaoReady && (
+          <button
+            onClick={handleKakaoShare}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FEE500] text-[#391B1B] text-sm font-semibold hover:bg-[#F0D800] transition-colors"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3C6.477 3 2 6.582 2 11c0 2.913 1.73 5.478 4.334 6.979l-.997 3.73a.307.307 0 00.455.338l4.372-2.916c.6.084 1.214.127 1.836.127 5.523 0 10-3.582 10-8s-4.477-8-10-8z"/>
+            </svg>
+            카카오톡으로 공유
+          </button>
+        )}
         <div className="flex items-center gap-3">
           <button
             onClick={handleDownload}
@@ -384,6 +437,7 @@ export function ShareCard(props: ShareCardProps) {
             </svg>
             Copy text summary
           </button>
+        </div>
         </div>
 
         {/* Hidden canvas for image generation */}

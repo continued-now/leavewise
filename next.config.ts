@@ -30,11 +30,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://t1.kakaocdn.net https://emrld.ltd",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob:",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://date.nager.at https://tequila.kiwi.com",
+              "connect-src 'self' https://date.nager.at https://tequila.kiwi.com https://engine.hotellook.com https://www.google-analytics.com https://region1.google-analytics.com https://emrld.ltd https://tp.media",
               "frame-ancestors 'none'",
             ].join('; '),
           },
@@ -53,6 +53,13 @@ const nextConfig: NextConfig = {
         source: '/api/flights',
         headers: [
           { key: 'Cache-Control', value: 'no-store' },
+        ],
+      },
+      {
+        // Hotel cached data can be held for 1hr
+        source: '/api/hotels',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=7200' },
         ],
       },
     ];

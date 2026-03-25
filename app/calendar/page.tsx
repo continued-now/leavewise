@@ -1,7 +1,22 @@
-'use client';
-
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { CALENDAR_DATA, SOURCES, type CountryKey } from '@/lib/calendar-data';
+
+export const metadata: Metadata = {
+  title: '2026 PTO Calendar — Free Download — Leavewise',
+  description:
+    'Download your free 2026 PTO optimization calendar for the US or South Korea. Every holiday bridge and efficiency window pre-calculated.',
+  openGraph: {
+    title: '2026 PTO Calendar — Free Download — Leavewise',
+    description:
+      'Download your free 2026 PTO optimization calendar for the US or South Korea. Every holiday bridge pre-calculated.',
+  },
+  twitter: {
+    title: '2026 PTO Calendar — Free Download — Leavewise',
+    description:
+      'Download your free 2026 PTO calendar for the US or South Korea. Holiday bridges pre-calculated.',
+  },
+};
 
 const COUNTRY_VARIANTS: Record<CountryKey, { key: string; label: string }[]> = {
   us: [

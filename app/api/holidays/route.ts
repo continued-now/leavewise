@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { checkRateLimit } from '@/lib/rate-limit';
+
+const QuerySchema = z.object({
+  year: z.coerce.number().int().min(2020).max(2035),
+  country: z.string().regex(/^[A-Z]{2}$/i).transform((s) => s.toUpperCase()),
+});
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const year = searchParams.get('year');
-  const country = searchParams.get('country');
-
-  if (!year || !country) {
-    return NextResponse.json({ error: 'Missing year or country' }, { status: 400 });
+  const parsed = QuerySchema.safeParse(Object.fromEntries(searchParams));
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Invalid query parameters', details: parsed.error.flatten() }, { status: 400 });
   }
+  const { year: yearNum, country: countryClean } = parsed.data;
 
   // Rate limit: 60 requests per minute per IP
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'anonymous';
@@ -22,13 +27,6 @@ export async function GET(request: NextRequest) {
       }
     );
   }
-
-  const yearNum = parseInt(year, 10);
-  if (isNaN(yearNum) || yearNum < 2020 || yearNum > 2035) {
-    return NextResponse.json({ error: 'Invalid year' }, { status: 400 });
-  }
-
-  const countryClean = country.replace(/[^A-Z]/gi, '').slice(0, 2).toUpperCase();
 
   try {
     const res = await fetch(

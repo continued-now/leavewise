@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { DayData } from '@/lib/types';
 
 const MONTH_NAMES = [
@@ -130,23 +130,29 @@ export function CalendarGrid({
   const year = days[0]?.date.getFullYear() ?? new Date().getFullYear();
 
   // Build ordered list of months that have data, starting from startMonth
-  const allMonths = Array.from({ length: 12 }, (_, i) => i);
-  const visibleMonths = allMonths.filter((m) => m >= startMonth);
-  const hiddenMonths = allMonths.filter((m) => m < startMonth); // for "go back" display
+  const visibleMonths = useMemo(
+    () => Array.from({ length: 12 }, (_, i) => i).filter((m) => m >= startMonth),
+    [startMonth]
+  );
+  const hiddenMonths = useMemo(
+    () => Array.from({ length: 12 }, (_, i) => i).filter((m) => m < startMonth),
+    [startMonth]
+  );
 
   const canGoPrev = startMonth > 0;
   const canGoNext = startMonth < 11;
 
   // Label for the current view range
-  const lastVisible = visibleMonths[visibleMonths.length - 1] ?? startMonth;
-  const rangeLabel =
-    startMonth === 0 && lastVisible === 11
+  const rangeLabel = useMemo(() => {
+    const lastVisible = visibleMonths[visibleMonths.length - 1] ?? startMonth;
+    return startMonth === 0 && lastVisible === 11
       ? `${year}`
       : startMonth === lastVisible
         ? `${MONTH_NAMES[startMonth]} ${year}`
         : `${MONTH_NAMES[startMonth]} – ${MONTH_NAMES[lastVisible]} ${year}`;
+  }, [startMonth, visibleMonths, year]);
 
-  const legendItems = [
+  const legendItems = useMemo(() => [
     { color: 'bg-coral', label: 'PTO / prebooked' },
     { color: 'bg-sage', label: 'Public holidays' },
     ...(showCompanyHolidays
@@ -155,7 +161,7 @@ export function CalendarGrid({
     { color: 'bg-stone-warm', label: 'Weekends' },
     { color: 'bg-coral-light border border-coral/20', label: 'Rest of window' },
     { color: 'bg-white border border-border', label: 'Workdays' },
-  ];
+  ], [showCompanyHolidays]);
 
   return (
     <div>

@@ -65,8 +65,9 @@ export function analyzeUSPayInsights(
   for (let i = 0; i < days.length; i++) {
     const wid = days[i].windowId;
     if (wid == null) continue;
-    if (!windowDaySet.has(wid)) windowDaySet.set(wid, new Set());
-    windowDaySet.get(wid)!.add(i);
+    let daySet = windowDaySet.get(wid);
+    if (!daySet) { daySet = new Set(); windowDaySet.set(wid, daySet); }
+    daySet.add(i);
   }
 
   for (const w of windows) {
