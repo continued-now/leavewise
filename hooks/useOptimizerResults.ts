@@ -174,15 +174,15 @@ export function useOptimizerResults(
 
         const optimized = optimizePTO(
           form.year, form.leavePool, holidays, companyHolidayDates, prebookedDates,
-          form.country, { ...baseOpts, maxWindowDays: form.maxDaysPerWindow }
+          form.country, { ...baseOpts, maxWindowDays: form.maxDaysPerWindow, strategy: 'balanced' }
         );
         const shortResult = optimizePTO(
           form.year, form.leavePool, holidays, companyHolidayDates, prebookedDates,
-          form.country, { ...baseOpts, maxWindowDays: 5 }
+          form.country, { ...baseOpts, maxWindowDays: 5, strategy: 'short' }
         );
         const longResult = optimizePTO(
           form.year, form.leavePool, holidays, companyHolidayDates, prebookedDates,
-          form.country, { ...baseOpts, maxWindowDays: 28 }
+          form.country, { ...baseOpts, maxWindowDays: 28, strategy: 'long' }
         );
 
         setStrategies({ short: shortResult, balanced: optimized, long: longResult });
@@ -220,7 +220,7 @@ export function useOptimizerResults(
           resultsAreaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 150);
 
-        if (window.innerWidth < 1024) setSidebarOpen(false);
+        setSidebarOpen(false);
 
         const bestW = optimized.windows.reduce((a, b) =>
           b.efficiency > a.efficiency ? b : a, optimized.windows[0]

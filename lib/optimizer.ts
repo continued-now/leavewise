@@ -211,6 +211,8 @@ export interface OptimizerOptions {
   travelValueWeight?: number;
   /** Home country of the user — used for destination suggestions */
   homeCountry?: 'US' | 'KR';
+  /** Strategy bias: 'short' favors many small windows, 'long' favors fewer big ones */
+  strategy?: 'short' | 'balanced' | 'long';
 }
 
 export function optimizePTO(
@@ -228,6 +230,7 @@ export function optimizePTO(
     lockedWindows = [],
     travelValueWeight = 0,
     homeCountry = 'US',
+    strategy = 'balanced',
   } = options;
 
   const days = buildYearDays(year, publicHolidays, companyHolidayDates, prebookedDates);
@@ -243,8 +246,9 @@ export function optimizePTO(
     dateToIdx.set(days[i].dateStr, i);
   }
 
-  const MIN_EFFICIENCY = 1.4;
-  const MAX_WINDOWS = 8;
+  // Strategy-dependent parameters
+  const MIN_EFFICIENCY = strategy === 'long' ? 1.15 : 1.4;
+  const MAX_WINDOWS = strategy === 'short' ? 12 : strategy === 'long' ? 4 : 8;
 
   interface Candidate {
     start: number;
@@ -318,18 +322,43 @@ export function optimizePTO(
 
   const maxEff = candidates.reduce((m, c) => Math.max(m, c.efficiency), MIN_EFFICIENCY);
 
+  const maxTotalDays = candidates.reduce((m, c) => Math.max(m, c.totalDays), 1);
+
   candidates.sort((a, b) => {
-    if (travelValueWeight === 0) {
+    if (travelValueWeight === 0 && strategy === 'balanced') {
       const diff = b.efficiency - a.efficiency;
       if (Math.abs(diff) > 0.05) return diff;
       return b.totalDays - a.totalDays;
     }
+
     const normalizeEff = (e: number) =>
       maxEff > MIN_EFFICIENCY ? (e - MIN_EFFICIENCY) / (maxEff - MIN_EFFICIENCY) : 1;
-    const tvA = (travelScoreMap.get(a) ?? 50) / 100;
-    const tvB = (travelScoreMap.get(b) ?? 50) / 100;
-    const scoreA = (1 - travelValueWeight) * normalizeEff(a.efficiency) + travelValueWeight * tvA;
-    const scoreB = (1 - travelValueWeight) * normalizeEff(b.efficiency) + travelValueWeight * tvB;
+
+    // Strategy bias: short prefers high-efficiency small windows, long prefers bigger windows
+    let scoreA = normalizeEff(a.efficiency);
+    let scoreB = normalizeEff(b.efficiency);
+
+    if (strategy === 'short') {
+      // Penalize longer windows — prefer 1-2 PTO day bridges
+      const shortBonusA = 1 - (a.ptoCost / Math.max(budgetLeft, effectiveBudget, 1));
+      const shortBonusB = 1 - (b.ptoCost / Math.max(budgetLeft, effectiveBudget, 1));
+      scoreA = 0.6 * scoreA + 0.4 * shortBonusA;
+      scoreB = 0.6 * scoreB + 0.4 * shortBonusB;
+    } else if (strategy === 'long') {
+      // Favor bigger windows — weight total days heavily
+      const sizeA = a.totalDays / maxTotalDays;
+      const sizeB = b.totalDays / maxTotalDays;
+      scoreA = 0.3 * scoreA + 0.7 * sizeA;
+      scoreB = 0.3 * scoreB + 0.7 * sizeB;
+    }
+
+    if (travelValueWeight > 0) {
+      const tvA = (travelScoreMap.get(a) ?? 50) / 100;
+      const tvB = (travelScoreMap.get(b) ?? 50) / 100;
+      scoreA = (1 - travelValueWeight) * scoreA + travelValueWeight * tvA;
+      scoreB = (1 - travelValueWeight) * scoreB + travelValueWeight * tvB;
+    }
+
     return scoreB - scoreA;
   });
 
