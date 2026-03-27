@@ -747,7 +747,12 @@ export function LandingPageContent({ initialLocale, country = 'US' }: LandingPag
       {/* FOOTER */}
       <footer className="border-t border-border py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-display font-semibold text-ink-muted text-sm">Leavewise</span>
+          <div className="flex items-center gap-4">
+            <span className="font-display font-semibold text-ink-muted text-sm">Leavewise</span>
+            <a href={locale === 'ko' ? '/ko/blog' : '/blog'} className="text-xs text-ink-muted hover:text-teal transition-colors">
+              {locale === 'ko' ? '블로그' : 'Blog'}
+            </a>
+          </div>
           <p className="text-xs text-ink-muted text-center md:text-right">
             {l.footerData}{' '}
             <a href="https://date.nager.at" target="_blank" rel="noopener noreferrer" className="underline hover:text-teal transition-colors">Nager.Date</a>

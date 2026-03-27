@@ -1876,3 +1876,371 @@ _These are cron-triggered agent tasks. Each prompt is what the OpenClaw cron job
 | R-02 | `docs/reports/monthly/{month}.md` (monthly) | — |
 | R-03 | `content/blog/*.md`, `docs/naver-blog/*.md` (biweekly) | — |
 | R-04 | `docs/reports/link-health/{date}.md` (weekly) | — |
+
+---
+---
+
+# Phase 4: Openclaw Autonomous Execution Tasks (March 2026+)
+
+> Added: 2026-03-26
+> These tasks are designed for fully autonomous agent execution.
+> Each task includes exact success criteria so the agent can self-verify.
+> Refer to `marketing.md` Section "Part 2: Openclaw Execution Playbook" for the content copy, prompts, and spike calendar.
+
+---
+
+## P4-01: Easter Blog Post — URGENT (Deadline: Mar 30, 2026)
+
+**Files created:** `content/blog/easter-long-weekend-2026.md` or equivalent blog route
+**Depends on:** P2-01 (blog infrastructure)
+**Priority:** CRITICAL — Easter is Apr 5, publish window closing
+
+### Agent Prompt
+
+```
+You are working in the project at /Users/constantlee/PTO-optimizer.
+Read AGENTS.md first. Read marketing.md Section A-01 for the exact content brief.
+
+TASK: Create the Easter 2026 blog post.
+
+1. Read the content brief in marketing.md under "A-01: Easter Window Blog Post"
+2. Follow the exact structure and tone described
+3. Write the post as a .md file at content/blog/easter-long-weekend-2026.md
+4. Include frontmatter: title, date (2026-03-28), slug, description, keywords
+5. Embed a link to /optimize with UTM params: ?utm_source=blog&utm_medium=content&utm_campaign=easter2026
+6. Include the day-by-day table as a markdown table
+7. Include meta description in frontmatter
+
+VERIFICATION:
+- File exists and has ≥800 words (run: wc -w content/blog/easter-long-weekend-2026.md)
+- Contains the UTM-tagged link to /optimize
+- Contains a markdown table showing the day-by-day breakdown
+- Contains at least 3 travel destination suggestions
+```
+
+**KPI:** Published by Mar 30. Indexed in Google by Apr 3.
+**Success criteria:** ≥200 organic clicks in 30 days. ≥5% CTR from post to /optimize.
+
+---
+
+## P4-02: Reddit Easter Seeding (Deadline: Mar 28, 2026)
+
+**Files created:** `docs/reddit/easter-2026-r-travel.md`
+**Depends on:** Nothing
+**Priority:** CRITICAL — must post before Easter week
+
+### Agent Prompt
+
+```
+You are working in the project at /Users/constantlee/PTO-optimizer.
+Read marketing.md Section B-01 for the exact Reddit post copy.
+
+TASK: Prepare the Reddit post for r/travel.
+
+1. Create docs/reddit/easter-2026-r-travel.md with the exact post content from marketing.md B-01
+2. At the top of the file, add posting instructions:
+   - Subreddit: r/travel
+   - Post date: March 28, 2026
+   - Post type: Text post
+   - Flair: "Trip Reports / Discussion" (or whatever r/travel allows)
+   - UTM link to use: leavewise.app/optimize?utm_source=reddit&utm_medium=community&utm_campaign=easter2026
+3. Add engagement rules at the bottom:
+   - Reply to every comment within 24 hours
+   - If asked about other holidays, calculate and share the specific bridge window
+   - Never be defensive if someone says "this is an ad" — just say "yeah I built it, happy to answer questions about the math"
+   - Do not post to another subreddit within 5 days
+
+VERIFICATION:
+- File exists at docs/reddit/easter-2026-r-travel.md
+- Contains the full post text
+- Contains the UTM-tagged link
+- Contains engagement rules
+```
+
+**KPI:** ≥20 upvotes, ≥100 referral clicks
+**Success criteria:** Post not removed. ≥5 comments. ≥3 organic reply threads.
+
+---
+
+## P4-03: Children's Day Korean Content (Deadline: Apr 5, 2026)
+
+**Files created:** `docs/naver-blog/childrens-day-2026.md`
+**Depends on:** Nothing
+**Priority:** HIGH — Children's Day is May 5
+
+### Agent Prompt
+
+```
+You are working in the project at /Users/constantlee/PTO-optimizer.
+Read marketing.md Section A-03 for the exact Naver Blog content brief.
+
+TASK: Create the Children's Day Korean blog post draft.
+
+1. Follow the content brief in marketing.md A-03 exactly
+2. Write the full post in Korean at docs/naver-blog/childrens-day-2026.md
+3. Include: Naver Blog tags, image placeholder descriptions, and CTA links
+4. Ensure post is ≥1,200 characters (Korean character count, not word count)
+5. Include the UTM link: leavewise.app/ko?utm_source=naver&utm_medium=blog&utm_campaign=childrens_day_2026
+
+VERIFICATION:
+- File exists and contains Korean text
+- Contains UTM-tagged link to leavewise.app/ko
+- Contains at least 2 strategy breakdowns with day-by-day tables
+- Contains Naver Blog tags section
+```
+
+**KPI:** ≥500 Naver views in April. Top 10 for "어린이날 연차 2026".
+**Success criteria:** ≥50 clicks to leavewise.app/ko. ≥3 이웃 additions.
+
+---
+
+## P4-04: Monthly Social Post Generator (Recurring — 1st of each month)
+
+**Files created:** `docs/social/YYYY-MM-window.md`
+**Depends on:** Nothing
+**Priority:** MEDIUM — consistency is key
+
+### Agent Prompt
+
+```
+You are working in the project at /Users/constantlee/PTO-optimizer.
+Read marketing.md Section A-06 for the post template.
+
+TASK: Generate the Window of the Month post for [CURRENT MONTH + 1].
+
+1. Check the 2026 holiday calendar for the target month
+2. Find the best PTO bridge opportunity (highest efficiency: days off / PTO cost)
+3. Write both English and Korean versions using the template in A-06
+4. Save to docs/social/YYYY-MM-window.md
+5. Include: exact post copy, hashtags, image description, posting channels
+
+The file must contain:
+- English Twitter/X post (≤280 characters)
+- Korean Instagram caption
+- Image design brief for the accompanying graphic
+- Posting date: 1st of the target month
+
+VERIFICATION:
+- File exists at docs/social/YYYY-MM-window.md
+- English post is ≤280 characters
+- Both posts contain a link to leavewise.app
+- Image description specifies teal color scheme, no gradients, no purple
+```
+
+**KPI:** ≥50 impressions per post (Twitter), ≥100 (Instagram)
+**Success criteria:** 100% monthly posting cadence maintained.
+
+---
+
+## P4-05: Chuseok Mega-Campaign Preparation (Deadline: Jul 15, 2026)
+
+**Files created:** `docs/naver-blog/chuseok-2026-guide.md`, `docs/social/chuseok-infographic-brief.md`, `docs/blind/chuseok-2026.md`, `docs/kakao/chuseok-2026-card.md`
+**Depends on:** Nothing
+**Priority:** HIGH — this is the single biggest traffic event for Korea
+
+### Agent Prompt
+
+```
+You are working in the project at /Users/constantlee/PTO-optimizer.
+Read marketing.md Sections A-04, B-03, and B-04 for all Chuseok content briefs.
+
+TASK: Prepare the complete Chuseok 2026 campaign kit.
+
+Create ALL of the following files:
+
+1. docs/naver-blog/chuseok-2026-guide.md — The 2,000-word definitive guide per A-04
+2. docs/blind/chuseok-2026.md — The Blind post per B-03, with engagement rules
+3. docs/kakao/chuseok-2026-card.md — The KakaoTalk infographic design brief per B-04
+4. docs/social/chuseok-instagram.md — Instagram carousel post (5 slides):
+   - Slide 1: "추석 황금연휴 2026"
+   - Slide 2: Strategy A (연차 0일 → 5일)
+   - Slide 3: Strategy B (연차 2일 → 10일)
+   - Slide 4: Strategy C (연차 4일 → 16일)
+   - Slide 5: CTA with leavewise.app/ko link
+
+All files must include:
+- Publishing date (Naver: Aug 10, Blind: Aug 15-20, KakaoTalk: Aug 20-Sep 15, Instagram: Aug 10)
+- UTM-tagged links appropriate to each channel
+- Success criteria from marketing.md
+
+VERIFICATION:
+- All 4 files exist in their respective directories
+- Naver post is ≥1,500 words in Korean
+- Blind post is ≤500 characters (Blind has a character limit)
+- All files contain UTM-tagged links
+- All files reference the correct Chuseok 2026 dates (Sep 24-26, substitute Sep 28)
+```
+
+**KPI:** Combined Chuseok campaign: ≥5,000 visits to leavewise.app/ko in Aug–Sep.
+**Success criteria:** #1 Naver result for "추석 황금연휴 2026". ≥200 Blind clicks. ≥50 KakaoTalk shares.
+
+---
+
+## P4-06: Memorial Day Blog Post (Deadline: Apr 20, 2026)
+
+**Files created:** `content/blog/memorial-day-2026-vacation.md`
+**Depends on:** P2-01
+
+### Agent Prompt
+
+```
+You are working in the project at /Users/constantlee/PTO-optimizer.
+Read marketing.md Section A-02 for the exact content brief.
+
+TASK: Create the Memorial Day 2026 blog post following A-02 exactly.
+Save to content/blog/memorial-day-2026-vacation.md with frontmatter.
+Include UTM link: ?utm_source=blog&utm_medium=content&utm_campaign=memday2026
+
+VERIFICATION:
+- File exists, ≥800 words
+- Contains day-by-day markdown table
+- Contains UTM-tagged optimizer link
+- Contains ≥3 travel destination suggestions
+```
+
+**KPI:** Page 1 for "memorial day 2026 vacation" within 45 days.
+**Success criteria:** ≥300 organic clicks in May.
+
+---
+
+## P4-07: Year-End PTO Rush Post (Deadline: Oct 15, 2026)
+
+**Files created:** `content/blog/use-remaining-pto-2026.md`
+**Depends on:** P2-01
+
+### Agent Prompt
+
+```
+Read marketing.md Section A-05. Create the year-end PTO blog post.
+Save to content/blog/use-remaining-pto-2026.md.
+UTM: ?utm_source=blog&utm_medium=content&utm_campaign=yearend2026
+
+VERIFICATION:
+- ≥1,000 words
+- Contains "2 days left / 3 days left / 5 days left / 8+ days left" scenarios
+- Contains the $2,500 stat with source attribution
+```
+
+**KPI:** ≥1,000 organic clicks in Oct–Dec.
+**Success criteria:** ≥12% CTR to /optimize.
+
+---
+
+## P4-08: Reddit Year-End Push (Deadline: Oct 20–25, 2026)
+
+**Files created:** `docs/reddit/yearend-pto-r-personalfinance.md`
+**Depends on:** Nothing
+
+### Agent Prompt
+
+```
+Read marketing.md Section B-02. Create the Reddit post for r/personalfinance.
+Save to docs/reddit/yearend-pto-r-personalfinance.md with post copy, engagement rules.
+UTM: ?utm_source=reddit&utm_medium=community&utm_campaign=yearend2026
+
+VERIFICATION:
+- File exists with full post copy
+- Includes the "$2,500 in lost compensation" hook
+- Includes 4 scenarios (2/3/5/8+ days remaining)
+```
+
+**KPI:** ≥100 upvotes. ≥500 clicks.
+**Success criteria:** ≥20 comments. Cross-shared by at least 1 user.
+
+---
+
+## P4-09: Email Nurture Sequence Setup (Deadline: Apr 15, 2026)
+
+**Files created:** `docs/email/nurture-sequence.md`
+**Depends on:** Resend API configured
+
+### Agent Prompt
+
+```
+Read marketing.md Section C-03. Create the email nurture sequence spec.
+Save to docs/email/nurture-sequence.md.
+
+Include:
+1. All 3 email templates with subject lines and body copy
+2. Send timing: Email 1 = immediate, Email 2 = Day 7, Email 3 = 4 weeks before next holiday
+3. Dynamic content rules: how to determine the "next upcoming best window" based on current date
+4. Resend API integration notes (reference existing .env.example RESEND_API_KEY)
+5. Unsubscribe compliance requirements (CAN-SPAM / Korean 정보통신망법)
+
+VERIFICATION:
+- File contains 3 complete email templates
+- Each template has subject line, body, CTA with UTM link
+- Contains dynamic content logic for date-based personalization
+```
+
+**KPI:** ≥30% open rate, ≥5% click rate on affiliate links.
+**Success criteria:** Sequence live within 2 weeks. ≥100 emails sent in first month.
+
+---
+
+## P4-10: TikTok/Reels Script Batch (Deadline: Apr 30, 2026)
+
+**Files created:** `docs/video/scripts/batch-01.md`
+**Depends on:** Nothing
+
+### Agent Prompt
+
+```
+Read marketing.md Section E-01. Generate the first batch of 8 video scripts.
+
+For each of the 3 templates (The Math, Did You Know, Holiday Bridge), write scripts for the next 8 upcoming holiday windows. Distribute templates so the batch has variety:
+- 3 × "The Math" scripts
+- 3 × "Did You Know" scripts
+- 2 × "Holiday Bridge" scripts
+
+Each script must include:
+1. Template type
+2. Duration (12/15/20 seconds)
+3. Exact spoken script with [PAUSES] marked
+4. Screen recording description (what the viewer sees)
+5. Text overlay copy
+6. Hashtags (≤10 per video)
+7. Target holiday/window and dates
+
+Save all 8 scripts in docs/video/scripts/batch-01.md.
+
+VERIFICATION:
+- File contains 8 complete scripts
+- Each script has all 7 required fields
+- Scripts use real 2026 dates (verify against holiday calendar)
+- No two scripts target the same holiday window
+```
+
+**KPI:** ≥1 video reaches 10K views within 7 days.
+**Success criteria:** All 8 videos produced and posted over 4 weeks (2/week cadence).
+
+---
+
+## Updated File Output Map (Phase 4)
+
+| Task | Files Created | Deadline |
+|------|--------------|----------|
+| P4-01 | `content/blog/easter-long-weekend-2026.md` | Mar 30 |
+| P4-02 | `docs/reddit/easter-2026-r-travel.md` | Mar 28 |
+| P4-03 | `docs/naver-blog/childrens-day-2026.md` | Apr 5 |
+| P4-04 | `docs/social/YYYY-MM-window.md` (monthly) | 1st of month |
+| P4-05 | `docs/naver-blog/chuseok-2026-guide.md`, `docs/blind/chuseok-2026.md`, `docs/kakao/chuseok-2026-card.md`, `docs/social/chuseok-instagram.md` | Jul 15 |
+| P4-06 | `content/blog/memorial-day-2026-vacation.md` | Apr 20 |
+| P4-07 | `content/blog/use-remaining-pto-2026.md` | Oct 15 |
+| P4-08 | `docs/reddit/yearend-pto-r-personalfinance.md` | Oct 20 |
+| P4-09 | `docs/email/nurture-sequence.md` | Apr 15 |
+| P4-10 | `docs/video/scripts/batch-01.md` | Apr 30 |
+
+---
+
+## Phase 4 Milestone Checkpoints
+
+| Checkpoint | Date | Criteria | Action if NOT Met |
+|-----------|------|----------|-------------------|
+| Easter content live | Mar 30 | Blog + Reddit posted | Deprioritize everything else until done |
+| May content pipeline | Apr 20 | Memorial Day + Children's Day posts ready | Extend deadline by 1 week max |
+| Social cadence established | May 1 | First 2 "Window of Month" posts published | Simplify to text-only posts, drop image requirement |
+| Video pilot complete | May 31 | ≥4 TikTok/Reels posted | Switch to static image carousel format |
+| Chuseok kit ready | Jul 15 | All 4 Chuseok files created | This is non-negotiable — Chuseok is the biggest KR event |
+| Email sequence live | Apr 15 | 3 emails configured in Resend | Start with email 1 only, add 2-3 later |
+| H2 content calendar set | Jul 1 | Jul–Dec blog posts planned with titles + keywords | Use marketing.md spike calendar as-is |
