@@ -98,7 +98,7 @@ export function WindowCard({
   return (
     <article
       role="article"
-      aria-label={`${w.label} — ${w.totalDays} days off using ${w.ptoDaysUsed} PTO${isBestWindow ? ' (best value)' : ''}`}
+      aria-label={`${w.label} — ${w.totalDays} days off using ${w.ptoDaysUsed} PTO${isBestWindow ? ' (most efficient)' : ''}`}
       className={`bg-white rounded-2xl border-l-4 border border-border ${accentColor} p-5 transition-all duration-200 cursor-default ${
         isHighlighted ? 'shadow-md ring-1 ring-teal/20' : 'hover:shadow-sm'
       } ${isBestWindow ? 'ring-2 ring-sage/20' : ''}`}
@@ -111,7 +111,7 @@ export function WindowCard({
             <span className="text-xs text-ink-muted font-medium truncate">{w.label}</span>
             {isBestWindow && (
               <span className="bg-sage text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0 leading-none">
-                Best value
+                Most efficient
               </span>
             )}
           </div>
@@ -332,10 +332,10 @@ export function WindowCard({
                 }`}
               >
                 {w.travelValueScore >= 70
-                  ? 'Great travel value'
+                  ? 'Cheap flights likely'
                   : w.travelValueScore >= 40
-                    ? 'Moderate travel value'
-                    : 'Peak travel period'}
+                    ? 'Average prices'
+                    : 'Expect higher prices'}
               </span>
             </div>
           )}
