@@ -5,7 +5,6 @@ import './globals.css';
 import { ToastProvider } from '@/components/Toast';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-const KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -17,7 +16,7 @@ const fraunces = Fraunces({
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
-  weight: ['300', '400', '500', '600'],
+  weight: ['400', '500'],
   display: 'swap',
 });
 
@@ -72,12 +71,6 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('leavewise_theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t}}catch(e){}})();`,
           }}
         />
-        {/* Travelpayouts affiliate tracking */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){var s=document.createElement("script");s.async=1;s.src="https://emrld.ltd/NTExNjE2.js?t=511616";document.head.appendChild(s);})();`,
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -104,18 +97,11 @@ export default function RootLayout({
           </Script>
         </>
       )}
-      {KAKAO_KEY && (
-        <>
-          <Script
-            src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
-            strategy="afterInteractive"
-            crossOrigin="anonymous"
-          />
-          <Script id="kakao-init" strategy="afterInteractive">
-            {`if(window.Kakao&&!window.Kakao.isInitialized()){window.Kakao.init('${KAKAO_KEY}');}`}
-          </Script>
-        </>
-      )}
+      {/* Travelpayouts affiliate tracking */}
+      <Script
+        src="https://emrld.ltd/NTExNjE2.js?t=511616"
+        strategy="afterInteractive"
+      />
       <body className="min-h-screen bg-cream">
         <a
           href="#main-content"

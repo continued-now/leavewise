@@ -1,14 +1,56 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import type { FormState, OptimizationResult, FlightDeal, HotelDeal, Strategy } from '@/lib/types';
-import { optimizePTO, LockedWindow } from '@/lib/optimizer';
-import { parseDates, fetchHolidaysForSettings } from '@/lib/api';
+import type { FormState, OptimizationResult, FlightDeal, HotelDeal, Strategy, VacationWindow, DayData } from '@/lib/types';
+import type { LockedWindow } from '@/lib/optimizer';
 import { downloadAllICS } from '@/lib/ics';
 import { trackOptimize, trackCalendarExport } from '@/lib/analytics';
 
 const COUNTRY_CURRENCY: Record<string, string> = { US: 'USD', KR: 'KRW' };
 
+// ---------------------------------------------------------------------------
+// API response types (dates arrive as ISO strings, need rehydration)
+// ---------------------------------------------------------------------------
+interface SerializedDay extends Omit<DayData, 'date'> {
+  date: string;
+}
+
+interface SerializedWindow extends Omit<VacationWindow, 'startDate' | 'endDate'> {
+  startDate: string;
+  endDate: string;
+}
+
+interface SerializedResult extends Omit<OptimizationResult, 'days' | 'windows'> {
+  days: SerializedDay[];
+  windows: SerializedWindow[];
+}
+
+interface OptimizeAPIResponse {
+  balanced: SerializedResult;
+  short?: SerializedResult;
+  long?: SerializedResult;
+  error?: string;
+}
+
+/** Rehydrate ISO date strings back to Date objects */
+function rehydrateResult(serialized: SerializedResult): OptimizationResult {
+  return {
+    ...serialized,
+    days: serialized.days.map((d) => ({
+      ...d,
+      date: new Date(d.date),
+    })),
+    windows: serialized.windows.map((w) => ({
+      ...w,
+      startDate: new Date(w.startDate),
+      endDate: new Date(w.endDate),
+    })),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Flight + hotel deal fetchers (unchanged)
+// ---------------------------------------------------------------------------
 async function fetchFlightDealsForWindows(
   windows: OptimizationResult['windows'],
   origin: string,
@@ -68,6 +110,43 @@ async function fetchHotelDealsForWindows(
   );
 }
 
+// ---------------------------------------------------------------------------
+// API call to server-side optimizer
+// ---------------------------------------------------------------------------
+async function callOptimizeAPI(
+  form: FormState,
+  lockedWindows: LockedWindow[],
+  allStrategies: boolean
+): Promise<OptimizeAPIResponse> {
+  const res = await fetch('/api/optimize', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      country: form.country,
+      year: form.year,
+      usState: form.usState,
+      leavePool: form.leavePool,
+      daysToAllocate: form.daysToAllocate,
+      maxDaysPerWindow: form.maxDaysPerWindow,
+      companyHolidaysRaw: form.companyHolidaysRaw,
+      prebookedRaw: form.prebookedRaw,
+      travelValueWeight: form.travelValueWeight,
+      lockedWindows,
+      allStrategies,
+    }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error ?? `Optimization failed (${res.status})`);
+  }
+
+  return res.json();
+}
+
+// ---------------------------------------------------------------------------
+// Hook
+// ---------------------------------------------------------------------------
 export function useOptimizerResults(
   form: FormState,
   setSelectedPTO: (s: Set<string>) => void,
@@ -149,10 +228,6 @@ export function useOptimizerResults(
       }
 
       try {
-        const holidays = await fetchHolidaysForSettings(form.year, form.country, form.usState);
-        const companyHolidayDates = parseDates(form.companyHolidaysRaw);
-        const prebookedDates = parseDates(form.prebookedRaw);
-
         const currentAllocations = windowAllocationsRef.current;
         const currentResult = resultRef.current;
         const lockedWindows: LockedWindow[] =
@@ -165,27 +240,23 @@ export function useOptimizerResults(
                 .filter((x): x is LockedWindow => x !== null)
             : [];
 
-        const baseOpts = {
-          budgetCap: form.daysToAllocate,
-          lockedWindows,
-          travelValueWeight: form.travelValueWeight,
-          homeCountry: form.country,
-        };
+        const allStrategies = !isAllocationAdjustment;
+        const apiResult = await callOptimizeAPI(form, lockedWindows, allStrategies);
 
-        const optimized = optimizePTO(
-          form.year, form.leavePool, holidays, companyHolidayDates, prebookedDates,
-          form.country, { ...baseOpts, maxWindowDays: form.maxDaysPerWindow, strategy: 'balanced' }
-        );
-        const shortResult = optimizePTO(
-          form.year, form.leavePool, holidays, companyHolidayDates, prebookedDates,
-          form.country, { ...baseOpts, maxWindowDays: 5, strategy: 'short' }
-        );
-        const longResult = optimizePTO(
-          form.year, form.leavePool, holidays, companyHolidayDates, prebookedDates,
-          form.country, { ...baseOpts, maxWindowDays: 28, strategy: 'long' }
-        );
+        if (apiResult.error) {
+          throw new Error(apiResult.error);
+        }
 
-        setStrategies({ short: shortResult, balanced: optimized, long: longResult });
+        const optimized = rehydrateResult(apiResult.balanced);
+
+        if (allStrategies && apiResult.short && apiResult.long) {
+          const shortResult = rehydrateResult(apiResult.short);
+          const longResult = rehydrateResult(apiResult.long);
+          setStrategies({ short: shortResult, balanced: optimized, long: longResult });
+        } else {
+          setStrategies((prev) => ({ ...prev, balanced: optimized }));
+        }
+
         setActiveStrategy('balanced');
         resultRef.current = optimized;
         setResult(optimized);

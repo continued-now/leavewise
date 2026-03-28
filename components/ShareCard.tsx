@@ -8,6 +8,7 @@ declare global {
   interface Window {
     Kakao?: {
       isInitialized: () => boolean;
+      init: (key: string) => void;
       Share: {
         sendDefault: (params: {
           objectType: string;
@@ -15,6 +16,25 @@ declare global {
         }) => void;
       };
     };
+  }
+}
+
+async function loadKakaoSDK(): Promise<void> {
+  if (window.Kakao?.isInitialized()) return;
+  // Load the script if not already present
+  if (!window.Kakao) {
+    await new Promise<void>((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js';
+      s.crossOrigin = 'anonymous';
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error('Failed to load Kakao SDK'));
+      document.head.appendChild(s);
+    });
+  }
+  const key = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
+  if (key && window.Kakao && !window.Kakao.isInitialized()) {
+    window.Kakao.init(key);
   }
 }
 
@@ -168,7 +188,7 @@ export function ShareCard(props: ShareCardProps) {
   const { year, totalLeave, totalDaysOff, windows, onClose } = props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
-  const [kakaoReady, setKakaoReady] = useState(false);
+  const [kakaoLoading, setKakaoLoading] = useState(false);
 
   const multiplier = totalLeave > 0
     ? (totalDaysOff / totalLeave).toFixed(1)
@@ -184,11 +204,6 @@ export function ShareCard(props: ShareCardProps) {
       drawShareCard(canvasRef.current, props);
     }
   }, [props]);
-
-  // Detect Kakao SDK availability after mount
-  useEffect(() => {
-    setKakaoReady(typeof window !== 'undefined' && !!window.Kakao?.isInitialized());
-  }, []);
 
   const handleDownload = useCallback(() => {
     if (!canvasRef.current) return;
@@ -220,23 +235,32 @@ export function ShareCard(props: ShareCardProps) {
     });
   }, [year, totalLeave, totalDaysOff, multiplier, sortedWindows, toast]);
 
-  const handleKakaoShare = useCallback(() => {
-    if (!window.Kakao?.isInitialized() || !canvasRef.current) return;
-    const imageUrl = canvasRef.current.toDataURL('image/png');
-    window.Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: `내 ${year}년 연차 플랜`,
-        description: `${totalLeave}일 연차 → ${totalDaysOff}일 휴가 (${multiplier}x)`,
-        imageUrl,
-        link: {
-          mobileWebUrl: window.location.href,
-          webUrl: window.location.href,
+  const handleKakaoShare = useCallback(async () => {
+    if (!canvasRef.current) return;
+    try {
+      setKakaoLoading(true);
+      await loadKakaoSDK();
+      if (!window.Kakao?.isInitialized()) return;
+      const imageUrl = canvasRef.current.toDataURL('image/png');
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: `내 ${year}년 연차 플랜`,
+          description: `${totalLeave}일 연차 → ${totalDaysOff}일 휴가 (${multiplier}x)`,
+          imageUrl,
+          link: {
+            mobileWebUrl: window.location.href,
+            webUrl: window.location.href,
+          },
         },
-      },
-    });
-    trackKakaoShare();
-  }, [year, totalLeave, totalDaysOff, multiplier]);
+      });
+      trackKakaoShare();
+    } catch {
+      toast('Failed to load KakaoTalk sharing');
+    } finally {
+      setKakaoLoading(false);
+    }
+  }, [year, totalLeave, totalDaysOff, multiplier, toast]);
 
   return (
     <div
@@ -387,15 +411,16 @@ export function ShareCard(props: ShareCardProps) {
 
         {/* Action buttons */}
         <div className="flex flex-col gap-2">
-        {kakaoReady && (
+        {process.env.NEXT_PUBLIC_KAKAO_APP_KEY && (
           <button
             onClick={handleKakaoShare}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FEE500] text-[#391B1B] text-sm font-semibold hover:bg-[#F0D800] transition-colors"
+            disabled={kakaoLoading}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FEE500] text-[#391B1B] text-sm font-semibold hover:bg-[#F0D800] transition-colors disabled:opacity-60"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 3C6.477 3 2 6.582 2 11c0 2.913 1.73 5.478 4.334 6.979l-.997 3.73a.307.307 0 00.455.338l4.372-2.916c.6.084 1.214.127 1.836.127 5.523 0 10-3.582 10-8s-4.477-8-10-8z"/>
             </svg>
-            카카오톡으로 공유
+            {kakaoLoading ? '로딩 중...' : '카카오톡으로 공유'}
           </button>
         )}
         <div className="flex items-center gap-3">

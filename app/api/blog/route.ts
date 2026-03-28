@@ -10,16 +10,20 @@ function getLocaleDir(locale: string) {
 }
 
 // GET /api/blog?locale=en — list all posts with full content
+// Optional pagination: ?page=1&limit=10
+// If no pagination params are sent, returns all posts for backward compatibility.
 export async function GET(request: NextRequest) {
   const locale = request.nextUrl.searchParams.get('locale') ?? 'en';
+  const pageParam = request.nextUrl.searchParams.get('page');
+  const limitParam = request.nextUrl.searchParams.get('limit');
   const dir = getLocaleDir(locale);
 
   if (!fs.existsSync(dir)) {
-    return NextResponse.json({ posts: [] });
+    return NextResponse.json({ posts: [], total: 0, page: 1, totalPages: 0 });
   }
 
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'));
-  const posts = files.map((file) => {
+  const allPosts = files.map((file) => {
     const raw = fs.readFileSync(path.join(dir, file), 'utf-8');
     const { data, content } = matter(raw);
     const publishDate = data.publishDate ?? data.date ?? '';
@@ -37,8 +41,21 @@ export async function GET(request: NextRequest) {
     };
   });
 
-  posts.sort((a, b) => (a.date > b.date ? -1 : 1));
-  return NextResponse.json({ posts });
+  allPosts.sort((a, b) => (a.date > b.date ? -1 : 1));
+
+  // If no pagination params, return all posts (backward compatible)
+  if (!pageParam && !limitParam) {
+    return NextResponse.json({ posts: allPosts });
+  }
+
+  const page = Math.max(1, parseInt(pageParam ?? '1', 10) || 1);
+  const limit = Math.max(1, Math.min(100, parseInt(limitParam ?? '10', 10) || 10));
+  const total = allPosts.length;
+  const totalPages = Math.ceil(total / limit);
+  const start = (page - 1) * limit;
+  const posts = allPosts.slice(start, start + limit);
+
+  return NextResponse.json({ posts, total, page, totalPages });
 }
 
 // POST /api/blog — create a new post

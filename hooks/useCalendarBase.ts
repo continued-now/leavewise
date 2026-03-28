@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import type { DayData, FormState } from '@/lib/types';
-import { buildCalendarBase } from '@/lib/optimizer';
+import { buildCalendarBase } from '@/lib/calendar-base';
 import { parseDates, fetchHolidaysForSettings } from '@/lib/api';
 import { computeLongWeekends } from '@/lib/longWeekends';
 

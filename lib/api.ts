@@ -63,17 +63,33 @@ const KR_EXTRA_HOLIDAYS: Record<number, { date: string; name: string; localName:
 /** Last date Korean holiday data was verified against government sources */
 export const KR_SUBSTITUTE_HOLIDAYS_VERIFIED = '2026-03-26';
 
-export async function fetchHolidaysForSettings(
+/**
+ * Server-side holiday fetcher — calls Nager.Date directly (not via /api/holidays).
+ * Used by the /api/optimize route to avoid internal HTTP round-trips.
+ */
+export async function fetchHolidaysServer(
   year: number,
   country: CountryCode,
   usState: string
 ): Promise<Holiday[]> {
-  const res = await fetch(`/api/holidays?year=${year}&country=${country}`);
+  const res = await fetch(
+    `https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`,
+    { headers: { Accept: 'application/json' } }
+  );
   if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    throw new Error(data.error ?? 'Failed to fetch holiday data');
+    throw new Error(`Holiday data not available for ${country} ${year}`);
   }
   let holidays: Holiday[] = await res.json();
+  return applyHolidayAdjustments(holidays, year, country, usState);
+}
+
+/** Shared post-processing for both client and server holiday fetching */
+function applyHolidayAdjustments(
+  holidays: Holiday[],
+  year: number,
+  country: CountryCode,
+  usState: string
+): Holiday[] {
   if (country === 'US') {
     holidays = holidays.filter(
       (h) =>
@@ -96,7 +112,6 @@ export async function fetchHolidaysForSettings(
   if (country === 'KR') {
     const existingDates = new Set(holidays.map((h) => h.date));
 
-    // Add holidays missing from Nager.Date (e.g. Constitution Day)
     const extras = KR_EXTRA_HOLIDAYS[year] ?? [];
     for (const extra of extras) {
       if (!existingDates.has(extra.date)) {
@@ -114,7 +129,6 @@ export async function fetchHolidaysForSettings(
       }
     }
 
-    // Add substitute holidays (대체공휴일)
     const substitutes = KR_SUBSTITUTE_HOLIDAYS[year] ?? [];
     for (const sub of substitutes) {
       if (!existingDates.has(sub.date)) {
@@ -132,4 +146,18 @@ export async function fetchHolidaysForSettings(
     }
   }
   return holidays;
+}
+
+export async function fetchHolidaysForSettings(
+  year: number,
+  country: CountryCode,
+  usState: string
+): Promise<Holiday[]> {
+  const res = await fetch(`/api/holidays?year=${year}&country=${country}`);
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error ?? 'Failed to fetch holiday data');
+  }
+  const holidays: Holiday[] = await res.json();
+  return applyHolidayAdjustments(holidays, year, country, usState);
 }
