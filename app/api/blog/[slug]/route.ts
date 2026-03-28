@@ -110,16 +110,23 @@ export async function PUT(
   const frontmatter = matter.stringify(updatedContent, updatedData);
 
   // If slug changed, write new file and delete old
-  if (newSlug && finalSlug !== slug) {
-    const dir = path.join(CONTENT_DIR, locale);
-    const newPath = path.join(dir, `${finalSlug}.md`);
-    if (fs.existsSync(newPath)) {
-      return NextResponse.json({ error: 'A post with the new slug already exists' }, { status: 409 });
+  try {
+    if (newSlug && finalSlug !== slug) {
+      const dir = path.join(CONTENT_DIR, locale);
+      const newPath = path.join(dir, `${finalSlug}.md`);
+      if (fs.existsSync(newPath)) {
+        return NextResponse.json({ error: 'A post with the new slug already exists' }, { status: 409 });
+      }
+      fs.writeFileSync(newPath, frontmatter, 'utf-8');
+      fs.unlinkSync(filePath);
+    } else {
+      fs.writeFileSync(filePath, frontmatter, 'utf-8');
     }
-    fs.writeFileSync(newPath, frontmatter, 'utf-8');
-    fs.unlinkSync(filePath);
-  } else {
-    fs.writeFileSync(filePath, frontmatter, 'utf-8');
+  } catch {
+    return NextResponse.json(
+      { error: 'Blog editing is not available in this environment' },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json({ success: true, slug: finalSlug });
@@ -138,6 +145,13 @@ export async function DELETE(
     return NextResponse.json({ error: 'Post not found' }, { status: 404 });
   }
 
-  fs.unlinkSync(filePath);
+  try {
+    fs.unlinkSync(filePath);
+  } catch {
+    return NextResponse.json(
+      { error: 'Blog deletion is not available in this environment' },
+      { status: 500 }
+    );
+  }
   return NextResponse.json({ success: true });
 }

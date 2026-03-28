@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { DayData } from '@/lib/types';
 import { buildFlightSearchLink } from '@/lib/affiliates';
+import { trackCalendarDayClick } from '@/lib/analytics';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April',
@@ -155,11 +156,11 @@ function MonthGrid({
               aria-label={`${MONTH_NAMES[month]} ${day.date.getDate()}${day.holidayName ? ` — ${day.holidayName}` : ''}${isSelected ? ' (PTO)' : ''}`}
               title={tooltip}
               tabIndex={day.isHoliday || (!isPast && !day.isFree) ? 0 : -1}
-              onClick={() => !isPast && onDayClick?.(day)}
+              onClick={() => { if (!isPast && onDayClick) { onDayClick(day); trackCalendarDayClick(); } }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  !isPast && onDayClick?.(day);
+                  if (!isPast && onDayClick) { onDayClick(day); trackCalendarDayClick(); }
                 }
               }}
               onMouseEnter={() => !isPast && isInWindow && onHoverWindow(day.windowId!)}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import AdminGate from '@/components/AdminGate';
 
 interface BlogPost {
   slug: string;
@@ -187,6 +188,7 @@ export default function BlogAdmin() {
   };
 
   return (
+    <AdminGate>
     <div className="max-w-4xl mx-auto px-6 py-12">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
@@ -474,5 +476,6 @@ export default function BlogAdmin() {
         </div>
       )}
     </div>
+    </AdminGate>
   );
 }

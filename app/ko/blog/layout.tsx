@@ -4,6 +4,16 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: { template: '%s | Leavewise 블로그', default: '블로그 — Leavewise' },
   description: '공휴일을 활용한 연차 최적화 팁과 전략.',
+  alternates: {
+    canonical: '/ko/blog',
+    languages: {
+      en: '/blog',
+      ko: '/ko/blog',
+    },
+    types: {
+      'application/rss+xml': '/ko/blog/feed.xml',
+    },
+  },
 };
 
 export default function KoBlogLayout({ children }: { children: React.ReactNode }) {

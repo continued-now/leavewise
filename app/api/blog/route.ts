@@ -98,7 +98,14 @@ export async function POST(request: NextRequest) {
   }
   const frontmatter = matter.stringify(content, meta);
 
-  fs.writeFileSync(filePath, frontmatter, 'utf-8');
+  try {
+    fs.writeFileSync(filePath, frontmatter, 'utf-8');
+  } catch {
+    return NextResponse.json(
+      { error: 'Blog editing is not available in this environment' },
+      { status: 500 }
+    );
+  }
 
   return NextResponse.json({ success: true, slug: safeSlug }, { status: 201 });
 }

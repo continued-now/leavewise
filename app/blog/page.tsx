@@ -10,7 +10,7 @@ export default function BlogIndex() {
     <div className="max-w-3xl mx-auto px-6 py-12 sm:py-16">
       <h1 className="font-display text-3xl font-semibold text-ink mb-2">Blog</h1>
       <p className="text-ink-muted text-sm mb-10">
-        Tips and strategies for getting the most out of your time off.
+        Vacation hacks, holiday bridge guides, and PTO strategies.
       </p>
 
       {posts.length === 0 ? (

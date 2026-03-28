@@ -2,17 +2,20 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { WindowCard } from '@/components/WindowCard';
 import { InteractiveCalendar } from '@/components/InteractiveCalendar';
-import { HolidayPanel } from '@/components/HolidayPanel';
-
-import { ShareCard } from '@/components/ShareCard';
+import { EfficiencyBadge } from '@/components/EfficiencyBadge';
 import { useToast } from '@/components/Toast';
 import { SectionLabel } from '@/components/optimize/SectionLabel';
 import { NumberStepper } from '@/components/optimize/NumberStepper';
 import { CollapsibleSection } from '@/components/optimize/CollapsibleSection';
 import { LongWeekendCard } from '@/components/optimize/LongWeekendCard';
-import { ExpandedLongWeekendModal } from '@/components/optimize/ExpandedLongWeekendModal';
+import { OnboardingTour } from '@/components/OnboardingTour';
+
+const ShareCard = dynamic(() => import('@/components/ShareCard').then((mod) => mod.ShareCard), { ssr: false });
+const ExpandedLongWeekendModal = dynamic(() => import('@/components/optimize/ExpandedLongWeekendModal').then((mod) => mod.ExpandedLongWeekendModal), { ssr: false });
+const HolidayPanel = dynamic(() => import('@/components/HolidayPanel').then((mod) => mod.HolidayPanel), { ssr: false });
 import { useThemeLocale } from '@/hooks/useThemeLocale';
 import { useFormState, DEFAULT_FORM, encodeShareURL } from '@/hooks/useFormState';
 import { useCalendarBase } from '@/hooks/useCalendarBase';
@@ -21,6 +24,7 @@ import { useOptimizerResults } from '@/hooks/useOptimizerResults';
 import { parseDates, KR_SUBSTITUTE_HOLIDAYS_VERIFIED as KR_SUBSTITUTE_VERIFIED } from '@/lib/api';
 import { US_STATES, COUNTRY_CURRENCY } from '@/lib/countries';
 import { generatePlanSummary, getStateName } from '@/lib/planUtils';
+import { trackStrategySwitch } from '@/lib/analytics';
 import type { CountryCode, Strategy } from '@/lib/types';
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -290,7 +294,7 @@ export default function OptimizePage() {
       </nav>
 
       {/* STATS BAR */}
-      <div className="bg-white border-b border-border/60 print:hidden">
+      <div className="bg-white border-b border-border/60 print:hidden" aria-live="polite">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3 overflow-x-auto scrollbar-none text-xs min-h-[38px]">
           {calendarLoading ? (
             <span className="text-ink-muted/60 animate-pulse">
@@ -317,6 +321,10 @@ export default function OptimizePage() {
                 </span>
                 <span className="text-ink-muted">{locale === 'ko' ? '효율' : 'efficiency'}</span>
               </div>
+              <EfficiencyBadge
+                efficiency={result.totalDaysOff / Math.max(1, result.totalLeaveUsed)}
+                country={form.country}
+              />
               <div className="w-px h-3 bg-border shrink-0" />
               <div className="flex items-center gap-1.5 shrink-0">
                 <span className="font-semibold text-ink">{result.windows.length}</span>
@@ -507,7 +515,7 @@ export default function OptimizePage() {
               )}
 
               {/* Location */}
-              <div>
+              <div data-tour="location">
                 <SectionLabel>{l.location}</SectionLabel>
                 <div className="flex gap-2 mb-3">
                   {([
@@ -603,6 +611,7 @@ export default function OptimizePage() {
 
               {/* Optimize Button */}
               <button
+                data-tour="optimize-button"
                 onClick={() => { handleOptimize(); handleSidebarInteraction(); }}
                 disabled={loading || totalLeave === 0}
                 className={`w-full bg-teal text-white font-semibold py-3 rounded-xl hover:bg-teal-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm flex items-center justify-center gap-2 ${
@@ -832,11 +841,11 @@ export default function OptimizePage() {
           )}
 
           {/* ── MAIN CONTENT ── */}
-          <main className="flex-1 min-w-0" role="main" aria-label="Calendar and results">
+          <main id="main-content" className="flex-1 min-w-0" role="main" aria-label="Calendar and results">
           <div className="flex flex-col gap-8">
 
             {/* Results section */}
-            <div ref={resultsAreaRef} className="w-full order-3 space-y-8">
+            <div ref={resultsAreaRef} tabIndex={-1} className="w-full order-3 space-y-8 outline-none">
 
             {result && (
               <div className="space-y-5">
@@ -1096,7 +1105,7 @@ export default function OptimizePage() {
 
             {/* Strategy comparison — above calendar when results exist */}
             {result && strategies.balanced && (
-              <div className="w-full order-1">
+              <div className="w-full order-1" data-tour="strategy-cards">
                 <div className="bg-white rounded-2xl border border-border p-4">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-semibold text-ink">Compare strategies</span>
@@ -1112,7 +1121,7 @@ export default function OptimizePage() {
                       return (
                         <button
                           key={key}
-                          onClick={() => setActiveStrategy(key)}
+                          onClick={() => { setActiveStrategy(key); trackStrategySwitch(key); }}
                           className={`text-left p-3 rounded-xl border transition-all ${isActive ? 'border-teal bg-teal/5 shadow-sm' : 'border-border hover:border-teal/30'}`}
                         >
                           <div className="flex items-center gap-1.5 mb-1">
@@ -1147,7 +1156,7 @@ export default function OptimizePage() {
             )}
 
             {/* Calendar — front and center */}
-            <div className="w-full order-2 space-y-3">
+            <div className="w-full order-2 space-y-3" data-tour="calendar">
             {calendarLoading ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -1284,6 +1293,9 @@ export default function OptimizePage() {
           </div>
         </>
       )}
+
+      {/* Onboarding tour */}
+      <OnboardingTour />
     </div>
   );
 }

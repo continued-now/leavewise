@@ -29,10 +29,18 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://leavewise.app'),
   title: 'Leavewise — Turn PTO into maximum time off',
   description:
-    'Leavewise finds every holiday bridge, long weekend, and calendar gap in your year — so you spend fewer PTO days and get more life.',
+    'Leavewise finds every holiday bridge, long weekend, and calendar gap in your year — so you get more time off without burning more days.',
   robots: { index: true, follow: true },
+  alternates: {
+    canonical: '/',
+    languages: {
+      en: '/',
+      ko: '/ko',
+    },
+  },
   openGraph: {
     title: 'Leavewise — Turn PTO into maximum time off',
     description: 'Smart vacation planning around public holidays. Free forever.',
@@ -109,6 +117,12 @@ export default function RootLayout({
         </>
       )}
       <body className="min-h-screen bg-cream">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-teal focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-semibold"
+        >
+          Skip to main content
+        </a>
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>

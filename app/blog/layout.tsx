@@ -4,6 +4,16 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: { template: '%s | Leavewise Blog', default: 'Blog — Leavewise' },
   description: 'Tips and strategies for maximizing your paid time off around public holidays.',
+  alternates: {
+    canonical: '/blog',
+    languages: {
+      en: '/blog',
+      ko: '/ko/blog',
+    },
+    types: {
+      'application/rss+xml': '/blog/feed.xml',
+    },
+  },
 };
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {

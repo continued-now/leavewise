@@ -12,15 +12,15 @@ const t = {
   en: {
     navCta: 'Try it free',
     badge: '100+ countries · Free forever',
-    heroTitle1: 'Work less.',
-    heroTitle2: 'Be gone',
-    heroTitle3: 'longer.',
-    heroSub: 'Leavewise finds every holiday bridge, long weekend, and calendar gap in your year — so you spend fewer PTO days and get more life.',
-    heroCta: 'Plan my time off',
+    heroTitle1: 'Take longer',
+    heroTitle2: 'vacations',
+    heroTitle3: 'without using more PTO.',
+    heroSub: 'Leavewise finds every holiday bridge, long weekend, and calendar gap in your year — so you get more time off without burning more days.',
+    heroCta: 'See my optimized plan',
     heroNote: 'No signup required',
     heroAccountNote: 'No account, no password, no drama. Only sign up if you want us to keep track of your PTO.',
 
-    calcTitle: 'How far can your PTO stretch?',
+    calcTitle: 'What could you do with your PTO days?',
     calcSub: 'Drag the slider to see what Leavewise can do with your days.',
     calcPrefix: 'I have',
     calcSuffix: 'PTO days',
@@ -29,12 +29,12 @@ const t = {
     calcEfficiency: 'efficiency',
     calcCta: 'See my personalized plan',
 
-    trustBrowser: 'Runs in your browser',
-    trustBrowserSub: 'Nothing stored on servers',
+    trustBrowser: 'Your data stays on your device',
+    trustBrowserSub: 'Period',
     trustNoAccount: 'No account needed',
     trustNoAccountSub: 'Start planning instantly',
-    trustFree: 'Free forever',
-    trustFreeSub: 'No premium tier, no paywall',
+    trustFree: '100% free',
+    trustFreeSub: 'No upsells, ever',
     trustCountries: '100+ countries',
     trustCountriesSub: 'Official holiday data',
 
@@ -64,19 +64,19 @@ const t = {
     perfect3: 'Expats and immigrants navigating new holiday calendars',
     perfect4: 'Families planning school-break trips without burning all PTO',
     perfect5: 'Frequent travelers who want flights aligned to PTO windows',
-    perfect6: 'Anyone who feels guilty taking time off but shouldn\'t',
+    perfect6: 'Anyone who\'s ever felt guilty using their own PTO',
 
     sampleTitle: 'Sample optimized windows',
     sampleSub: 'Real suggestions Leavewise generates for the US in 2026.',
     sampleDaysOff: 'days off',
     samplePto: 'PTO',
 
-    proofTitle: 'People love this',
+    proofTitle: 'Real plans, real trips',
     proofSub: 'Office workers who stopped leaving PTO on the table.',
 
     faqTitle: 'Common questions',
     faqSub: 'Everything you want to know before you start.',
-    faq1Q: 'Is this really free?',
+    faq1Q: 'What\'s the catch?',
     faq1A: 'Yes, completely free — no account, no paywall, no "premium tier". The tool runs entirely in your browser. We make money through affiliate links when you choose to book flights.',
     faq2Q: 'What countries are supported?',
     faq2A: 'We pull official public holiday data for 100+ countries including US (with state-level holidays), South Korea, Canada, UK, Germany, Japan, Australia, and many more. Company-specific holidays can be added manually.',
@@ -88,10 +88,10 @@ const t = {
     faq5A: 'Currently Leavewise is designed for individual planning. You can share your optimized plan via a link or by downloading the calendar file (.ics).',
 
     ctaTitle: 'Stop wasting PTO days',
-    ctaSub: 'The average office worker leaves 3-5 bonus vacation days on the table every year by not aligning PTO with holidays.',
+    ctaSub: 'You\'re probably leaving 3\u20135 free vacation days on the table this year.',
     ctaNote: 'Takes 30 seconds. No account. No catch.',
-    ctaBtn: 'Plan my time off',
-    mobileCta: 'Plan my time off — it\'s free',
+    ctaBtn: 'See my optimized plan',
+    mobileCta: 'Get my free plan',
 
     footerData: 'Holiday data from',
     footerFlights: 'Flight links via affiliate programs.',
@@ -119,7 +119,7 @@ const t = {
     calPto: 'PTO', calHol: 'Holiday', calWknd: 'Weekend',
     calDaysOff: 'days off', calPtoUsed: 'PTO used',
 
-    emailTitle: 'Get your free 2026 PTO calendar',
+    emailTitle: 'Get every 2026 bridge day in one calendar',
     emailSub: 'A printable calendar with every holiday and optimized window highlighted. No spam, unsubscribe anytime.',
     emailPlaceholder: 'you@company.com',
     emailCta: 'Get it free',
@@ -690,6 +690,23 @@ export function LandingPageContent({ initialLocale, country = 'US' }: LandingPag
 
       {/* FAQ */}
       <section className="max-w-2xl mx-auto px-6 pb-20">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: faqItems.map((item) => ({
+                '@type': 'Question',
+                name: item.q,
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: item.a,
+                },
+              })),
+            }),
+          }}
+        />
         <h2 className="text-3xl font-display font-semibold text-ink mb-2 text-center">{l.faqTitle}</h2>
         <p className="text-ink-muted text-center text-sm mb-10">{l.faqSub}</p>
         <div className="bg-white rounded-2xl border border-border px-6">

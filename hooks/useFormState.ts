@@ -3,21 +3,24 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { FormState, StoredState, ShareableSnapshot, CountryCode } from '@/lib/types';
 import { inferAirport } from '@/lib/airports';
+import { COUNTRY_CONFIG } from '@/lib/countries-config';
 
 const STORAGE_KEY = 'leavewise_state_v1';
 const CURRENT_YEAR = new Date().getFullYear();
+
+const defaultCountryConfig = COUNTRY_CONFIG['US'];
 
 export const DEFAULT_FORM: FormState = {
   country: 'US',
   usState: 'US-NY',
   year: CURRENT_YEAR,
-  leavePool: { ptoDays: 15, compDays: 0, floatingHolidays: 0 },
-  daysToAllocate: 15,
+  leavePool: { ptoDays: defaultCountryConfig.avgPtoDays, compDays: 0, floatingHolidays: 0 },
+  daysToAllocate: defaultCountryConfig.avgPtoDays,
   maxDaysPerWindow: 14,
   companyName: '',
   companyHolidaysRaw: '',
   prebookedRaw: '',
-  homeAirport: inferAirport('US'),
+  homeAirport: defaultCountryConfig.defaultAirport,
   airportManuallySet: false,
   travelValueWeight: 0,
 };
@@ -113,7 +116,15 @@ export function useFormState(selectedPTO: Set<string>) {
         }
       } catch { /* ok */ }
     }
-    return fallbackCountry === 'US' ? DEFAULT_FORM : { ...DEFAULT_FORM, country: fallbackCountry };
+    if (fallbackCountry === 'US') return DEFAULT_FORM;
+    const cfg = COUNTRY_CONFIG[fallbackCountry];
+    return {
+      ...DEFAULT_FORM,
+      country: fallbackCountry,
+      homeAirport: cfg?.defaultAirport ?? inferAirport(fallbackCountry),
+      leavePool: { ...DEFAULT_FORM.leavePool, ptoDays: cfg?.avgPtoDays ?? DEFAULT_FORM.leavePool.ptoDays },
+      daysToAllocate: cfg?.avgPtoDays ?? DEFAULT_FORM.daysToAllocate,
+    };
   });
 
   const [initialPTO] = useState<string[]>(() => {
@@ -149,11 +160,23 @@ export function useFormState(selectedPTO: Set<string>) {
   }, []);
 
   const handleCountryChange = useCallback((code: CountryCode) => {
-    setForm((f) => ({
-      ...f,
-      country: code,
-      homeAirport: f.airportManuallySet ? f.homeAirport : inferAirport(code),
-    }));
+    const cfg = COUNTRY_CONFIG[code];
+    setForm((f) => {
+      const newAirport = f.airportManuallySet ? f.homeAirport : (cfg?.defaultAirport ?? inferAirport(code));
+      const newPtoDays = cfg?.avgPtoDays ?? f.leavePool.ptoDays;
+      const oldTotal = f.leavePool.ptoDays + f.leavePool.compDays + f.leavePool.floatingHolidays;
+      const newPool = { ...f.leavePool, ptoDays: newPtoDays };
+      const newTotal = newPool.ptoDays + newPool.compDays + newPool.floatingHolidays;
+      // If user hadn't manually changed daysToAllocate from the old total, update it to the new total
+      const newDaysToAllocate = f.daysToAllocate >= oldTotal ? newTotal : Math.min(f.daysToAllocate, newTotal);
+      return {
+        ...f,
+        country: code,
+        homeAirport: newAirport,
+        leavePool: newPool,
+        daysToAllocate: newDaysToAllocate,
+      };
+    });
   }, []);
 
   const clearSavedState = useCallback(() => {

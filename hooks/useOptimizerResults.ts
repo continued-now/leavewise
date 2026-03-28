@@ -218,6 +218,7 @@ export function useOptimizerResults(
 
         setTimeout(() => {
           resultsAreaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          resultsAreaRef.current?.focus();
         }, 150);
 
         setSidebarOpen(false);

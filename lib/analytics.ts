@@ -15,7 +15,7 @@ export function trackOptimize(country: string, ptoDays: number): void {
   send('optimize_pto', { country, pto_days: ptoDays });
 }
 
-export function trackAffiliateClick(windowLabel: string, type: 'flight' | 'hotel' | 'compare' | 'activities' | 'attractions' | 'esim'): void {
+export function trackAffiliateClick(windowLabel: string, type: 'flight' | 'hotel' | 'compare' | 'activities' | 'attractions' | 'esim' | 'google_cal'): void {
   send('affiliate_click', { window_label: windowLabel, link_type: type });
 }
 
@@ -33,4 +33,24 @@ export function trackEmailSignup(): void {
 
 export function trackKakaoShare(): void {
   send('kakao_share');
+}
+
+export function trackCalendarDayClick(): void {
+  send('calendar_day_click');
+}
+
+export function trackStrategySwitch(strategy: string): void {
+  send('strategy_switch', { strategy });
+}
+
+export function trackSidebarToggle(section: string): void {
+  send('sidebar_toggle', { section });
+}
+
+export function trackFlightCtaView(days: number): void {
+  send('flight_cta_view', { days });
+}
+
+export function trackBlogScrollDepth(depth: number): void {
+  send('blog_scroll_depth', { depth });
 }
