@@ -9,7 +9,6 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-fraunces',
-  axes: ['opsz'],
   display: 'swap',
 });
 
@@ -100,7 +99,7 @@ export default function RootLayout({
       {/* Travelpayouts affiliate tracking */}
       <Script
         src="https://emrld.ltd/NTExNjE2.js?t=511616"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
       <body className="min-h-screen bg-cream">
         <a

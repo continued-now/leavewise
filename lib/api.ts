@@ -63,28 +63,8 @@ const KR_EXTRA_HOLIDAYS: Record<number, { date: string; name: string; localName:
 /** Last date Korean holiday data was verified against government sources */
 export const KR_SUBSTITUTE_HOLIDAYS_VERIFIED = '2026-03-26';
 
-/**
- * Server-side holiday fetcher — calls Nager.Date directly (not via /api/holidays).
- * Used by the /api/optimize route to avoid internal HTTP round-trips.
- */
-export async function fetchHolidaysServer(
-  year: number,
-  country: CountryCode,
-  usState: string
-): Promise<Holiday[]> {
-  const res = await fetch(
-    `https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`,
-    { headers: { Accept: 'application/json' } }
-  );
-  if (!res.ok) {
-    throw new Error(`Holiday data not available for ${country} ${year}`);
-  }
-  let holidays: Holiday[] = await res.json();
-  return applyHolidayAdjustments(holidays, year, country, usState);
-}
-
 /** Shared post-processing for both client and server holiday fetching */
-function applyHolidayAdjustments(
+export function applyHolidayAdjustments(
   holidays: Holiday[],
   year: number,
   country: CountryCode,

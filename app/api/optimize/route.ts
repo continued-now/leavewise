@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { checkRateLimit } from '@/lib/rate-limit';
-import { fetchHolidaysServer, parseDates } from '@/lib/api';
+import { fetchHolidaysServer } from '@/lib/api.server';
+import { parseDates } from '@/lib/api';
 import { optimizePTO } from '@/lib/optimizer';
 import type { CountryCode, OptimizationResult } from '@/lib/types';
 
