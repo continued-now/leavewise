@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 160" fill="none">
+  <rect width="800" height="160" rx="16" fill="#1A6363"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#FFF" opacity="0.6" letter-spacing="1">항공권 예약 타임라인</text>
+
+  <!-- Track -->
+  <rect x="48" y="62" width="704" height="4" rx="2" fill="#FFF" opacity="0.12"/>
+
+  <!-- Month markers -->
+  <g font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.5">
+    <text x="48" y="52" text-anchor="middle">4월</text>
+    <text x="189" y="52" text-anchor="middle">5월</text>
+    <text x="330" y="52" text-anchor="middle">6월</text>
+    <text x="471" y="52" text-anchor="middle">7월</text>
+    <text x="612" y="52" text-anchor="middle">8월</text>
+  </g>
+
+  <!-- Month tick marks -->
+  <g fill="#FFF" opacity="0.3">
+    <rect x="47" y="58" width="2" height="12" rx="1"/>
+    <rect x="188" y="58" width="2" height="12" rx="1"/>
+    <rect x="329" y="58" width="2" height="12" rx="1"/>
+    <rect x="470" y="58" width="2" height="12" rx="1"/>
+    <rect x="611" y="58" width="2" height="12" rx="1"/>
+  </g>
+
+  <!-- Now marker -->
+  <circle cx="48" cy="64" r="7" fill="#D95740"/>
+  <circle cx="48" cy="64" r="3" fill="#FFF"/>
+  <text x="68" y="44" text-anchor="start" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FFF">지금</text>
+
+  <!-- Sweet spot highlight (now through May) -->
+  <rect x="40" y="59" width="190" height="10" rx="5" fill="#FFF" opacity="0.18"/>
+
+  <!-- Holiday markers -->
+  <circle cx="495" cy="64" r="5" fill="#FFF" opacity="0.4"/>
+  <text x="495" y="44" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#FFF" opacity="0.6">7/17 제헌절</text>
+
+  <circle cx="650" cy="64" r="5" fill="#FFF" opacity="0.4"/>
+  <text x="650" y="44" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#FFF" opacity="0.6">8/15 광복절</text>
+
+  <!-- Price climb indicators -->
+  <g font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.45">
+    <text x="340" y="56">+10%</text>
+    <text x="440" y="56">+25%</text>
+    <text x="580" y="56">+30%</text>
+  </g>
+
+  <!-- Booking windows -->
+  <g font-family="system-ui, sans-serif" fill="#FFF">
+    <!-- Best price window -->
+    <rect x="48" y="88" width="220" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="158" y="108" text-anchor="middle" font-size="12" font-weight="600">최적 예약 구간</text>
+    <text x="158" y="124" text-anchor="middle" font-size="11" opacity="0.6">5월까지 — 기준가 최저</text>
+
+    <!-- 제헌절 travel -->
+    <rect x="288" y="88" width="220" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="398" y="108" text-anchor="middle" font-size="12" font-weight="600">7월 제헌절 여행</text>
+    <text x="398" y="124" text-anchor="middle" font-size="11" opacity="0.6">6월 이후 +10~25% 상승</text>
+
+    <!-- 광복절 travel -->
+    <rect x="528" y="88" width="224" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="640" y="108" text-anchor="middle" font-size="12" font-weight="600">8월 광복절 여행</text>
+    <text x="640" y="124" text-anchor="middle" font-size="11" opacity="0.6">7월 직전 +25~40% 급등</text>
+  </g>
+</svg>

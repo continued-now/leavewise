@@ -11,6 +11,8 @@ keywords: ["memorial day 2026 vacation", "memorial day 2026 long weekend", "may 
 
 Memorial Day 2026 falls on Monday, May 25. Most people get a 3-day weekend and call it good. With a little planning, you can turn it into a proper 9-day vacation.
 
+![Calendar showing the Memorial Day 2026 PTO window: 4 PTO days from May 19-22 combined with weekends and the holiday for 9 days off](/blog/memorial-day-calendar.svg)
+
 ## The Play
 
 Take Tuesday through Friday off the week before Memorial Day:
@@ -42,6 +44,8 @@ That single Friday before Memorial Day is one of the highest-value PTO days of t
 
 ## Where to Go in Late May
 
+![Destination cards for Memorial Day travel: Puerto Rico beaches, Greece islands, Portugal coast, and San Diego](/blog/memorial-day-destinations.svg)
+
 Late May sits in a sweet spot: warm enough for beaches, not yet peak summer pricing.
 
 **Beaches without the June markup:**
@@ -55,6 +59,8 @@ Late May sits in a sweet spot: warm enough for beaches, not yet peak summer pric
 - **Costa Rica** — The "green season" (rainy) starts in May, but mornings are sunny and prices drop 30%. Nine days is plenty for Pacific coast + cloud forests.
 
 ## Booking Strategy
+
+![Booking timeline for Memorial Day showing domestic flights, international flights, and hotel windows from March through late May](/blog/memorial-day-booking.svg)
 
 Memorial Day travel is predictable. Here's the pricing curve:
 

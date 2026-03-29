@@ -14,6 +14,8 @@ By February, the holiday glow has faded and spring feels far away. Presidents' D
 
 In 2026, Presidents' Day falls on **Monday, February 16**. That's a guaranteed 3-day weekend for anyone whose employer observes it (most do — it's a federal holiday).
 
+![Calendar showing the Presidents Day 2026 PTO window: 2 PTO days on February 12-13 combined with the weekend and holiday for 5 days off](/blog/presidents-day-calendar.svg)
+
 ## Extending to 5 Days
 
 Take Thursday and Friday off before the long weekend:
@@ -41,6 +43,8 @@ Presidents' Day weekend is peak ski season, but there's a nuance:
 **The secret play:** Ski Thursday–Saturday, rest Sunday, enjoy the empty mountain Monday morning when everyone else is driving home.
 
 ## Best Ski Destinations for a 5-Day Trip
+
+![Destination cards for Presidents Day ski trips: Park City, Breckenridge, Jackson Hole, and Palm Springs](/blog/presidents-day-destinations.svg)
 
 **Western US:**
 - **Park City, Utah** — Consistent February snow. Two resorts (Park City + Deer Valley) in walking distance. SLC airport is 35 minutes from the slopes.

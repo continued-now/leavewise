@@ -8,6 +8,8 @@ keywords: ["long weekends 2026", "2026 vacation planning", "US holidays 2026", "
 
 ## Your 2026 Long Weekend Map
 
+![Month-by-month overview of 2026 US holidays showing efficiency ratings from 2.3x to 4.0x for each long weekend opportunity](/blog/long-weekends-overview.svg)
+
 2026 is a strong year for long weekends. Several federal holidays fall on Thursdays and Mondays, creating natural bridge opportunities. Here's every one worth knowing about.
 
 ## January
@@ -90,6 +92,10 @@ If your employer gives Dec 24 as well: take just Dec 29–31 → 10 days for 3 P
 PTO cost: 3 days. Days off: 10. Efficiency: 3.3x.
 
 ## The Bottom Line
+
+![PTO budget strategy comparison: 5 days gets 2 long weekends, 10 days gets 3 extended breaks, 15 days covers every major holiday plus a summer escape](/blog/long-weekends-budgets.svg)
+
+![2026 summary: 11 federal holidays in a strong year, 15 PTO days needed at average US budget, 35-40 total days off at more than double the random approach](/blog/long-weekends-bottom-line.svg)
 
 With 15 PTO days, a US worker can realistically get **35–40 total days off** in 2026 by stacking around holidays. That's more than double what most people achieve by taking random weeks off.
 

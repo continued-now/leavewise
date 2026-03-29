@@ -15,6 +15,8 @@ It's October. If you have unused PTO, the clock is ticking. But the good news: Q
 
 ## Your Remaining Days Playbook
 
+![Four columns showing optimal PTO use by days remaining: 2 days gets 6 off at Thanksgiving, 3 days gets 11 off over Christmas, 5 days gets 17 off across both, and 8 plus days covers all of Q4](/blog/remaining-pto-playbook.svg)
+
 ### You Have 2 Days Left
 
 **Best move: Thanksgiving extension**
@@ -77,6 +79,8 @@ If your company has a **PTO use-it-or-lose-it policy with a December deadline**,
 
 ## Why You Should Plan Now, Not Later
 
+![Q4 booking timeline showing price increases from October baseline to December surge pricing](/blog/remaining-pto-booking.svg)
+
 Every week you wait in Q4, travel prices climb:
 
 - **October bookings** for November travel: baseline pricing
@@ -86,6 +90,8 @@ Every week you wait in Q4, travel prices climb:
 The difference between booking a Christmas trip in October versus December can be $300–$800 per person on flights alone.
 
 ## Quick Destinations for a November Escape
+
+![Four destination cards for November: Mexico City, Sedona, Savannah, and Puerto Rico with weather and pricing highlights](/blog/remaining-pto-destinations.svg)
 
 November is off-peak almost everywhere that isn't a ski resort:
 

@@ -201,6 +201,132 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* ── Blog prose refinements ── */
+.prose img {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 16px;
+}
+
+.prose table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #E5E2DA;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.prose thead {
+  background: #1A6363;
+}
+
+.prose thead th {
+  color: white;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-bottom: none;
+  text-align: left;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+
+.prose tbody tr {
+  border-bottom: 1px solid #E5E2DA;
+  transition: background 0.1s ease;
+}
+
+.prose tbody tr:last-child {
+  border-bottom: none;
+}
+
+.prose tbody tr:hover {
+  background: #E8F3F3;
+}
+
+.prose tbody td {
+  padding: 10px 16px;
+  border-bottom: none;
+  vertical-align: middle;
+}
+
+.prose tbody td strong {
+  color: #1A6363;
+  font-weight: 700;
+}
+
+.prose tbody tr:nth-child(even) {
+  background: #FAFAF8;
+}
+
+.prose tbody tr:nth-child(even):hover {
+  background: #E8F3F3;
+}
+
+/* Bold callout paragraphs (e.g. "If your state observes Good Friday:") */
+.prose > p > strong:first-child {
+  color: #1A6363;
+}
+
+/* Better horizontal rules */
+.prose hr {
+  border: none;
+  height: 1px;
+  background: #E5E2DA;
+  margin: 2.5rem 0;
+}
+
+/* List markers */
+.prose ul > li::marker {
+  color: #1A6363;
+}
+
+.prose ol > li::marker {
+  color: #1A6363;
+  font-weight: 600;
+}
+
+/* Link arrows for CTA links */
+.prose a[href^="/optimize"] {
+  display: inline-block;
+  background: #E8F3F3;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: background 0.15s ease;
+  text-decoration: none !important;
+  margin-top: 0.5rem;
+}
+
+.prose a[href^="/optimize"]:hover {
+  background: #D0E8E8;
+}
+
+/* Dark mode blog overrides */
+html[data-theme="dark"] .prose thead {
+  background: #144F4F;
+}
+html[data-theme="dark"] .prose table {
+  border-color: #3D3835;
+}
+html[data-theme="dark"] .prose tbody tr {
+  border-color: #3D3835;
+}
+html[data-theme="dark"] .prose tbody tr:nth-child(even) {
+  background: #292524;
+}
+html[data-theme="dark"] .prose tbody tr:hover {
+  background: #1A3333;
+}
+html[data-theme="dark"] .prose tbody td strong {
+  color: #4FD1C5;
+}
+html[data-theme="dark"] .prose a[href^="/optimize"] {
+  background: #1A3333;
+}
+
 /* ── Print styles ── */
 @media print {
   /* Hide navigation and interactive chrome */

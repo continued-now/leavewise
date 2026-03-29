@@ -14,6 +14,8 @@ But the bigger waste isn't unused days. It's *poorly timed* days.
 
 ## What Is a Holiday Bridge?
 
+![Diagram showing how 1 PTO day bridges a weekend and a holiday to create 4 consecutive days off for a 4x return](/blog/holiday-bridge-concept.svg)
+
 A holiday bridge is when you use a PTO day to connect a weekend to a public holiday — or connect two nearby holidays — creating a much longer consecutive break than you'd otherwise get.
 
 Here's a simple example. July 4th, 2026 falls on a Saturday. Most people think "great, I get a day off I would've had anyway." But if your employer observes the preceding Friday (July 3) as the holiday:
@@ -38,6 +40,8 @@ Not all PTO days are created equal. A random Wednesday off gives you a 1:1 retur
 The best windows in any given year depend on which day of the week holidays fall. Some years are better than others — and 2026 happens to be excellent.
 
 ## The 2026 Cheat Sheet
+
+![2026 holiday bridge cheat sheet showing four top windows: Easter Week (4 PTO for 10 days, 2.5x), Memorial Day (4 PTO for 9 days, 2.3x), Thanksgiving (3 PTO for 9 days, 3.0x), and Christmas to New Year's (3 PTO for 10 days, 3.3x)](/blog/holiday-bridge-cheatsheet.svg)
 
 Here are the highest-efficiency windows this year for US workers:
 

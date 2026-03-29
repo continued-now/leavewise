@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" fill="none">
+  <rect width="800" height="220" rx="16" fill="#F7F6F2"/>
+
+  <!-- Mexico -->
+  <rect x="24" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="24" y="24" width="176" height="56" rx="12" fill="#FDF4E7"/>
+  <rect x="24" y="68" width="176" height="12" fill="#FFF"/>
+  <g transform="translate(112,34)">
+    <circle r="10" fill="#C4872A" opacity="0.4"/>
+    <line x1="-14" y1="0" x2="-10" y2="0" stroke="#C4872A" stroke-width="1.5" opacity="0.4"/>
+    <line x1="10" y1="0" x2="14" y2="0" stroke="#C4872A" stroke-width="1.5" opacity="0.4"/>
+    <line x1="0" y1="-14" x2="0" y2="-10" stroke="#C4872A" stroke-width="1.5" opacity="0.4"/>
+    <line x1="0" y1="10" x2="0" y2="14" stroke="#C4872A" stroke-width="1.5" opacity="0.4"/>
+  </g>
+  <text x="112" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">Mexico</text>
+  <text x="112" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Peak weather, pre-holiday</text>
+  <text x="112" y="134" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Oaxaca, Tulum, P. Escondido</text>
+  <rect x="56" y="152" width="112" height="26" rx="6" fill="#C4872A" opacity="0.07"/>
+  <text x="112" y="169" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#C4872A">Warm escape</text>
+
+  <!-- Costa Rica -->
+  <rect x="216" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="216" y="24" width="176" height="56" rx="12" fill="#EEF6F1"/>
+  <rect x="216" y="68" width="176" height="12" fill="#FFF"/>
+  <g transform="translate(304,28)">
+    <rect x="-1" y="18" width="3" height="28" rx="1" fill="#4A7C5E" opacity="0.5"/>
+    <path d="M0 20C-7 11-19 13-15 18C-12 14-5 14 0 20Z" fill="#4A7C5E" opacity="0.4"/>
+    <path d="M0 20C7 11 19 13 15 18C12 14 5 14 0 20Z" fill="#4A7C5E" opacity="0.4"/>
+    <path d="M0 18C-3 8-14 6-12 12C-9 9-3 10 0 18Z" fill="#4A7C5E" opacity="0.35"/>
+    <path d="M0 18C3 8 14 6 12 12C9 9 3 10 0 18Z" fill="#4A7C5E" opacity="0.35"/>
+  </g>
+  <text x="304" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">Costa Rica</text>
+  <text x="304" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Dry season starts Nov</text>
+  <text x="304" y="134" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Beach + cloud forests</text>
+  <rect x="248" y="152" width="112" height="26" rx="6" fill="#4A7C5E" opacity="0.07"/>
+  <text x="304" y="169" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#4A7C5E">Best weather</text>
+
+  <!-- Europe -->
+  <rect x="408" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="408" y="24" width="176" height="56" rx="12" fill="#E8F3F3"/>
+  <rect x="408" y="68" width="176" height="12" fill="#FFF"/>
+  <g transform="translate(496,30)">
+    <path d="M0 42L-10 42L-3 16L-7 16L0 0L7 16L3 16L10 42Z" fill="#1A6363" opacity="0.45"/>
+    <rect x="-12" y="40" width="24" height="3" rx="1" fill="#1A6363" opacity="0.45"/>
+  </g>
+  <text x="496" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">Europe</text>
+  <text x="496" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">60F, Xmas markets open</text>
+  <text x="496" y="134" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Portugal, Spain, Germany</text>
+  <rect x="440" y="152" width="112" height="26" rx="6" fill="#1A6363" opacity="0.07"/>
+  <text x="496" y="169" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1A6363">Shoulder season</text>
+
+  <!-- Hawaii -->
+  <rect x="600" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="600" y="24" width="176" height="56" rx="12" fill="#FEF0ED"/>
+  <rect x="600" y="68" width="176" height="12" fill="#FFF"/>
+  <g transform="translate(688,34)">
+    <path d="M-14 10C-14 2-8-4 0-4C8-4 14 2 14 10" fill="none" stroke="#D95740" stroke-width="2" opacity="0.45"/>
+    <path d="M-16 12C-12 8-8 12-4 8C0 4 4 8 8 4C12 0 16 4 16 4" stroke="#D95740" stroke-width="1.5" opacity="0.35" fill="none"/>
+    <path d="M-16 18C-12 14-8 18-4 14C0 10 4 14 8 10C12 6 16 10 16 10" stroke="#D95740" stroke-width="1.5" opacity="0.35" fill="none"/>
+  </g>
+  <text x="688" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">Hawaii</text>
+  <text x="688" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">75-80F, whale season</text>
+  <text x="688" y="134" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Maui whales late Nov</text>
+  <rect x="632" y="152" width="112" height="26" rx="6" fill="#D95740" opacity="0.07"/>
+  <text x="688" y="169" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#D95740">Peak season</text>
+</svg>

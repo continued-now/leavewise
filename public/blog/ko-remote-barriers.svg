@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" fill="none">
+  <rect width="800" height="220" rx="16" fill="#F7F6F2"/>
+
+  <!-- Card 1: Coral — 비상용으로만 인식 -->
+  <rect x="24" y="24" width="236" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="24" y="24" width="236" height="48" rx="12" fill="#FEF0ED"/>
+  <rect x="24" y="60" width="236" height="12" fill="#FFF"/>
+  <text x="142" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#D95740">비상용으로만 인식</text>
+  <text x="142" y="88" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">연차는 아플 때만 쓰는 것이라는</text>
+  <text x="142" y="104" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">인식이 여전히 남아있음</text>
+  <rect x="52" y="128" width="180" height="28" rx="6" fill="#D95740" opacity="0.07"/>
+  <text x="142" y="146" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#D95740">해결: 1월에 미리 블로킹</text>
+
+  <!-- Divider icon -->
+  <circle cx="142" y="170" r="0" fill="none"/>
+
+  <!-- Card 2: Amber — 연차 촉진 정책 부재 -->
+  <rect x="282" y="24" width="236" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="282" y="24" width="236" height="48" rx="12" fill="#FDF4E7"/>
+  <rect x="282" y="60" width="236" height="12" fill="#FFF"/>
+  <text x="400" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#C4872A">연차 촉진 정책 부재</text>
+  <text x="400" y="88" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">회사가 연차 사용을 적극적으로</text>
+  <text x="400" y="104" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">독려하지 않는 조직 문화</text>
+  <rect x="310" y="128" width="180" height="28" rx="6" fill="#C4872A" opacity="0.07"/>
+  <text x="400" y="146" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#C4872A">해결: 촉진제도 활용 요청</text>
+
+  <!-- Card 3: Teal — 팀 눈치 문화 -->
+  <rect x="540" y="24" width="236" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="540" y="24" width="236" height="48" rx="12" fill="#E8F3F3"/>
+  <rect x="540" y="60" width="236" height="12" fill="#FFF"/>
+  <text x="658" y="56" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1A6363">팀 눈치 문화</text>
+  <text x="658" y="88" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">다들 안 쓰는데 나만 쓰기</text>
+  <text x="658" y="104" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">미안한 분위기가 사용을 억제</text>
+  <rect x="568" y="128" width="180" height="28" rx="6" fill="#1A6363" opacity="0.07"/>
+  <text x="658" y="146" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1A6363">해결: 내가 첫 번째가 되기</text>
+</svg>

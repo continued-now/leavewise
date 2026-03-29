@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" fill="none">
+  <rect width="800" height="220" rx="16" fill="#F7F6F2"/>
+
+  <!-- Park City -->
+  <rect x="24" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="24" y="24" width="176" height="56" rx="12" fill="#E8F3F3"/>
+  <rect x="24" y="68" width="176" height="12" fill="#FFF"/>
+  <g transform="translate(112,30)">
+    <path d="M0 42L-14 42L-4 18L-8 18L0 0L8 18L4 18L14 42Z" fill="#1A6363" opacity="0.45"/>
+    <path d="M-6 42L-12 42L-4 24L0 32L4 24L12 42L6 42L0 34Z" fill="#1A6363" opacity="0.35"/>
+    <rect x="-15" y="40" width="30" height="3" rx="1" fill="#1A6363" opacity="0.45"/>
+  </g>
+  <text x="112" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">Park City</text>
+  <text x="112" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">2 resorts, 35 min from SLC</text>
+  <text x="112" y="134" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Consistent February snow</text>
+  <rect x="56" y="152" width="112" height="26" rx="6" fill="#1A6363" opacity="0.07"/>
+  <text x="112" y="169" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1A6363">Best access</text>
+
+  <!-- Breckenridge -->
+  <rect x="216" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="216" y="24" width="176" height="56" rx="12" fill="#EEF6F1"/>
+  <rect x="216" y="68" width="176" height="12" fill="#FFF"/>
+  <g transform="translate(304,28)">
+    <path d="M0 44L-16 44L-5 16L-9 16L0 0L9 16L5 16L16 44Z" fill="#4A7C5E" opacity="0.4"/>
+    <circle cx="0" cy="6" r="3" fill="#FFF" opacity="0.5"/>
+    <circle cx="-5" cy="18" r="2" fill="#FFF" opacity="0.4"/>
+    <circle cx="6" cy="14" r="2.5" fill="#FFF" opacity="0.4"/>
+  </g>
+  <text x="304" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">Breckenridge</text>
+  <text x="304" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">10+ inches Feb snowfall</text>
+  <text x="304" y="134" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Great town for apres-ski</text>
+  <rect x="248" y="152" width="112" height="26" rx="6" fill="#4A7C5E" opacity="0.07"/>
+  <text x="304" y="169" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#4A7C5E">Peak powder</text>
+
+  <!-- Jackson Hole -->
+  <rect x="408" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="408" y="24" width="176" height="56" rx="12" fill="#FEF0ED"/>
+  <rect x="408" y="68" width="176" height="12" fill="#FFF"/>
+  <g transform="translate(496,30)">
+    <path d="M-18 38L-6 8L0 18L6 8L18 38Z" fill="#D95740" opacity="0.4"/>
+    <path d="M-10 38L0 14L10 38Z" fill="#D95740" opacity="0.3"/>
+    <rect x="-20" y="36" width="40" height="3" rx="1" fill="#D95740" opacity="0.35"/>
+  </g>
+  <text x="496" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">Jackson Hole</text>
+  <text x="496" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Expert terrain, deep powder</text>
+  <text x="496" y="134" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Less crowded than CO</text>
+  <rect x="440" y="152" width="112" height="26" rx="6" fill="#D95740" opacity="0.07"/>
+  <text x="496" y="169" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#D95740">Advanced skiers</text>
+
+  <!-- Palm Springs -->
+  <rect x="600" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="600" y="24" width="176" height="56" rx="12" fill="#FDF4E7"/>
+  <rect x="600" y="68" width="176" height="12" fill="#FFF"/>
+  <g transform="translate(688,30)">
+    <circle cy="8" r="12" fill="#C4872A" opacity="0.35"/>
+    <line x1="-18" y1="8" x2="-13" y2="8" stroke="#C4872A" stroke-width="2" opacity="0.4"/>
+    <line x1="13" y1="8" x2="18" y2="8" stroke="#C4872A" stroke-width="2" opacity="0.4"/>
+    <line x1="0" y1="-7" x2="0" y2="-12" stroke="#C4872A" stroke-width="2" opacity="0.4"/>
+    <line x1="-10" y1="-4" x2="-13" y2="-8" stroke="#C4872A" stroke-width="2" opacity="0.4"/>
+    <line x1="10" y1="-4" x2="13" y2="-8" stroke="#C4872A" stroke-width="2" opacity="0.4"/>
+  </g>
+  <text x="688" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">Palm Springs</text>
+  <text x="688" y="118" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">75F, desert hiking, hot springs</text>
+  <text x="688" y="134" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">The anti-ski escape</text>
+  <rect x="632" y="152" width="112" height="26" rx="6" fill="#C4872A" opacity="0.07"/>
+  <text x="688" y="169" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#C4872A">Warm alternative</text>
+</svg>

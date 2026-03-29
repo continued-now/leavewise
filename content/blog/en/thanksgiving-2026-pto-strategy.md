@@ -12,6 +12,8 @@ Thanksgiving always falls on a Thursday. Most employers give you Friday off too.
 
 The hack is what you do with the Monday, Tuesday, and Wednesday before it.
 
+![Thanksgiving 2026 PTO calendar showing how 3 PTO days on Monday through Wednesday create a 9-day break from November 21 to 29](/blog/thanksgiving-calendar.svg)
+
 ## The Math
 
 Thanksgiving 2026 is **Thursday, November 26**.
@@ -50,6 +52,8 @@ The same applies to return flights. Everyone flies back Sunday the 29th. Fly bac
 
 ## Where to Go With 9 Days
 
+![Destination cards for Thanksgiving travel: Mexico, Costa Rica, Europe with Christmas markets, and Hawaii](/blog/thanksgiving-destinations.svg)
+
 **Warm escapes:**
 - **Mexico (Oaxaca, Puerto Escondido, Tulum):** Peak weather, pre-holiday prices. The Day of the Dead crowds have cleared by mid-November.
 - **Costa Rica:** Dry season starts in November. 9 days is enough for both Pacific coast beaches and Arenal/Monteverde cloud forests.
@@ -65,6 +69,8 @@ The same applies to return flights. Everyone flies back Sunday the 29th. Fly bac
 - **New York City:** The Macy's parade, holiday window displays, and ice skating at Rockefeller Center. Classic for a reason.
 
 ## When to Book
+
+![Booking timeline for Thanksgiving travel showing September as baseline best prices, climbing to +50% the week before](/blog/thanksgiving-booking.svg)
 
 Thanksgiving travel follows predictable pricing patterns:
 

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 160" fill="none">
+  <rect width="800" height="160" rx="16" fill="#1A6363"/>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#FFF" opacity="0.6" letter-spacing="1">FLIGHT PRICING CURVE</text>
+
+  <!-- Timeline track -->
+  <rect x="48" y="58" width="704" height="4" rx="2" fill="#FFF" opacity="0.12"/>
+
+  <!-- Sweet spot highlight -->
+  <rect x="48" y="55" width="300" height="10" rx="5" fill="#4A7C5E" opacity="0.35"/>
+
+  <!-- Timeline labels -->
+  <text x="48" y="50" font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.5">May</text>
+  <text x="224" y="50" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.5">Early Jun</text>
+  <text x="400" y="50" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.5">Mid Jun</text>
+  <text x="576" y="50" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.5">Late Jun</text>
+  <text x="752" y="50" text-anchor="end" font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.5">July</text>
+
+  <!-- Tick marks -->
+  <rect x="224" y="56" width="1" height="8" fill="#FFF" opacity="0.2"/>
+  <rect x="400" y="56" width="1" height="8" fill="#FFF" opacity="0.2"/>
+  <rect x="576" y="56" width="1" height="8" fill="#FFF" opacity="0.2"/>
+
+  <!-- Book-by marker -->
+  <circle cx="310" cy="60" r="7" fill="#D95740"/>
+  <circle cx="310" cy="60" r="3" fill="#FFF"/>
+  <text x="310" y="79" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#FFF">BOOK BY</text>
+
+  <!-- Price cards -->
+  <g font-family="system-ui, sans-serif" fill="#FFF">
+    <!-- Baseline -->
+    <rect x="56" y="90" width="140" height="44" rx="8" fill="#4A7C5E" opacity="0.2" stroke="#4A7C5E" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="126" y="110" text-anchor="middle" font-size="12" font-weight="600">May</text>
+    <text x="126" y="126" text-anchor="middle" font-size="11" opacity="0.6">Baseline price</text>
+
+    <!-- +15-25% -->
+    <rect x="212" y="90" width="160" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="292" y="110" text-anchor="middle" font-size="12" font-weight="600">June</text>
+    <text x="292" y="126" text-anchor="middle" font-size="11" opacity="0.6">+15-25% above baseline</text>
+
+    <!-- +40-60% -->
+    <rect x="388" y="90" width="170" height="44" rx="8" fill="#C4872A" opacity="0.2" stroke="#C4872A" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="473" y="110" text-anchor="middle" font-size="12" font-weight="600">Late June</text>
+    <text x="473" y="126" text-anchor="middle" font-size="11" opacity="0.6">+40-60% surge zone</text>
+
+    <!-- +50-80% -->
+    <rect x="574" y="90" width="178" height="44" rx="8" fill="#D95740" opacity="0.2" stroke="#D95740" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="663" y="110" text-anchor="middle" font-size="12" font-weight="600">July 4th week</text>
+    <text x="663" y="126" text-anchor="middle" font-size="11" opacity="0.6">+50-80% peak pricing</text>
+  </g>
+</svg>

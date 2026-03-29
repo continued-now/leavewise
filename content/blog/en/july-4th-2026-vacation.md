@@ -13,6 +13,8 @@ When Independence Day falls on a Saturday, it feels like a wasted holiday. But m
 
 The opportunity is in the days before it.
 
+![Calendar showing the July 4th 2026 PTO window: 4 PTO days from June 29 to July 2 combined with the observed holiday and weekends for 9 days off](/blog/july-4th-calendar.svg)
+
 ## The 9-Day Strategy
 
 Take Monday through Thursday off the week leading into July 4th:
@@ -49,6 +51,8 @@ July gets a bad reputation for being "peak everything." But early July — speci
 
 ## Where to Go With 9 Days in Early July
 
+![Destination cards for July 4th travel: National Parks road trips, Alaska wildlife, Iceland midnight sun, and Croatia coast](/blog/july-4th-destinations.svg)
+
 **Classic summer trips:**
 - **National parks road trip** — 9 days is perfect for a Yellowstone + Grand Teton loop, or a Pacific Coast Highway drive from San Francisco to LA.
 - **Alaska** — Peak season for wildlife, 18+ hours of daylight, and glacier excursions. July is the ideal month.
@@ -60,6 +64,8 @@ July gets a bad reputation for being "peak everything." But early July — speci
 - **Japan** — Early July is the tail end of rainy season in Tokyo but dry and warm in Hokkaido. Summer festivals (matsuri) begin.
 
 ## The Flight Price Trap
+
+![Flight pricing curve from May to July showing sweet spot in May through early June, with prices surging 50-80% by July 4th week](/blog/july-4th-pricing.svg)
 
 July 4th flight prices follow a specific pattern:
 

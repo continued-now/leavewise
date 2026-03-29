@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" fill="none">
+  <rect width="800" height="420" rx="16" fill="#F7F6F2"/>
+  <rect y="0" width="800" height="52" rx="16" fill="#1A6363"/>
+  <rect y="28" width="800" height="24" fill="#1A6363"/>
+  <text x="400" y="35" text-anchor="middle" font-family="Georgia, serif" font-size="17" font-weight="600" fill="#FFF">2026년 5월 — 어린이날 + 부처님오신날 연차 전략</text>
+
+  <!-- === Row 1: Children's Day Window (5/2 - 5/5) === -->
+  <text x="40" y="82" font-family="Georgia, serif" font-size="14" font-weight="600" fill="#1C1917">어린이날 주간</text>
+
+  <!-- Day headers row 1 -->
+  <g font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#78716C" text-anchor="middle">
+    <text x="108" y="102">토</text>
+    <text x="218" y="102">일</text>
+    <text x="328" y="102">월</text>
+    <text x="438" y="102">화</text>
+  </g>
+
+  <!-- 5/2 Sat — Weekend -->
+  <rect x="56" y="112" width="104" height="80" rx="12" fill="#EEECEA"/>
+  <text x="108" y="146" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#78716C">2</text>
+  <text x="108" y="168" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">주말</text>
+
+  <!-- 5/3 Sun — Weekend -->
+  <rect x="166" y="112" width="104" height="80" rx="12" fill="#EEECEA"/>
+  <text x="218" y="146" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#78716C">3</text>
+  <text x="218" y="168" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">주말</text>
+
+  <!-- 5/4 Mon — PTO -->
+  <rect x="276" y="112" width="104" height="80" rx="12" fill="#E8F3F3" stroke="#1A6363" stroke-width="1.5"/>
+  <text x="328" y="146" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#1A6363">4</text>
+  <text x="328" y="168" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1A6363">연차</text>
+
+  <!-- 5/5 Tue — Children's Day -->
+  <rect x="386" y="112" width="104" height="80" rx="12" fill="#FEF0ED" stroke="#D95740" stroke-width="1.5"/>
+  <text x="438" y="142" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#D95740">5</text>
+  <text x="438" y="164" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">어린이날</text>
+
+  <!-- Row 1 result badge -->
+  <rect x="530" y="128" width="240" height="44" rx="10" fill="#1A6363"/>
+  <text x="650" y="148" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="white" opacity="0.75">연차 1일로</text>
+  <text x="650" y="164" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="600" fill="#FFF">4일 연속 = 4.0배</text>
+
+  <!-- Divider between rows -->
+  <rect x="24" y="210" width="752" height="1" fill="#E5E2DA"/>
+
+  <!-- === Row 2: Buddha's Birthday Window (5/22 - 5/25) === -->
+  <text x="40" y="240" font-family="Georgia, serif" font-size="14" font-weight="600" fill="#1C1917">부처님오신날 주간</text>
+
+  <!-- Day headers row 2 -->
+  <g font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#78716C" text-anchor="middle">
+    <text x="108" y="260">금</text>
+    <text x="218" y="260">토</text>
+    <text x="328" y="260">일</text>
+    <text x="438" y="260">월</text>
+  </g>
+
+  <!-- 5/22 Fri — PTO -->
+  <rect x="56" y="270" width="104" height="80" rx="12" fill="#E8F3F3" stroke="#1A6363" stroke-width="1.5"/>
+  <text x="108" y="304" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#1A6363">22</text>
+  <text x="108" y="326" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1A6363">연차</text>
+
+  <!-- 5/23 Sat — Weekend -->
+  <rect x="166" y="270" width="104" height="80" rx="12" fill="#EEECEA"/>
+  <text x="218" y="304" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#78716C">23</text>
+  <text x="218" y="326" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">주말</text>
+
+  <!-- 5/24 Sun — Buddha's Birthday -->
+  <rect x="276" y="270" width="104" height="80" rx="12" fill="#FEF0ED" stroke="#D95740" stroke-width="1.5"/>
+  <text x="328" y="298" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#D95740">24</text>
+  <text x="328" y="316" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">부처님</text>
+  <text x="328" y="328" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">오신날</text>
+
+  <!-- 5/25 Mon — Substitute Holiday -->
+  <rect x="386" y="270" width="104" height="80" rx="12" fill="#EEF6F1" stroke="#4A7C5E" stroke-width="1.5"/>
+  <text x="438" y="298" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#4A7C5E">25</text>
+  <text x="438" y="318" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#4A7C5E">대체공휴일</text>
+
+  <!-- Row 2 result badge -->
+  <rect x="530" y="286" width="240" height="44" rx="10" fill="#1A6363"/>
+  <text x="650" y="306" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="white" opacity="0.75">연차 1일로</text>
+  <text x="650" y="322" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="600" fill="#FFF">4일 연속 = 4.0배</text>
+
+  <!-- Bottom divider -->
+  <rect x="24" y="366" width="752" height="1" fill="#E5E2DA"/>
+
+  <!-- Legend -->
+  <g font-family="system-ui, sans-serif" font-size="11" fill="#44403C">
+    <rect x="40" y="380" width="14" height="14" rx="4" fill="#E8F3F3" stroke="#1A6363" stroke-width="1"/>
+    <text x="62" y="392">연차</text>
+    <rect x="130" y="380" width="14" height="14" rx="4" fill="#FEF0ED" stroke="#D95740" stroke-width="1"/>
+    <text x="152" y="392">공휴일</text>
+    <rect x="230" y="380" width="14" height="14" rx="4" fill="#EEF6F1" stroke="#4A7C5E" stroke-width="1"/>
+    <text x="252" y="392">대체공휴일</text>
+    <rect x="360" y="380" width="14" height="14" rx="4" fill="#EEECEA"/>
+    <text x="382" y="392">주말</text>
+  </g>
+</svg>

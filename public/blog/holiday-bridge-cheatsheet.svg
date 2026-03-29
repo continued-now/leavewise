@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 260" fill="none">
+  <rect width="800" height="260" rx="16" fill="#F7F6F2"/>
+
+  <!-- Title -->
+  <text x="400" y="20" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#1C1917" letter-spacing="0.5">2026 HOLIDAY BRIDGE CHEAT SHEET</text>
+
+  <!-- Easter Card -->
+  <rect x="24" y="34" width="180" height="202" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="24" y="34" width="180" height="40" rx="12" fill="#E8F3F3"/>
+  <rect x="24" y="62" width="180" height="12" fill="#FFF"/>
+  <text x="114" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#1A6363">Easter Week</text>
+  <text x="114" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Apr 3 – Apr 12</text>
+
+  <text x="114" y="106" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">PTO days</text>
+  <text x="114" y="122" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#1C1917">4</text>
+
+  <line x1="54" y1="132" x2="174" y2="132" stroke="#E5E2DA" stroke-width="1"/>
+
+  <text x="114" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Total days off</text>
+  <text x="114" y="166" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#1C1917">10</text>
+
+  <line x1="54" y1="176" x2="174" y2="176" stroke="#E5E2DA" stroke-width="1"/>
+
+  <rect x="62" y="186" width="104" height="36" rx="8" fill="#1A6363" opacity="0.08"/>
+  <text x="114" y="200" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#1A6363">Efficiency</text>
+  <text x="114" y="216" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1A6363">2.5x</text>
+
+  <!-- Memorial Day Card -->
+  <rect x="218" y="34" width="180" height="202" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="218" y="34" width="180" height="40" rx="12" fill="#EEF6F1"/>
+  <rect x="218" y="62" width="180" height="12" fill="#FFF"/>
+  <text x="308" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#4A7C5E">Memorial Day</text>
+  <text x="308" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">May 22 – May 25</text>
+
+  <text x="308" y="106" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">PTO days</text>
+  <text x="308" y="122" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#1C1917">4</text>
+
+  <line x1="248" y1="132" x2="368" y2="132" stroke="#E5E2DA" stroke-width="1"/>
+
+  <text x="308" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Total days off</text>
+  <text x="308" y="166" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#1C1917">9</text>
+
+  <line x1="248" y1="176" x2="368" y2="176" stroke="#E5E2DA" stroke-width="1"/>
+
+  <rect x="256" y="186" width="104" height="36" rx="8" fill="#4A7C5E" opacity="0.08"/>
+  <text x="308" y="200" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#4A7C5E">Efficiency</text>
+  <text x="308" y="216" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#4A7C5E">2.3x</text>
+
+  <!-- Thanksgiving Card -->
+  <rect x="412" y="34" width="180" height="202" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="412" y="34" width="180" height="40" rx="12" fill="#FEF0ED"/>
+  <rect x="412" y="62" width="180" height="12" fill="#FFF"/>
+  <text x="502" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#D95740">Thanksgiving</text>
+  <text x="502" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Nov 26 – Nov 29</text>
+
+  <text x="502" y="106" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">PTO days</text>
+  <text x="502" y="122" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#1C1917">3</text>
+
+  <line x1="442" y1="132" x2="562" y2="132" stroke="#E5E2DA" stroke-width="1"/>
+
+  <text x="502" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Total days off</text>
+  <text x="502" y="166" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#1C1917">9</text>
+
+  <line x1="442" y1="176" x2="562" y2="176" stroke="#E5E2DA" stroke-width="1"/>
+
+  <rect x="450" y="186" width="104" height="36" rx="8" fill="#D95740" opacity="0.08"/>
+  <text x="502" y="200" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#D95740">Efficiency</text>
+  <text x="502" y="216" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#D95740">3.0x</text>
+
+  <!-- Christmas Card -->
+  <rect x="606" y="34" width="170" height="202" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="606" y="34" width="170" height="40" rx="12" fill="#FDF4E7"/>
+  <rect x="606" y="62" width="170" height="12" fill="#FFF"/>
+  <text x="691" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#C4872A">Christmas–NYE</text>
+  <text x="691" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Dec 24 – Jan 1</text>
+
+  <text x="691" y="106" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">PTO days</text>
+  <text x="691" y="122" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#1C1917">3</text>
+
+  <line x1="636" y1="132" x2="746" y2="132" stroke="#E5E2DA" stroke-width="1"/>
+
+  <text x="691" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Total days off</text>
+  <text x="691" y="166" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#1C1917">10</text>
+
+  <line x1="636" y1="176" x2="746" y2="176" stroke="#E5E2DA" stroke-width="1"/>
+
+  <rect x="639" y="186" width="104" height="36" rx="8" fill="#C4872A" opacity="0.08"/>
+  <text x="691" y="200" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#C4872A">Efficiency</text>
+  <text x="691" y="216" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#C4872A">3.3x</text>
+</svg>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" fill="none">
+  <rect width="800" height="220" rx="16" fill="#F7F6F2"/>
+
+  <!-- Card 1: coral — 눈치 보여서 안 씀 -->
+  <rect x="24" y="24" width="236" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="24" y="24" width="236" height="52" rx="12" fill="#FEF0ED"/>
+  <rect x="24" y="64" width="236" height="12" fill="#FFF"/>
+  <!-- X icon -->
+  <g transform="translate(142,42)">
+    <circle r="12" fill="#D95740" opacity="0.15"/>
+    <line x1="-5" y1="-5" x2="5" y2="5" stroke="#D95740" stroke-width="2" stroke-linecap="round"/>
+    <line x1="5" y1="-5" x2="-5" y2="5" stroke="#D95740" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="142" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1C1917">눈치 보여서 안 씀</text>
+  <text x="142" y="114" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">연차는 법적 권리입니다</text>
+  <text x="142" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">안 쓰면 회사도 곤란해집니다</text>
+  <rect x="72" y="148" width="140" height="26" rx="6" fill="#D95740" opacity="0.07"/>
+  <text x="142" y="165" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#D95740">당당하게 사용하세요</text>
+
+  <!-- Card 2: amber — 발생 전 연차 계획 -->
+  <rect x="282" y="24" width="236" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="282" y="24" width="236" height="52" rx="12" fill="#FDF4E7"/>
+  <rect x="282" y="64" width="236" height="12" fill="#FFF"/>
+  <!-- Warning triangle icon -->
+  <g transform="translate(400,42)">
+    <path d="M0 -11L11 8L-11 8Z" fill="none" stroke="#C4872A" stroke-width="1.5" stroke-linejoin="round"/>
+    <line x1="0" y1="-4" x2="0" y2="1" stroke="#C4872A" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="0" cy="4.5" r="1.2" fill="#C4872A"/>
+  </g>
+  <text x="400" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1C1917">발생 전 연차 계획</text>
+  <text x="400" y="114" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">1년차는 매월 1일씩 발생</text>
+  <text x="400" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">발생 시기 먼저 확인하세요</text>
+  <rect x="330" y="148" width="140" height="26" rx="6" fill="#C4872A" opacity="0.07"/>
+  <text x="400" y="165" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#C4872A">누적일수 꼭 확인</text>
+
+  <!-- Card 3: coral — 하반기에 몰아쓰기 -->
+  <rect x="540" y="24" width="236" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="540" y="24" width="236" height="52" rx="12" fill="#FEF0ED"/>
+  <rect x="540" y="64" width="236" height="12" fill="#FFF"/>
+  <!-- X icon -->
+  <g transform="translate(658,42)">
+    <circle r="12" fill="#D95740" opacity="0.15"/>
+    <line x1="-5" y1="-5" x2="5" y2="5" stroke="#D95740" stroke-width="2" stroke-linecap="round"/>
+    <line x1="5" y1="-5" x2="-5" y2="5" stroke="#D95740" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="658" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1C1917">하반기에 몰아쓰기</text>
+  <text x="658" y="114" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">연말 업무 폭주 + 비싼 항공권</text>
+  <text x="658" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#44403C">상·하반기 분산이 정답</text>
+  <rect x="588" y="148" width="140" height="26" rx="6" fill="#D95740" opacity="0.07"/>
+  <text x="658" y="165" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#D95740">분산 사용 추천</text>
+</svg>

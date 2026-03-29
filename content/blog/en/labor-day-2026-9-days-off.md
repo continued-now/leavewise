@@ -14,6 +14,8 @@ Ask any seasoned traveler when they prefer to go and you'll hear the same answer
 
 Labor Day 2026 falls on **Monday, September 7**. Most people take the 3-day weekend and head home Sunday night. You can do better.
 
+![Calendar showing the Labor Day 2026 PTO window: 4 PTO days from September 8-11 combined with weekends and the holiday for 9 days off](/blog/labor-day-calendar.svg)
+
 ## The 9-Day Play
 
 Take Tuesday through Friday off the week after Labor Day:
@@ -44,6 +46,8 @@ The reverse works too — take the week *before* Labor Day (Sep 1–4) for 9 day
 
 ## Where to Go
 
+![Destination cards for Labor Day trips: Cape Cod, Lake Tahoe, Greece, and Portugal](/blog/labor-day-destinations.svg)
+
 **Domestic gems in September:**
 
 - **Cape Cod / Martha's Vineyard** — Water is warmest of the year (68–72°F). Tourists vanish after Labor Day. Restaurant reservations that were impossible in July become walk-in easy.
@@ -57,6 +61,8 @@ The reverse works too — take the week *before* Labor Day (Sep 1–4) for 9 day
 - **Japan** — Summer humidity fades, fall foliage begins in Hokkaido by late September, and the September equinox (Shūbun no Hi) is a public holiday creating a long weekend domestically — but tourism is lighter than cherry blossom or autumn peak.
 
 ## The Budget Angle
+
+![Side-by-side comparison of peak summer vs post-Labor Day pricing showing 30-40% savings on flights](/blog/labor-day-budget.svg)
 
 Here's concrete data on post-Labor Day savings:
 

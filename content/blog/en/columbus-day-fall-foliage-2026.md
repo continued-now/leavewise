@@ -14,6 +14,8 @@ Columbus Day (or Indigenous Peoples' Day, depending on your state) is one of the
 
 Many workers forget about it entirely. Some employers don't observe it. But if yours does, you have a free 3-day weekend sitting in the most beautiful month of the year.
 
+![Columbus Day 2026 PTO calendar showing how 1 PTO day on Friday October 9 creates a 4-day weekend through Monday October 12](/blog/columbus-day-calendar.svg)
+
 ## The 1-Day Play: 4 Days Off
 
 Take Friday, October 9 off:
@@ -48,6 +50,8 @@ Take Tuesday through Friday off the week after Columbus Day:
 
 ## Peak Foliage Timing
 
+![Horizontal timeline showing peak foliage by region: New England peaks early October, Mid-Atlantic mid October, Southeast late October](/blog/columbus-day-foliage.svg)
+
 Mid-October is the sweet spot for fall color across a huge swath of the US:
 
 | Region | Peak Foliage Week (2026 estimate) |
@@ -63,6 +67,8 @@ Mid-October is the sweet spot for fall color across a huge swath of the US:
 A Columbus Day weekend trip hits the peak almost exactly for the Mid-Atlantic and Southern New England — the most accessible foliage regions from major East Coast cities.
 
 ## The Best Fall Trips for a 4-Day Weekend
+
+![Destination cards for Columbus Day fall trips: Vermont Route 100, Shenandoah, White Mountains NH, and Asheville NC](/blog/columbus-day-destinations.svg)
 
 **Road trips (drivable from major cities):**
 

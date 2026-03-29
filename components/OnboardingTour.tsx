@@ -82,12 +82,40 @@ export function OnboardingTour() {
     };
   }, [measureTarget]);
 
-  // Re-measure when step changes
+  // Scroll target into view and re-measure when step changes
   useEffect(() => {
-    // Small delay to allow DOM to settle after step change
-    const t = setTimeout(measureTarget, 100);
-    return () => clearTimeout(t);
-  }, [step, measureTarget]);
+    if (!active) return;
+    const config = STEPS[step];
+    if (!config) return;
+
+    const el = document.querySelector(config.selector);
+    if (!el) {
+      // Target not in DOM — measure immediately (will show centered card)
+      measureTarget();
+      return;
+    }
+
+    // Scroll the target into view with smooth animation, centered vertically
+    el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+
+    // Re-measure after scroll settles — listen for scrollend with a fallback timeout
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      measureTarget();
+    };
+
+    // Modern browsers fire 'scrollend'; fall back to a timeout for older ones
+    window.addEventListener('scrollend', finish, { once: true });
+    const fallback = setTimeout(finish, 600);
+
+    return () => {
+      settled = true;
+      window.removeEventListener('scrollend', finish);
+      clearTimeout(fallback);
+    };
+  }, [step, active, measureTarget]);
 
   if (!active) return null;
 
@@ -131,7 +159,7 @@ export function OnboardingTour() {
       {/* Highlight hole (outline around target) */}
       {targetRect && (
         <div
-          className="absolute z-[101] rounded-xl ring-4 ring-teal/50 transition-all duration-300"
+          className="absolute z-[101] rounded-xl ring-4 ring-teal/50 transition-[top,left,width,height] duration-300 ease-out"
           style={{
             top: targetRect.top - 4,
             left: targetRect.left - 4,
@@ -147,7 +175,7 @@ export function OnboardingTour() {
       <div
         ref={popoverRef}
         style={popoverStyle}
-        className="w-80 bg-white rounded-2xl shadow-lg border border-border p-5 pointer-events-auto"
+        className="w-80 bg-white rounded-2xl shadow-lg border border-border p-5 pointer-events-auto transition-[top,left,transform] duration-300 ease-out"
         role="dialog"
         aria-label={`Tour step ${step + 1} of ${STEPS.length}: ${config.title}`}
       >

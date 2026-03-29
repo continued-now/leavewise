@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" fill="none">
+  <rect width="800" height="200" rx="16" fill="#F7F6F2"/>
+
+  <!-- Left Panel: Peak Summer (coral) -->
+  <rect x="24" y="24" width="368" height="152" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="24" y="24" width="368" height="40" rx="12" fill="#FEF0ED"/>
+  <rect x="24" y="52" width="368" height="12" fill="#FFF"/>
+  <text x="208" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#D95740">Peak Summer (Jul-Aug)</text>
+
+  <text x="44" y="88" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">NYC to Miami</text>
+  <text x="372" y="88" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#D95740">$380</text>
+
+  <rect x="44" y="96" width="328" height="1" fill="#E5E2DA"/>
+
+  <text x="44" y="114" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">LAX to Maui</text>
+  <text x="372" y="114" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#D95740">$520</text>
+
+  <rect x="44" y="122" width="328" height="1" fill="#E5E2DA"/>
+
+  <text x="44" y="140" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">JFK to Lisbon</text>
+  <text x="372" y="140" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#D95740">$680</text>
+
+  <rect x="44" y="150" width="328" height="22" rx="6" fill="#D95740" opacity="0.07"/>
+  <text x="208" y="165" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">Peak pricing, heavy crowds</text>
+
+  <!-- Right Panel: Post-Labor Day (teal) -->
+  <rect x="408" y="24" width="368" height="152" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="408" y="24" width="368" height="40" rx="12" fill="#E8F3F3"/>
+  <rect x="408" y="52" width="368" height="12" fill="#FFF"/>
+  <text x="592" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1A6363">Post-Labor Day (Sep)</text>
+
+  <text x="428" y="88" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">NYC to Miami</text>
+  <text x="756" y="88" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#1A6363">$220</text>
+  <text x="696" y="88" text-anchor="end" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#1A6363">-42%</text>
+
+  <rect x="428" y="96" width="328" height="1" fill="#E5E2DA"/>
+
+  <text x="428" y="114" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">LAX to Maui</text>
+  <text x="756" y="114" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#1A6363">$340</text>
+  <text x="696" y="114" text-anchor="end" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#1A6363">-35%</text>
+
+  <rect x="428" y="122" width="328" height="1" fill="#E5E2DA"/>
+
+  <text x="428" y="140" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">JFK to Lisbon</text>
+  <text x="756" y="140" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#1A6363">$480</text>
+  <text x="696" y="140" text-anchor="end" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#1A6363">-29%</text>
+
+  <rect x="428" y="150" width="328" height="22" rx="6" fill="#1A6363" opacity="0.07"/>
+  <text x="592" y="165" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#1A6363">Save $100-$200 per person</text>
+</svg>

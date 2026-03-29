@@ -10,6 +10,8 @@ keywords: ["christmas 2026 vacation", "new years 2026 time off", "holiday PTO pl
 
 Christmas 2026 falls on a Friday. New Year's Day 2027 is the following Thursday. That gap between the two holidays is where the magic happens.
 
+![Christmas to New Year's 2026 PTO calendar showing how 3 PTO days on December 28-30 create a 10-day break from December 24 through January 4](/blog/christmas-calendar.svg)
+
 Here's the day-by-day breakdown:
 
 | Date | Day | Status |
@@ -40,6 +42,8 @@ Most holiday windows give you a 2–2.5x return on PTO. The Christmas-to-New-Yea
 
 ## Where to Go With 10 Days in Late December
 
+![Destination cards for late December travel: Caribbean beaches, Southeast Asia, European Christmas markets, and ski resorts](/blog/christmas-destinations.svg)
+
 Late December travel splits into two camps: cold-weather destinations (ski season, Christmas markets) and warm escapes.
 
 **For warmth:**
@@ -55,6 +59,8 @@ Late December travel splits into two camps: cold-weather destinations (ski seaso
 - A 10-day staycation during the quietest week of the year is genuinely underrated. Every restaurant has availability, roads are empty, and your inbox stops moving.
 
 ## The Catch: Book Early
+
+![Booking timeline for Christmas travel showing September-October as the sweet spot, with prices climbing 40% after November](/blog/christmas-booking.svg)
 
 Here's the data that matters: flight prices for Dec 24–Jan 2 travel start climbing in early November. The sweet spot for booking is **September–October** — you'll save 15–30% compared to November/December bookings.
 

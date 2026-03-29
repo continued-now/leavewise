@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 160" fill="none">
+  <rect width="800" height="160" rx="16" fill="#1A6363"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#FFF" opacity="0.6" letter-spacing="1">추석 항공권 예매 타임라인</text>
+
+  <!-- Track -->
+  <rect x="48" y="62" width="704" height="4" rx="2" fill="#FFF" opacity="0.12"/>
+
+  <!-- Now marker -->
+  <circle cx="120" cy="64" r="7" fill="#D95740"/>
+  <circle cx="120" cy="64" r="3" fill="#FFF"/>
+  <text x="120" y="52" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FFF">지금</text>
+
+  <!-- Sweet spot highlight -->
+  <rect x="100" y="59" width="200" height="10" rx="5" fill="#FFF" opacity="0.18"/>
+
+  <!-- Chuseok marker -->
+  <circle cx="700" cy="64" r="5" fill="#FFF" opacity="0.4"/>
+  <text x="700" y="52" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#FFF" opacity="0.6">9/25</text>
+
+  <!-- Month markers -->
+  <text x="120" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.4">6월</text>
+  <text x="310" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.4">7월</text>
+  <text x="510" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.4">8월</text>
+  <text x="700" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.4">9월</text>
+
+  <!-- Booking windows -->
+  <g font-family="system-ui, sans-serif" fill="#FFF">
+    <!-- 최적 시기 -->
+    <rect x="60" y="88" width="180" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="150" y="108" text-anchor="middle" font-size="12" font-weight="600">6월 — 최적 시기</text>
+    <text x="150" y="124" text-anchor="middle" font-size="11" opacity="0.6">동남아 왕복 30~50만원대</text>
+
+    <!-- 마지노선 -->
+    <rect x="260" y="88" width="210" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="365" y="108" text-anchor="middle" font-size="12" font-weight="600">7월 — 마지노선</text>
+    <text x="365" y="124" text-anchor="middle" font-size="11" opacity="0.6">인기 노선 10~20% 상승</text>
+
+    <!-- 위험 -->
+    <rect x="490" y="88" width="184" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="582" y="108" text-anchor="middle" font-size="12" font-weight="600">8~9월</text>
+    <text x="582" y="124" text-anchor="middle" font-size="11" opacity="0.6">+50~100%, 좌석 부족</text>
+  </g>
+</svg>

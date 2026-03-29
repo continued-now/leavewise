@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" fill="none">
+  <rect width="800" height="340" rx="16" fill="#F7F6F2"/>
+  <rect y="0" width="800" height="52" rx="16" fill="#1A6363"/>
+  <rect y="28" width="800" height="24" fill="#1A6363"/>
+  <text x="400" y="35" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="600" fill="#FFF">Jun–Jul 2026 — Your 9-Day Window</text>
+
+  <!-- Day headers row -->
+  <g font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#78716C" text-anchor="middle">
+    <text x="62" y="80">SAT-SUN</text>
+    <text x="156" y="80">MON</text>
+    <text x="238" y="80">TUE</text>
+    <text x="320" y="80">WED</text>
+    <text x="402" y="80">THU</text>
+    <text x="496" y="80">FRI</text>
+    <text x="614" y="80">SAT-SUN</text>
+  </g>
+
+  <!-- Jun 27-28 — Weekend -->
+  <rect x="24" y="92" width="76" height="88" rx="12" fill="#EEECEA"/>
+  <text x="62" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#78716C">27-28</text>
+  <text x="62" y="142" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Weekend</text>
+  <text x="62" y="154" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">(Jun)</text>
+
+  <!-- Jun 29 — PTO 1 -->
+  <rect x="118" y="92" width="76" height="88" rx="12" fill="#E8F3F3" stroke="#1A6363" stroke-width="1.5"/>
+  <text x="156" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#1A6363">29</text>
+  <text x="156" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1A6363">PTO 1</text>
+
+  <!-- Jun 30 — PTO 2 -->
+  <rect x="200" y="92" width="76" height="88" rx="12" fill="#E8F3F3" stroke="#1A6363" stroke-width="1.5"/>
+  <text x="238" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#1A6363">30</text>
+  <text x="238" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1A6363">PTO 2</text>
+
+  <!-- Jul 1 — PTO 3 -->
+  <rect x="282" y="92" width="76" height="88" rx="12" fill="#E8F3F3" stroke="#1A6363" stroke-width="1.5"/>
+  <text x="320" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#1A6363">1</text>
+  <text x="320" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1A6363">PTO 3</text>
+
+  <!-- Jul 2 — PTO 4 -->
+  <rect x="364" y="92" width="76" height="88" rx="12" fill="#E8F3F3" stroke="#1A6363" stroke-width="1.5"/>
+  <text x="402" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#1A6363">2</text>
+  <text x="402" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1A6363">PTO 4</text>
+
+  <!-- Jul 3 — Holiday observed -->
+  <rect x="446" y="92" width="96" height="88" rx="12" fill="#FEF0ED" stroke="#D95740" stroke-width="1.5"/>
+  <text x="494" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#D95740">3</text>
+  <text x="494" y="142" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">July 4th</text>
+  <text x="494" y="154" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">Observed</text>
+
+  <!-- Jul 4-5 — Weekend + Holiday -->
+  <rect x="552" y="92" width="120" height="88" rx="12" fill="#EEECEA" stroke="#D95740" stroke-width="1.5"/>
+  <text x="612" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#78716C">4-5</text>
+  <text x="612" y="142" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#D95740">July 4th +</text>
+  <text x="612" y="154" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Weekend</text>
+
+  <!-- Divider -->
+  <rect x="24" y="200" width="752" height="1" fill="#E5E2DA"/>
+
+  <!-- Legend -->
+  <g font-family="system-ui, sans-serif" font-size="12" fill="#44403C">
+    <rect x="40" y="220" width="14" height="14" rx="4" fill="#E8F3F3" stroke="#1A6363" stroke-width="1"/>
+    <text x="62" y="232">PTO days (4 total)</text>
+    <rect x="212" y="220" width="14" height="14" rx="4" fill="#FEF0ED" stroke="#D95740" stroke-width="1"/>
+    <text x="234" y="232">Holiday</text>
+    <rect x="340" y="220" width="14" height="14" rx="4" fill="#EEECEA"/>
+    <text x="362" y="232">Weekends</text>
+  </g>
+
+  <!-- Result callout -->
+  <rect x="24" y="256" width="752" height="56" rx="12" fill="#1A6363"/>
+  <text x="400" y="282" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="white" opacity="0.75">Use just</text>
+  <text x="400" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="17" font-weight="600" fill="#FFF">4 PTO days to get 9 consecutive days off — a 2.3x return</text>
+</svg>

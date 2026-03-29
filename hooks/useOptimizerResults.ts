@@ -287,10 +287,15 @@ export function useOptimizerResults(
           );
         });
 
+        // Scroll to results with offset for sticky nav + stats bar (~100px)
         setTimeout(() => {
-          resultsAreaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          resultsAreaRef.current?.focus();
-        }, 150);
+          const el = resultsAreaRef.current;
+          if (el) {
+            const top = el.getBoundingClientRect().top + window.scrollY - 110;
+            window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+            el.focus();
+          }
+        }, 200);
 
         setSidebarOpen(false);
 

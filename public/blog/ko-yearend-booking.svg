@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 160" fill="none">
+  <rect width="800" height="160" rx="16" fill="#1A6363"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#FFF" opacity="0.6" letter-spacing="1">항공권 예약 타임라인</text>
+
+  <!-- Track -->
+  <rect x="48" y="62" width="704" height="4" rx="2" fill="#FFF" opacity="0.12"/>
+
+  <!-- Month markers -->
+  <g font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.5">
+    <text x="48" y="52" text-anchor="middle">10월</text>
+    <text x="224" y="52" text-anchor="middle">11월</text>
+    <text x="400" y="52" text-anchor="middle">12월</text>
+    <text x="576" y="52" text-anchor="middle">1월</text>
+  </g>
+
+  <!-- Month tick marks -->
+  <g fill="#FFF" opacity="0.3">
+    <rect x="47" y="58" width="2" height="12" rx="1"/>
+    <rect x="223" y="58" width="2" height="12" rx="1"/>
+    <rect x="399" y="58" width="2" height="12" rx="1"/>
+    <rect x="575" y="58" width="2" height="12" rx="1"/>
+  </g>
+
+  <!-- Now marker -->
+  <circle cx="80" cy="64" r="7" fill="#D95740"/>
+  <circle cx="80" cy="64" r="3" fill="#FFF"/>
+  <text x="80" y="44" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FFF">지금</text>
+
+  <!-- Sweet spot highlight -->
+  <rect x="60" y="59" width="200" height="10" rx="5" fill="#FFF" opacity="0.18"/>
+
+  <!-- Price climb indicators -->
+  <g font-family="system-ui, sans-serif" font-size="10" fill="#FFF" opacity="0.45">
+    <text x="310" y="56">+20%</text>
+    <text x="440" y="56">+50%</text>
+    <text x="590" y="56">+80%</text>
+  </g>
+
+  <!-- Booking windows -->
+  <g font-family="system-ui, sans-serif" fill="#FFF">
+    <!-- 11월 여행 -->
+    <rect x="48" y="88" width="200" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="148" y="108" text-anchor="middle" font-size="12" font-weight="600">11월 여행</text>
+    <text x="148" y="124" text-anchor="middle" font-size="11" opacity="0.6">지금 예약 — 최저가</text>
+
+    <!-- 12월 여행 -->
+    <rect x="268" y="88" width="220" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="378" y="108" text-anchor="middle" font-size="12" font-weight="600">12월 크리스마스 여행</text>
+    <text x="378" y="124" text-anchor="middle" font-size="11" opacity="0.6">10월 중순까지 예약 필수</text>
+
+    <!-- 1월 여행 -->
+    <rect x="508" y="88" width="244" height="44" rx="8" fill="#FFF" opacity="0.08" stroke="#FFF" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="630" y="108" text-anchor="middle" font-size="12" font-weight="600">1월 신정 여행</text>
+    <text x="630" y="124" text-anchor="middle" font-size="11" opacity="0.6">11월까지 예약 권장</text>
+  </g>
+</svg>

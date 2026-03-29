@@ -14,6 +14,8 @@ Here's the play: take Monday through Thursday off (April 6–9), and you get a 1
 
 ## The Day-by-Day Breakdown
 
+![Calendar showing April 3–12 with 4 PTO days creating a 10-day vacation window around Easter 2026](/blog/easter-calendar.svg)
+
 | Date | Day | Status |
 |------|-----|--------|
 | Fri Apr 3 | Friday | Good Friday (holiday in 11 states) or PTO |
@@ -41,6 +43,8 @@ Even if your state isn't on this list, check with your employer — many compani
 
 April is shoulder season almost everywhere. That means:
 
+![Four destination cards showing Europe, Caribbean, Japan, and US National Parks with key travel highlights for April](/blog/easter-destinations.svg)
+
 **Europe:** Temperatures are mild (60–70°F in Southern Europe), tourist crowds are a fraction of summer levels, and flight prices are 30–40% lower than June–August. Spain, Portugal, and Italy are ideal.
 
 **Caribbean:** Hurricane season doesn't start until June. April has dry, warm weather across most islands, and resort prices drop after spring break peaks (which usually end by late March).
@@ -50,6 +54,8 @@ April is shoulder season almost everywhere. That means:
 **Domestic US:** National parks are open but not yet packed. Zion, Grand Canyon, and Yosemite have perfect hiking weather without the July–August crowds.
 
 ## The Booking Window
+
+![Timeline showing optimal booking windows: domestic flights now, international flights 6-8 weeks out, and hotels to book refundable rates immediately](/blog/easter-booking.svg)
 
 Flight prices for Easter travel start climbing in mid-March. If you're reading this and haven't booked yet:
 

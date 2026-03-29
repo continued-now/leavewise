@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" fill="none">
+  <rect width="800" height="220" rx="16" fill="#F7F6F2"/>
+
+  <!-- Column 1: 2 Days -->
+  <rect x="24" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="24" y="24" width="176" height="50" rx="12" fill="#E8F3F3"/>
+  <rect x="24" y="62" width="176" height="12" fill="#FFF"/>
+  <text x="112" y="44" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#1A6363">2</text>
+  <text x="112" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#1A6363">DAYS LEFT</text>
+  <text x="112" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#1C1917">Thanksgiving</text>
+  <text x="112" y="112" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Tue + Wed before</text>
+  <text x="112" y="128" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Nov 24-25</text>
+  <rect x="48" y="144" width="128" height="38" rx="8" fill="#E8F3F3"/>
+  <text x="112" y="162" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1A6363">2 PTO = 6 days off</text>
+  <text x="112" y="176" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#1A6363">3.0x return</text>
+
+  <!-- Column 2: 3 Days -->
+  <rect x="216" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="216" y="24" width="176" height="50" rx="12" fill="#FEF0ED"/>
+  <rect x="216" y="62" width="176" height="12" fill="#FFF"/>
+  <text x="304" y="44" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#D95740">3</text>
+  <text x="304" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">DAYS LEFT</text>
+  <text x="304" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#1C1917">Xmas to NYE</text>
+  <text x="304" y="112" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Mon-Wed Dec 29-31</text>
+  <text x="304" y="128" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Best window of 2026</text>
+  <rect x="240" y="144" width="128" height="38" rx="8" fill="#FEF0ED"/>
+  <text x="304" y="162" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#D95740">3 PTO = 11 days off</text>
+  <text x="304" y="176" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#D95740">3.7x return</text>
+
+  <!-- Column 3: 5 Days -->
+  <rect x="408" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="408" y="24" width="176" height="50" rx="12" fill="#EEF6F1"/>
+  <rect x="408" y="62" width="176" height="12" fill="#FFF"/>
+  <text x="496" y="44" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#4A7C5E">5</text>
+  <text x="496" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#4A7C5E">DAYS LEFT</text>
+  <text x="496" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#1C1917">Thx + Xmas</text>
+  <text x="496" y="112" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Split 2 + 3 across both</text>
+  <text x="496" y="128" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">holiday windows</text>
+  <rect x="432" y="144" width="128" height="38" rx="8" fill="#EEF6F1"/>
+  <text x="496" y="162" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#4A7C5E">5 PTO = 17 days off</text>
+  <text x="496" y="176" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#4A7C5E">3.4x return</text>
+
+  <!-- Column 4: 8+ Days -->
+  <rect x="600" y="24" width="176" height="172" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="600" y="24" width="176" height="50" rx="12" fill="#FDF4E7"/>
+  <rect x="600" y="62" width="176" height="12" fill="#FFF"/>
+  <text x="688" y="44" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#C4872A">8+</text>
+  <text x="688" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#C4872A">DAYS LEFT</text>
+  <text x="688" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#1C1917">Full Q4 Plan</text>
+  <text x="688" y="112" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">Oct + Nov escape</text>
+  <text x="688" y="128" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">+ Thx + Xmas</text>
+  <rect x="624" y="144" width="128" height="38" rx="8" fill="#FDF4E7"/>
+  <text x="688" y="162" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#C4872A">8 PTO = 30+ days off</text>
+  <text x="688" y="176" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#C4872A">3.8x return</text>
+</svg>

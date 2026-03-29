@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" fill="none">
+  <rect width="800" height="220" rx="16" fill="#F7F6F2"/>
+
+  <!-- Title row -->
+  <text x="400" y="20" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#1C1917" letter-spacing="0.5">2026 REMOTE WORKER PTO CALENDAR</text>
+
+  <!-- Month grid: 12 months in a row -->
+  <!-- Each cell: 58 wide, 24px left padding, 8px gap -->
+  <!-- Row 1: month labels -->
+  <!-- Row 2: boxes colored if PTO month -->
+
+  <!-- Jan -->
+  <rect x="24" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="53" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Jan</text>
+  <rect x="34" y="62" width="38" height="18" rx="4" fill="#1A6363" opacity="0.12"/>
+  <text x="53" y="75" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#1A6363">1 day</text>
+  <text x="53" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Jan 2</text>
+
+  <!-- Feb -->
+  <rect x="88" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="117" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Feb</text>
+  <text x="117" y="78" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#A8A29E">--</text>
+
+  <!-- Mar -->
+  <rect x="152" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="181" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Mar</text>
+  <text x="181" y="78" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#A8A29E">--</text>
+
+  <!-- Apr -->
+  <rect x="216" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="245" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Apr</text>
+  <rect x="226" y="62" width="38" height="18" rx="4" fill="#4A7C5E" opacity="0.12"/>
+  <text x="245" y="75" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#4A7C5E">1 day</text>
+  <text x="245" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Apr 3</text>
+
+  <!-- May -->
+  <rect x="280" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="309" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">May</text>
+  <rect x="290" y="62" width="38" height="18" rx="4" fill="#4A7C5E" opacity="0.12"/>
+  <text x="309" y="75" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#4A7C5E">1 day</text>
+  <text x="309" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">May 22</text>
+
+  <!-- Jun -->
+  <rect x="344" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="373" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Jun</text>
+  <text x="373" y="78" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#A8A29E">--</text>
+
+  <!-- Jul -->
+  <rect x="408" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="437" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Jul</text>
+  <rect x="418" y="62" width="38" height="18" rx="4" fill="#D95740" opacity="0.12"/>
+  <text x="437" y="75" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">1 day</text>
+  <text x="437" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Jul 2</text>
+
+  <!-- Aug -->
+  <rect x="472" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="501" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Aug</text>
+  <text x="501" y="78" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#A8A29E">--</text>
+
+  <!-- Sep -->
+  <rect x="536" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="565" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Sep</text>
+  <rect x="543" y="62" width="44" height="18" rx="4" fill="#D95740" opacity="0.12"/>
+  <text x="565" y="75" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">4 days</text>
+  <text x="565" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Sep 8-11</text>
+
+  <!-- Oct -->
+  <rect x="600" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="629" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Oct</text>
+  <text x="629" y="78" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#A8A29E">--</text>
+
+  <!-- Nov -->
+  <rect x="664" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="693" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Nov</text>
+  <rect x="674" y="62" width="38" height="18" rx="4" fill="#C4872A" opacity="0.12"/>
+  <text x="693" y="75" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#C4872A">1 day</text>
+  <text x="693" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Nov 25</text>
+
+  <!-- Dec -->
+  <rect x="728" y="36" width="58" height="72" rx="10" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <text x="757" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1C1917">Dec</text>
+  <rect x="735" y="62" width="44" height="18" rx="4" fill="#C4872A" opacity="0.12"/>
+  <text x="757" y="75" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#C4872A">3 days</text>
+  <text x="757" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Dec 29-31</text>
+
+  <!-- Summary bar -->
+  <rect x="24" y="120" width="752" height="76" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+
+  <!-- Left stat -->
+  <text x="150" y="148" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">PTO days used</text>
+  <text x="150" y="174" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#1A6363">12</text>
+
+  <!-- Divider -->
+  <line x1="300" y1="136" x2="300" y2="186" stroke="#E5E2DA" stroke-width="1"/>
+
+  <!-- Middle stat -->
+  <text x="400" y="148" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Total days off</text>
+  <text x="400" y="174" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#4A7C5E">49</text>
+
+  <!-- Divider -->
+  <line x1="500" y1="136" x2="500" y2="186" stroke="#E5E2DA" stroke-width="1"/>
+
+  <!-- Right stat -->
+  <text x="650" y="148" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Remaining for spontaneous trips</text>
+  <text x="650" y="174" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#C4872A">3 days</text>
+</svg>

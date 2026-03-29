@@ -41,6 +41,8 @@ Remote workers are often good at structured planning for work. Apply the same di
 
 ## Remote-Specific PTO Strategies
 
+![Three remote PTO strategy cards: Slow Travel for 12 days away using 3 PTO days, Reset Monday for regular long weekends, and Holiday Stacking for 49 days off using 12 PTO days](/blog/remote-pto-strategies.svg)
+
 ### The "Slow Travel" Play
 
 Remote workers can do something office workers can't: take PTO days non-consecutively around work days. Example:
@@ -74,6 +76,8 @@ Remote workers aren't tied to school schedules or office holiday closures. You c
 - **Early November:** The forgotten month. Almost everything is cheap.
 
 ## The 2026 Remote Worker Calendar
+
+![Month-by-month PTO calendar for remote workers in 2026 showing optimal days: Jan 2, Apr 3, May 22, Jul 2, Sep 8-11, Nov 25, Dec 29-31 totaling 12 PTO days for 49 days off](/blog/remote-pto-calendar.svg)
 
 Here are the highest-value PTO days for remote workers in 2026 — optimized for flexibility:
 

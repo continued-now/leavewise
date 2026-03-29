@@ -14,6 +14,10 @@ November 2026 has something special: **Veterans Day falls on Wednesday, November
 
 But even if you're not going for the mega-break, each holiday offers its own high-efficiency window.
 
+![Three strategy cards comparing November PTO options: Mini-Break with 2 PTO for 5 days, Extended with 3 PTO for 9 days, and Mega-Break with 7 PTO for 16 days](/blog/veterans-strategy-cards.svg)
+
+![November 2026 PTO calendar showing Veterans Day and Thanksgiving double window with 5 PTO days creating a 5-day and 9-day break](/blog/veterans-thanksgiving-calendar.svg)
+
 ## Option 1: Veterans Day Mini-Break (2 PTO → 5 days)
 
 Veterans Day lands mid-week on a Wednesday. Take Thursday and Friday off:
@@ -59,6 +63,8 @@ That's 7 PTO days for a break from **Wed Nov 11 through Sun Nov 29 = 19 days.**
 Realistically, you might work the middle week and just take the two bookends: 5 PTO days (Nov 12–13 + Nov 23–25) for two separate 5-day and 9-day breaks in the same month. Same PTO, more structure.
 
 ## Why November Travel Is Underrated
+
+![Destination cards for November travel: Southwest Desert, Southeast Asia, Morocco, and Hawaii](/blog/veterans-november-destinations.svg)
 
 November sits in a pricing valley between summer/fall foliage season and holiday season:
 

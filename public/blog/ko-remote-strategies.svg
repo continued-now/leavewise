@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" fill="none">
+  <rect width="800" height="200" rx="16" fill="#F7F6F2"/>
+
+  <!-- Card 1: 슬로우 트래블 -->
+  <rect x="24" y="24" width="240" height="152" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="24" y="24" width="240" height="44" rx="12" fill="#E8F3F3"/>
+  <rect x="24" y="56" width="240" height="12" fill="#FFF"/>
+  <!-- Plane icon -->
+  <g transform="translate(144,46)">
+    <path d="M-12 0L-4-6L4 0L12-6" stroke="#1A6363" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+    <circle cx="0" cy="-2" r="3" fill="#1A6363" opacity="0.3"/>
+  </g>
+  <text x="144" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">슬로우 트래블</text>
+  <text x="144" y="108" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">평일 재택 + 주말·연차 관광</text>
+  <text x="144" y="124" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">연차 2일 → 7박 체류</text>
+  <rect x="68" y="140" width="152" height="26" rx="6" fill="#1A6363" opacity="0.07"/>
+  <text x="144" y="157" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1A6363">재택근무자만 가능</text>
+
+  <!-- Card 2: 리셋 먼데이 -->
+  <rect x="280" y="24" width="240" height="152" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="280" y="24" width="240" height="44" rx="12" fill="#FEF0ED"/>
+  <rect x="280" y="56" width="240" height="12" fill="#FFF"/>
+  <!-- Calendar icon -->
+  <g transform="translate(400,46)">
+    <rect x="-8" y="-8" width="16" height="14" rx="2" stroke="#D95740" stroke-width="1.2" fill="none" opacity="0.5"/>
+    <line x1="-8" y1="-4" x2="8" y2="-4" stroke="#D95740" stroke-width="1.2" opacity="0.5"/>
+    <circle cx="0" cy="1" r="1.5" fill="#D95740" opacity="0.4"/>
+  </g>
+  <text x="400" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">리셋 먼데이</text>
+  <text x="400" y="108" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">매달 첫째 월요일 연차</text>
+  <text x="400" y="124" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">연차 12일 → 매달 4일 연휴</text>
+  <rect x="324" y="140" width="152" height="26" rx="6" fill="#D95740" opacity="0.07"/>
+  <text x="400" y="157" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#D95740">번아웃 예방 최적</text>
+
+  <!-- Card 3: 연휴 연결 -->
+  <rect x="536" y="24" width="240" height="152" rx="12" fill="#FFF" stroke="#E5E2DA" stroke-width="1"/>
+  <rect x="536" y="24" width="240" height="44" rx="12" fill="#EEF6F1"/>
+  <rect x="536" y="56" width="240" height="12" fill="#FFF"/>
+  <!-- Link icon -->
+  <g transform="translate(656,46)">
+    <path d="M-6-3L-3-6A4.2 4.2 0 0 1 3 0L0 3" stroke="#4A7C5E" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.5"/>
+    <path d="M6 3L3 6A4.2 4.2 0 0 1-3 0L0-3" stroke="#4A7C5E" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  <text x="656" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#1C1917">연휴 연결</text>
+  <text x="656" y="108" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">공휴일 사이 평일에 연차</text>
+  <text x="656" y="124" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#78716C">연차 4일 → 16일 연속</text>
+  <rect x="580" y="140" width="152" height="26" rx="6" fill="#4A7C5E" opacity="0.07"/>
+  <text x="656" y="157" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#4A7C5E">9~10월 황금기</text>
+</svg>

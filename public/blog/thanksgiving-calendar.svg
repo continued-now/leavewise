@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" fill="none">
+  <rect width="800" height="340" rx="16" fill="#F7F6F2"/>
+  <rect y="0" width="800" height="52" rx="16" fill="#1A6363"/>
+  <rect y="28" width="800" height="24" fill="#1A6363"/>
+  <text x="400" y="35" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="600" fill="#FFF">November 2026 — Your 9-Day Thanksgiving Window</text>
+
+  <!-- Day headers row -->
+  <g font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#78716C" text-anchor="middle">
+    <text x="62" y="80">SAT-SUN</text>
+    <text x="156" y="80">MON</text>
+    <text x="242" y="80">TUE</text>
+    <text x="328" y="80">WED</text>
+    <text x="414" y="80">THU</text>
+    <text x="500" y="80">FRI</text>
+    <text x="606" y="80">SAT-SUN</text>
+  </g>
+
+  <!-- Nov 21-22 — Weekend -->
+  <rect x="24" y="92" width="76" height="88" rx="12" fill="#EEECEA"/>
+  <text x="62" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#78716C">21-22</text>
+  <text x="62" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Weekend</text>
+
+  <!-- Nov 23 — PTO 1 -->
+  <rect x="114" y="92" width="84" height="88" rx="12" fill="#E8F3F3" stroke="#1A6363" stroke-width="1.5"/>
+  <text x="156" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#1A6363">23</text>
+  <text x="156" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1A6363">PTO 1</text>
+
+  <!-- Nov 24 — PTO 2 -->
+  <rect x="200" y="92" width="84" height="88" rx="12" fill="#E8F3F3" stroke="#1A6363" stroke-width="1.5"/>
+  <text x="242" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#1A6363">24</text>
+  <text x="242" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1A6363">PTO 2</text>
+
+  <!-- Nov 25 — PTO 3 -->
+  <rect x="286" y="92" width="84" height="88" rx="12" fill="#E8F3F3" stroke="#1A6363" stroke-width="1.5"/>
+  <text x="328" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#1A6363">25</text>
+  <text x="328" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1A6363">PTO 3</text>
+
+  <!-- Nov 26 — Thanksgiving -->
+  <rect x="372" y="92" width="84" height="88" rx="12" fill="#FEF0ED" stroke="#D95740" stroke-width="1.5"/>
+  <text x="414" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#D95740">26</text>
+  <text x="414" y="142" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">Thanks-</text>
+  <text x="414" y="153" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">giving</text>
+
+  <!-- Nov 27 — Day After Thanksgiving -->
+  <rect x="458" y="92" width="84" height="88" rx="12" fill="#FEF0ED" stroke="#D95740" stroke-width="1.5"/>
+  <text x="500" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#D95740">27</text>
+  <text x="500" y="146" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">Day After</text>
+  <text x="500" y="157" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#D95740">Thanksgiving</text>
+
+  <!-- Nov 28-29 — Weekend -->
+  <rect x="556" y="92" width="220" height="88" rx="12" fill="#EEECEA"/>
+  <text x="666" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#78716C">28-29</text>
+  <text x="666" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#78716C">Weekend</text>
+
+  <!-- Divider -->
+  <rect x="24" y="200" width="752" height="1" fill="#E5E2DA"/>
+
+  <!-- Legend -->
+  <g font-family="system-ui, sans-serif" font-size="12" fill="#44403C">
+    <rect x="80" y="220" width="14" height="14" rx="4" fill="#E8F3F3" stroke="#1A6363" stroke-width="1"/>
+    <text x="102" y="232">PTO days (3 total)</text>
+    <rect x="300" y="220" width="14" height="14" rx="4" fill="#FEF0ED" stroke="#D95740" stroke-width="1"/>
+    <text x="322" y="232">Holidays</text>
+    <rect x="440" y="220" width="14" height="14" rx="4" fill="#EEECEA"/>
+    <text x="462" y="232">Weekends</text>
+  </g>
+
+  <!-- Result callout -->
+  <rect x="24" y="256" width="752" height="56" rx="12" fill="#1A6363"/>
+  <text x="400" y="282" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="white" opacity="0.75">Use just</text>
+  <text x="400" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="17" font-weight="600" fill="#FFF">3 PTO days to get 9 consecutive days off — a 3.0x return</text>
+</svg>

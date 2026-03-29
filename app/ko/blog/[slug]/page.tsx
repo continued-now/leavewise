@@ -116,7 +116,7 @@ export default async function KoBlogPostPage({
           </header>
 
           <div
-            className="prose prose-stone max-w-none prose-headings:font-display prose-a:text-teal prose-a:no-underline hover:prose-a:underline"
+            className="prose prose-stone max-w-none prose-headings:font-display prose-a:text-teal prose-a:no-underline hover:prose-a:underline prose-img:rounded-2xl prose-headings:tracking-tight prose-h2:mt-10 prose-h2:mb-4 prose-h3:mt-8 prose-h3:mb-3 prose-p:leading-relaxed prose-li:leading-relaxed"
             dangerouslySetInnerHTML={{ __html: post.contentHtml }}
           />
 

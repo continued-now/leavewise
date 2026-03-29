@@ -436,64 +436,95 @@ export default function OptimizePage() {
                 </button>
               </div>
 
-              {/* PTO Budget Slider */}
-              {totalLeave > 0 && (
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-bold tracking-widest uppercase text-ink-muted/70">{l.budget}</span>
-                    <span className="text-xs font-semibold text-ink">
-                      {selectedPTO.size + prebookedCount} / {totalLeave} {l.used}
-                    </span>
-                  </div>
-
-                  {/* Layered slider: visual track + native range input */}
-                  <div className="relative h-3 group">
-                    {/* Background track */}
-                    <div className="absolute inset-0 rounded-full bg-border/40 overflow-hidden flex">
-                      {prebookedCount > 0 && (
-                        <div
-                          className="bg-ink-muted/40 h-full shrink-0 transition-all duration-200"
-                          style={{ width: `${(prebookedCount / 40) * 100}%` }}
+              {/* PTO Budget */}
+              <div>
+                <SectionLabel>{locale === 'ko' ? 'PTO 예산' : 'PTO budget'}</SectionLabel>
+                <div className="space-y-3">
+                  {/* Slider + stepper combo */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1">
+                      {/* Layered slider: visual track + native range input */}
+                      <div className="relative h-3 group">
+                        <div className="absolute inset-0 rounded-full bg-border/40 overflow-hidden flex">
+                          {prebookedCount > 0 && (
+                            <div
+                              className="bg-ink-muted/40 h-full shrink-0 transition-all duration-200"
+                              style={{ width: `${(prebookedCount / 40) * 100}%` }}
+                            />
+                          )}
+                          {selectedPTO.size > 0 && (
+                            <div
+                              className="bg-coral h-full shrink-0 transition-all duration-200"
+                              style={{ width: `${(selectedPTO.size / 40) * 100}%` }}
+                            />
+                          )}
+                          <div
+                            className="bg-teal/30 h-full shrink-0 transition-all duration-200"
+                            style={{ width: `${(Math.max(0, form.leavePool.ptoDays - selectedPTO.size - prebookedCount) / 40) * 100}%` }}
+                          />
+                        </div>
+                        <input
+                          type="range"
+                          min={0}
+                          max={40}
+                          value={form.leavePool.ptoDays}
+                          onChange={(e) => {
+                            const v = parseInt(e.target.value, 10);
+                            setLeave('ptoDays', v);
+                            setForm((f) => ({ ...f, daysToAllocate: v }));
+                          }}
+                          className="absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer
+                            [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5
+                            [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-teal [&::-webkit-slider-thumb]:border-2
+                            [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-grab
+                            [&::-webkit-slider-thumb]:active:cursor-grabbing [&::-webkit-slider-thumb]:transition-transform
+                            [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:active:scale-95"
                         />
-                      )}
-                      {selectedPTO.size > 0 && (
-                        <div
-                          className="bg-coral h-full shrink-0 transition-all duration-200"
-                          style={{ width: `${(selectedPTO.size / 40) * 100}%` }}
-                        />
-                      )}
-                      <div
-                        className="bg-teal/30 h-full shrink-0 transition-all duration-200"
-                        style={{ width: `${(Math.max(0, form.leavePool.ptoDays - selectedPTO.size - prebookedCount) / 40) * 100}%` }}
-                      />
+                      </div>
+                      <div className="flex items-center justify-between mt-1.5">
+                        <span className="text-[10px] font-semibold text-ink-muted">0</span>
+                        <span className="text-xs font-bold text-teal">{form.leavePool.ptoDays} {locale === 'ko' ? '일' : 'days'}</span>
+                        <span className="text-[10px] font-semibold text-ink-muted">40</span>
+                      </div>
                     </div>
-                    {/* Native range input (transparent track, styled thumb) */}
-                    <input
-                      type="range"
-                      min={0}
-                      max={40}
-                      value={form.leavePool.ptoDays}
-                      onChange={(e) => {
-                        const v = parseInt(e.target.value, 10);
-                        setLeave('ptoDays', v);
-                        setForm((f) => ({ ...f, daysToAllocate: v }));
-                      }}
-                      className="absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer
-                        [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5
-                        [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-teal [&::-webkit-slider-thumb]:border-2
-                        [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-grab
-                        [&::-webkit-slider-thumb]:active:cursor-grabbing [&::-webkit-slider-thumb]:transition-transform
-                        [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:active:scale-95"
-                    />
+                    <div className="flex items-center bg-cream border border-border rounded-lg overflow-hidden shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setForm((f) => {
+                          const newVal = Math.max(0, f.leavePool.ptoDays - 1);
+                          return { ...f, leavePool: { ...f.leavePool, ptoDays: newVal }, daysToAllocate: newVal };
+                        })}
+                        className="px-2 py-1.5 text-ink-muted hover:text-teal hover:bg-teal-light transition-colors text-sm font-semibold"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        min={0}
+                        max={40}
+                        value={form.leavePool.ptoDays}
+                        onChange={(e) => {
+                          const v = Math.max(0, Math.min(40, parseInt(e.target.value, 10) || 0));
+                          setLeave('ptoDays', v);
+                          setForm((f) => ({ ...f, daysToAllocate: v }));
+                        }}
+                        className="w-10 text-center text-sm font-display font-semibold text-teal bg-transparent border-x border-border py-1.5 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setForm((f) => {
+                          const newVal = Math.min(40, f.leavePool.ptoDays + 1);
+                          return { ...f, leavePool: { ...f.leavePool, ptoDays: newVal }, daysToAllocate: newVal };
+                        })}
+                        className="px-2 py-1.5 text-ink-muted hover:text-teal hover:bg-teal-light transition-colors text-sm font-semibold"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-1.5">
-                    <span className="text-[10px] font-semibold text-ink-muted">0</span>
-                    <span className="text-xs font-bold text-teal">{form.leavePool.ptoDays} {locale === 'ko' ? '일' : 'days'}</span>
-                    <span className="text-[10px] font-semibold text-ink-muted">40</span>
-                  </div>
-
-                  <div className="flex items-center gap-3 mt-1.5">
+                  {/* Budget legend */}
+                  <div className="flex items-center gap-3">
                     {prebookedCount > 0 && (
                       <span className="flex items-center gap-1 text-[10px] text-ink-muted">
                         <span className="w-2 h-2 rounded-sm bg-ink-muted/40" />
@@ -511,8 +542,40 @@ export default function OptimizePage() {
                       {remainingPTO} {l.remainingBadge}
                     </span>
                   </div>
+
+                  <CollapsibleSection
+                    title={locale === 'ko' ? '추가 휴가' : 'Additional leave'}
+                    defaultOpen={form.leavePool.compDays > 0 || form.leavePool.floatingHolidays > 0}
+                    badge={form.leavePool.compDays + form.leavePool.floatingHolidays > 0
+                      ? `+${form.leavePool.compDays + form.leavePool.floatingHolidays}`
+                      : undefined}
+                  >
+                    <div className="space-y-3">
+                      <NumberStepper
+                        label={l.compDays}
+                        sublabel={l.compDaysSub}
+                        value={form.leavePool.compDays}
+                        onChange={(v) => setLeave('compDays', v)}
+                      />
+                      <NumberStepper
+                        label={l.floatingHolidays}
+                        sublabel={l.floatingHolidaysSub}
+                        value={form.leavePool.floatingHolidays}
+                        onChange={(v) => setLeave('floatingHolidays', v)}
+                      />
+                    </div>
+                  </CollapsibleSection>
+
+                  {totalLeave > 0 && (
+                    <div className="flex items-center justify-between bg-teal-light rounded-lg px-3 py-2 border border-teal/10">
+                      <span className="text-xs font-semibold text-teal">{l.totalAvailable}</span>
+                      <span className="text-base font-display font-semibold text-teal">
+                        {totalLeave} {l.days}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
 
               {/* Location */}
               <div data-tour="location">
@@ -643,106 +706,6 @@ export default function OptimizePage() {
                 </div>
               )}
 
-              {/* PTO Budget */}
-              <div>
-                <SectionLabel>{locale === 'ko' ? 'PTO 예산' : 'PTO budget'}</SectionLabel>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-ink-soft">{locale === 'ko' ? '사용' : 'Use'}</span>
-                        <div className="flex items-center bg-cream border border-border rounded-lg overflow-hidden">
-                          <button
-                            type="button"
-                            onClick={() => setForm((f) => {
-                              const newVal = Math.max(0, f.leavePool.ptoDays - 1);
-                              return { ...f, leavePool: { ...f.leavePool, ptoDays: newVal }, daysToAllocate: newVal };
-                            })}
-                            className="px-2 py-1.5 text-ink-muted hover:text-teal hover:bg-teal-light transition-colors text-sm font-semibold"
-                          >
-                            -
-                          </button>
-                          <input
-                            type="number"
-                            min={0}
-                            max={40}
-                            value={form.leavePool.ptoDays}
-                            onChange={(e) => {
-                              const v = Math.max(0, Math.min(40, parseInt(e.target.value, 10) || 0));
-                              setLeave('ptoDays', v);
-                              setForm((f) => ({ ...f, daysToAllocate: v }));
-                            }}
-                            className="w-12 text-center text-sm font-display font-semibold text-teal bg-transparent border-x border-border py-1.5 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setForm((f) => {
-                              const newVal = Math.min(40, f.leavePool.ptoDays + 1);
-                              return { ...f, leavePool: { ...f.leavePool, ptoDays: newVal }, daysToAllocate: newVal };
-                            })}
-                            className="px-2 py-1.5 text-ink-muted hover:text-teal hover:bg-teal-light transition-colors text-sm font-semibold"
-                          >
-                            +
-                          </button>
-                        </div>
-                        <span className="text-xs text-ink-muted">{locale === 'ko' ? '일' : 'days'}</span>
-                      </div>
-                      <p className="text-[10px] text-ink-muted mt-1.5">
-                        {locale === 'ko'
-                          ? `${form.country === 'KR' ? '한국' : '미국'} 평균: ${form.country === 'KR' ? '15' : '15'}일`
-                          : `${form.country === 'US' ? 'US' : 'KR'} avg: ${form.country === 'KR' ? '15' : '15'} days`}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setLeave('ptoDays', 40);
-                        setForm((f) => ({ ...f, daysToAllocate: 40 }));
-                      }}
-                      className={`shrink-0 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg border transition-colors ${
-                        form.leavePool.ptoDays >= 40
-                          ? 'bg-teal/10 text-teal border-teal/20'
-                          : 'bg-cream text-ink-muted border-border hover:border-teal/40 hover:text-teal'
-                      }`}
-                    >
-                      {locale === 'ko' ? '전부 사용' : 'Use all'}
-                    </button>
-                  </div>
-
-                  <CollapsibleSection
-                    title={locale === 'ko' ? '추가 휴가' : 'Additional leave'}
-                    defaultOpen={form.leavePool.compDays > 0 || form.leavePool.floatingHolidays > 0}
-                    badge={form.leavePool.compDays + form.leavePool.floatingHolidays > 0
-                      ? `+${form.leavePool.compDays + form.leavePool.floatingHolidays}`
-                      : undefined}
-                  >
-                    <div className="space-y-3">
-                      <NumberStepper
-                        label={l.compDays}
-                        sublabel={l.compDaysSub}
-                        value={form.leavePool.compDays}
-                        onChange={(v) => setLeave('compDays', v)}
-                      />
-                      <NumberStepper
-                        label={l.floatingHolidays}
-                        sublabel={l.floatingHolidaysSub}
-                        value={form.leavePool.floatingHolidays}
-                        onChange={(v) => setLeave('floatingHolidays', v)}
-                      />
-                    </div>
-                  </CollapsibleSection>
-
-                  {totalLeave > 0 && (
-                    <div className="flex items-center justify-between bg-teal-light rounded-lg px-3 py-2 border border-teal/10">
-                      <span className="text-xs font-semibold text-teal">{l.totalAvailable}</span>
-                      <span className="text-base font-display font-semibold text-teal">
-                        {totalLeave} {l.days}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
               {/* Company Setup */}
               <CollapsibleSection
                 title={l.companySetup}
@@ -845,7 +808,34 @@ export default function OptimizePage() {
           <div className="flex flex-col gap-8">
 
             {/* Results section */}
-            <div ref={resultsAreaRef} tabIndex={-1} className="w-full order-3 space-y-8 outline-none">
+            <div tabIndex={-1} className="w-full order-3 space-y-8 outline-none">
+
+            {/* Loading skeleton while optimizing */}
+            {loading && !result && (
+              <div className="space-y-5 animate-pulse">
+                <div className="bg-white rounded-xl border border-border px-5 py-4 flex items-center gap-5">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="flex items-center gap-1.5">
+                      <div className="w-8 h-6 bg-border/50 rounded" />
+                      <div className="w-14 h-3 bg-border/40 rounded" />
+                    </div>
+                  ))}
+                </div>
+                <div className="bg-white rounded-2xl border border-border p-6">
+                  <div className="h-4 w-48 bg-border/50 rounded mb-4" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="border border-border rounded-xl p-4 space-y-3">
+                        <div className="h-4 w-32 bg-border/50 rounded" />
+                        <div className="h-3 w-full bg-border/40 rounded" />
+                        <div className="h-3 w-2/3 bg-border/40 rounded" />
+                        <div className="h-8 w-20 bg-border/50 rounded-lg" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {result && (
               <div className="space-y-5">
@@ -873,7 +863,7 @@ export default function OptimizePage() {
                 {result.windows.length > 0 ? (
                   <CollapsibleSection
                     title={l.optimizedWindows}
-                    defaultOpen={false}
+                    defaultOpen={true}
                     badge={`${result.windows.length} trips · ${result.totalDaysOff} ${l.daysOff}`}
                   >
                     <div className="flex items-center justify-end mb-4 gap-3 flex-wrap">
@@ -1103,14 +1093,36 @@ export default function OptimizePage() {
 
             </div>
 
+            {/* Strategy loading skeleton */}
+            {loading && !result && (
+              <div className="w-full order-1 animate-pulse">
+                <div className="bg-white rounded-2xl border border-border p-4">
+                  <div className="h-4 w-32 bg-border/50 rounded mb-3" />
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="p-3 rounded-xl border border-border space-y-2">
+                        <div className="h-4 w-24 bg-border/50 rounded" />
+                        <div className="h-3 w-full bg-border/40 rounded" />
+                        <div className="space-y-1.5 mt-2">
+                          <div className="h-3 w-full bg-border/30 rounded" />
+                          <div className="h-3 w-full bg-border/30 rounded" />
+                          <div className="h-3 w-2/3 bg-border/30 rounded" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Strategy comparison — above calendar when results exist */}
             {result && strategies.balanced && (
-              <div className="w-full order-1" data-tour="strategy-cards">
+              <div ref={resultsAreaRef} className="w-full order-1" data-tour="strategy-cards">
                 <div className="bg-white rounded-2xl border border-border p-4">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-semibold text-ink">Compare strategies</span>
                   </div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {([
                       { key: 'short' as Strategy, label: 'Short breaks', desc: 'Many mini-trips', icon: String.fromCodePoint(0x26A1) },
                       { key: 'balanced' as Strategy, label: 'Balanced', desc: 'Mix of short & long', icon: String.fromCodePoint(0x2696, 0xFE0F) },
