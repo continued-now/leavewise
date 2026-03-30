@@ -32,6 +32,45 @@ const CHUSEOK_DATES: Record<number, string> = {
   2032: '2032-09-18',
 };
 
+// Dragon Boat Festival (端午節) — 5th day of 5th lunar month (Taiwan / East Asia)
+const DRAGON_BOAT_DATES: Record<number, string> = {
+  2024: '2024-06-10',
+  2025: '2025-05-31',
+  2026: '2026-06-19',
+  2027: '2027-06-09',
+  2028: '2028-05-28',
+  2029: '2029-06-16',
+  2030: '2030-06-05',
+  2031: '2031-06-24',
+  2032: '2032-06-13',
+};
+
+// Nyepi (Balinese Day of Silence / Saka New Year) — based on Balinese Saka calendar
+const NYEPI_DATES: Record<number, string> = {
+  2024: '2024-03-11',
+  2025: '2025-03-29',
+  2026: '2026-03-19',
+  2027: '2027-03-08',
+  2028: '2028-03-27',
+  2029: '2029-03-16',
+  2030: '2030-03-06',
+  2031: '2031-03-25',
+  2032: '2032-03-13',
+};
+
+// Eid al-Fitr (end of Ramadan) — Islamic calendar, shifts ~11 days earlier each year
+const EID_AL_FITR_DATES: Record<number, string> = {
+  2024: '2024-04-10',
+  2025: '2025-03-30',
+  2026: '2026-03-20',
+  2027: '2027-03-09',
+  2028: '2028-02-27',
+  2029: '2029-02-14',
+  2030: '2030-02-04',
+  2031: '2031-01-24',
+  2032: '2032-01-13',
+};
+
 // Diwali (new moon of Hindu month Kartik) dates
 const DIWALI_DATES: Record<number, string> = {
   2024: '2024-11-01',
@@ -125,6 +164,117 @@ export function getCrowdEventsForYear(year: number): CrowdEventDef[] {
     avoidRegionKeys: ['japan'],
     crowdLevel: 'high',
     note: "Major Japanese domestic travel period — resorts, onsen, and coastal towns fill up. Shinkansen and domestic flights are peak-priced. Outside Japan it's business as usual.",
+  });
+
+  // ── Japan Silver Week (3rd Mon of Sep = Respect for the Aged Day + Autumnal Equinox ~Sep 22–23)
+  const respectAgedDay = nthWeekday(year, 8, 1, 3); // Sep = month 8 (0-based), Mon = 1, 3rd
+  if (respectAgedDay) {
+    events.push({
+      id: 'japan-silver-week',
+      name: 'Japan Silver Week',
+      startStr: addDays(respectAgedDay, -1),
+      endStr: `${year}-09-24`,
+      affectedRegions: ['Japan'],
+      avoidRegionKeys: ['japan'],
+      crowdLevel: 'high',
+      note: "Respect for the Aged Day plus Autumnal Equinox create a long weekend. Domestic travel surges — popular onsen towns and Kyoto are crowded. Prices rise 20–30% on domestic routes.",
+    });
+  }
+
+  // ── Japan Shogatsu / New Year (Dec 28 – Jan 3)
+  events.push({
+    id: 'japan-new-year',
+    name: 'Japan New Year (Shogatsu)',
+    startStr: `${year}-12-28`,
+    endStr: `${year + 1}-01-03`,
+    affectedRegions: ['Japan'],
+    avoidRegionKeys: ['japan'],
+    crowdLevel: 'peak',
+    note: "Japan's most important holiday. Most businesses close Dec 29–Jan 3. Hotels in onsen towns and ski resorts sell out months ahead. Shinkansen reserved seats are fully booked. Prices spike 50–100%.",
+  });
+
+  // ── Taiwan Tomb Sweeping Day (Qingming, Apr 4–5)
+  events.push({
+    id: 'taiwan-tomb-sweeping',
+    name: 'Taiwan Tomb Sweeping Day (Qingming)',
+    startStr: `${year}-04-03`,
+    endStr: `${year}-04-06`,
+    affectedRegions: ['Taiwan'],
+    avoidRegionKeys: ['east-asia'],
+    crowdLevel: 'moderate',
+    note: "Taiwanese families travel for ancestral tomb visits. Domestic transport is busy and popular scenic areas (Taroko Gorge, Sun Moon Lake) see moderate crowds.",
+  });
+
+  // ── Taiwan Dragon Boat Festival (端午節)
+  const dragonBoat = DRAGON_BOAT_DATES[year];
+  if (dragonBoat) {
+    events.push({
+      id: 'taiwan-dragon-boat',
+      name: 'Taiwan Dragon Boat Festival',
+      startStr: addDays(dragonBoat, -1),
+      endStr: addDays(dragonBoat, 2),
+      affectedRegions: ['Taiwan'],
+      avoidRegionKeys: ['east-asia'],
+      crowdLevel: 'moderate',
+      note: "3-day weekend in Taiwan. Domestic travel picks up and popular destinations see moderate price increases. Dragon boat races draw crowds to riverside areas.",
+    });
+  }
+
+  // ── Taiwan Moon Festival (Mid-Autumn) — same lunar date as Chuseok
+  const moonFest = CHUSEOK_DATES[year]; // 15th of 8th lunar month, same as Chuseok
+  if (moonFest) {
+    events.push({
+      id: 'taiwan-moon-festival',
+      name: 'Taiwan Moon Festival (Mid-Autumn)',
+      startStr: addDays(moonFest, -1),
+      endStr: addDays(moonFest, 2),
+      affectedRegions: ['Taiwan'],
+      avoidRegionKeys: ['east-asia'],
+      crowdLevel: 'moderate',
+      note: "Family gathering holiday in Taiwan. Domestic travel is busy, and nearby destinations (Japan, Korea) see some overflow. Overlaps with Korean Chuseok — double impact on East Asian routes.",
+    });
+  }
+
+  // ── Indonesia Nyepi (Balinese Day of Silence)
+  const nyepi = NYEPI_DATES[year];
+  if (nyepi) {
+    events.push({
+      id: 'indonesia-nyepi',
+      name: 'Nyepi (Balinese Day of Silence)',
+      startStr: addDays(nyepi, -2),
+      endStr: addDays(nyepi, 1),
+      affectedRegions: ['Indonesia', 'Bali'],
+      avoidRegionKeys: ['southeast-asia'],
+      crowdLevel: 'moderate',
+      note: "Bali shuts down completely for 24 hours — no flights, no transport, no leaving hotels. The days before and after see heavy domestic travel. Plan around this if visiting Bali.",
+    });
+  }
+
+  // ── Indonesia Eid al-Fitr (Lebaran)
+  const eid = EID_AL_FITR_DATES[year];
+  if (eid) {
+    events.push({
+      id: 'indonesia-eid',
+      name: 'Eid al-Fitr (Lebaran)',
+      startStr: addDays(eid, -5),
+      endStr: addDays(eid, 7),
+      affectedRegions: ['Indonesia', 'Southeast Asia'],
+      avoidRegionKeys: ['southeast-asia'],
+      crowdLevel: 'high',
+      note: "Indonesia's biggest travel event — 'mudik' (homecoming) moves 100M+ people. Flights and trains are fully booked weeks ahead. Bali sees a huge domestic tourist surge. Prices spike 40–80% on all routes.",
+    });
+  }
+
+  // ── Vietnam Liberation Day / Reunification Day (Apr 30) + May Day (May 1)
+  events.push({
+    id: 'vietnam-liberation-day',
+    name: 'Vietnam Liberation & May Day',
+    startStr: `${year}-04-29`,
+    endStr: `${year}-05-02`,
+    affectedRegions: ['Vietnam'],
+    avoidRegionKeys: ['vietnam'],
+    crowdLevel: 'moderate',
+    note: "4-day holiday weekend in Vietnam. Domestic tourism surges to Da Nang, Phu Quoc, and Ha Long Bay. Hotel prices in beach towns rise 20–40%.",
   });
 
   // ── China National Day / Golden Week (Oct 1–7)
