@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
       scheduled: publishDate > today,
       description: data.description ?? '',
       keywords: data.keywords ?? [],
+      category: data.category ?? 'strategy',
       content,
       fileName: file,
     };
@@ -95,7 +96,14 @@ export async function POST(request: NextRequest) {
   const loc = locale ?? 'en';
   const dir = getLocaleDir(loc);
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+    try {
+      fs.mkdirSync(dir, { recursive: true });
+    } catch {
+      return NextResponse.json(
+        { error: 'Blog editing is not available in this environment' },
+        { status: 500 }
+      );
+    }
   }
 
   const filePath = path.join(dir, `${safeSlug}.md`);

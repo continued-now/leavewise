@@ -4,6 +4,7 @@ date: "2026-03-22"
 slug: "2026-substitute-holidays-explained"
 description: "2026년 대체공휴일 날짜와 제헌절 공휴일 부활까지, 올해 달라지는 공휴일 제도를 한눈에 정리했습니다."
 keywords: ["대체공휴일 2026", "제헌절 공휴일", "2026년 공휴일", "대체공휴일제", "한국 공휴일 달력"]
+category: "strategy"
 ---
 
 ## 2026년, 공휴일이 바뀝니다

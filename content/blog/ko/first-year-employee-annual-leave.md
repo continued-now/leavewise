@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "first-year-employee-annual-leave"
 description: "입사 1년차는 연차가 11일뿐입니다. 적은 연차를 가장 효율적으로 쓰는 방법과 신입사원이 알아야 할 연차 규정을 정리했습니다."
 keywords: ["신입사원 연차", "1년차 연차", "연차 11일", "신입 휴가 팁", "연차 계산법"]
+category: "strategy"
 draft: true
 ---
 

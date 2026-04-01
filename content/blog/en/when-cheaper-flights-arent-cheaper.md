@@ -5,6 +5,7 @@ date: "2026-03-30"
 slug: "when-cheaper-flights-arent-cheaper"
 locale: "en"
 keywords: ["cheaper flights hidden costs", "alternative airport worth it", "true cost of flights", "airport comparison", "budget travel tips"]
+category: "travel-tips"
 ---
 
 ## The $130 trap

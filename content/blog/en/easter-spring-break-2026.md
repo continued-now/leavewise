@@ -4,6 +4,7 @@ date: "2026-03-26"
 slug: "easter-spring-break-2026"
 description: "Easter 2026 falls on April 5. Here's exactly how to take 4 PTO days and get 10 consecutive days off — plus the best destinations for an April trip."
 keywords: ["easter 2026 long weekend", "easter 2026 time off", "april 2026 vacation", "spring break 2026 PTO"]
+category: "holiday-guide"
 ---
 
 ## Easter 2026 Falls on a Sunday — Here's Why That Matters

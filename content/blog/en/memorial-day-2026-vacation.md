@@ -5,6 +5,7 @@ publishDate: "2026-04-20"
 slug: "memorial-day-2026-vacation"
 description: "Memorial Day 2026 is May 25. Take 4 PTO days the week before and get a 9-day break — here's the exact plan and where to go."
 keywords: ["memorial day 2026 vacation", "memorial day 2026 long weekend", "may 2026 time off", "memorial day PTO"]
+category: "holiday-guide"
 ---
 
 ## The Summer Kickoff Window

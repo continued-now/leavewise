@@ -4,6 +4,7 @@ date: "2026-03-25"
 slug: "christmas-new-years-2026-pto-guide"
 description: "Christmas 2026 falls on a Friday. Here's exactly how to turn 3 PTO days into a 10-day holiday break — and where to go."
 keywords: ["christmas 2026 vacation", "new years 2026 time off", "holiday PTO planning", "december 2026 vacation"]
+category: "holiday-guide"
 ---
 
 ## The Best Window of the Year

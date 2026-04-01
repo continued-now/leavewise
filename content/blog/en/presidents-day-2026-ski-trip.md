@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "presidents-day-2026-ski-trip"
 description: "Presidents' Day 2026 gives you a free Monday. Add 2 PTO days and you've got a 5-day midwinter escape. Here's the plan."
 keywords: ["presidents day 2026", "presidents day ski trip", "february 2026 long weekend", "winter vacation 2026"]
+category: "holiday-guide"
 draft: true
 ---
 

@@ -70,3 +70,15 @@ export function trackPlanDelete(): void {
 export function trackPlanCompare(): void {
   send('plan_compare');
 }
+
+export function trackBlogShare(platform: string): void {
+  send('blog_share', { platform });
+}
+
+export function trackBlogCategoryFilter(category: string): void {
+  send('blog_category_filter', { category });
+}
+
+export function trackBlogCTAClick(slug: string): void {
+  send('blog_cta_click', { slug });
+}

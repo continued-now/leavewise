@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "remote-work-annual-leave-korea"
 description: "재택근무자가 사무실 출근자보다 연차를 덜 쓴다는 데이터가 있습니다. 번아웃을 막는 연차 사용 전략을 정리했습니다."
 keywords: ["재택근무 연차", "원격근무 휴가", "재택근무 번아웃", "연차 사용률"]
+category: "strategy"
 draft: true
 ---
 

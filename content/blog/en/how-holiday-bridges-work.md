@@ -4,6 +4,7 @@ date: "2026-03-20"
 slug: "how-holiday-bridges-work"
 description: "Most workers leave 4-5 vacation days worth of value on the table every year. Holiday bridges fix that — here's how the math works."
 keywords: ["holiday bridge", "PTO optimization", "maximize vacation days", "time off planning"]
+category: "strategy"
 ---
 
 ## You're Probably Wasting PTO

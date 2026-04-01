@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "labor-day-2026-9-days-off"
 description: "Labor Day 2026 is September 7. Here's how to stretch it into a 9-day late-summer vacation and why September is the smartest month to travel."
 keywords: ["labor day 2026 vacation", "labor day long weekend", "september 2026 PTO", "late summer trip"]
+category: "holiday-guide"
 draft: true
 ---
 

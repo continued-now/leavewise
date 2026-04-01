@@ -5,6 +5,7 @@ date: "2026-03-30"
 slug: "cheap-flights-hidden-costs"
 locale: "ko"
 keywords: ["저가항공 숨은 비용", "대체 공항 비교", "항공권 실제 비용", "나리타 하네다 비교", "여행 꿀팁"]
+category: "travel-tips"
 ---
 
 ## 13만원의 함정

@@ -4,6 +4,7 @@ date: "2026-03-20"
 slug: "annual-leave-efficiency-guide"
 description: "연차를 아무 날이나 쓰면 1일=1일. 공휴일 옆에 쓰면 1일=3일. 연차 효율의 기본 원리를 정리했습니다."
 keywords: ["연차 효율", "연차 활용법", "공휴일 연차", "직장인 연차 팁", "휴가 계획"]
+category: "strategy"
 ---
 
 ## 연차 1일의 가치는 전부 다릅니다

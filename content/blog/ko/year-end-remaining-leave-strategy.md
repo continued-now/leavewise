@@ -4,6 +4,7 @@ date: "2026-03-26"
 slug: "year-end-remaining-leave-strategy"
 description: "연말에 남은 연차를 효율적으로 쓰는 방법. 남은 일수별 최적 전략과 크리스마스-연말 황금연휴 만드는 법을 정리했습니다."
 keywords: ["연차 소진", "남은 연차 활용", "연말 연차 계획", "크리스마스 연차 2026", "연차 소멸"]
+category: "strategy"
 ---
 
 ## 매년 반복되는 문제

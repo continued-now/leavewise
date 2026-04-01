@@ -4,6 +4,7 @@ date: "2026-03-22"
 slug: "best-long-weekends-2026-usa"
 description: "A complete list of every long weekend opportunity in 2026 for US workers, with the exact PTO days to take for each one."
 keywords: ["long weekends 2026", "2026 vacation planning", "US holidays 2026", "PTO planning guide"]
+category: "holiday-guide"
 ---
 
 ## Your 2026 Long Weekend Map

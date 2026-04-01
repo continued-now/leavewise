@@ -5,6 +5,7 @@ publishDate: "2026-05-15"
 slug: "july-4th-2026-vacation"
 description: "July 4th lands on a Saturday in 2026. Most employers observe Friday July 3. Here's how to build a 9-day summer vacation around it."
 keywords: ["july 4th 2026 vacation", "fourth of july 2026 time off", "july 2026 long weekend", "independence day PTO"]
+category: "holiday-guide"
 ---
 
 ## Saturday July 4th — Better Than You Think

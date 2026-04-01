@@ -4,6 +4,7 @@ date: "2026-03-30"
 slug: "best-time-korean-travelers-visit-destinations"
 description: "When Korean holidays collide with local holidays, prices spike and crowds swell. Here's a data-driven guide to the sweet spots — months where weather is great, Korean tourists are few, and local prices are normal."
 keywords: ["best time to visit Japan from Korea", "off-peak travel Korea", "avoid Korean holiday crowds", "cheap flights from Korea", "Bali off season", "Europe shoulder season", "Southeast Asia best months"]
+category: "travel-tips"
 ---
 
 ## The Double-Overlap Problem

@@ -5,6 +5,7 @@ publishDate: "2026-12-01"
 slug: "seollal-2027-early-planning"
 description: "2027년 설날은 2월 6~8일. 대체공휴일까지 합하면 연차 2일로 9일 연속 휴가가 가능합니다. 항공권은 12월에 사야 합니다."
 keywords: ["설날 연차 2027", "설날 황금연휴 2027", "2027 설날 여행", "설날 항공권 예약"]
+category: "holiday-guide"
 ---
 
 ## 왜 지금 설날 이야기를?

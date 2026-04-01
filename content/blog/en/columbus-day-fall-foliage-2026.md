@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "columbus-day-fall-foliage-2026"
 description: "Columbus Day 2026 is October 12. Take one Friday off and you get a 4-day weekend perfectly timed for peak fall foliage across the Northeast and Midwest."
 keywords: ["columbus day 2026", "fall foliage 2026", "october long weekend", "indigenous peoples day 2026"]
+category: "holiday-guide"
 draft: true
 ---
 

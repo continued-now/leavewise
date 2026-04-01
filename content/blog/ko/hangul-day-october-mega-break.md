@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "hangul-day-october-mega-break"
 description: "2026년 10월은 개천절(10/3)+대체공휴일(10/5)+한글날(10/9)이 집중된 황금의 달. 연차 3일로 12일 연속 가능."
 keywords: ["한글날 연차 2026", "개천절 대체공휴일", "10월 황금연휴 2026", "한글날 여행"]
+category: "holiday-guide"
 draft: true
 ---
 

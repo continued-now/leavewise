@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "pto-for-remote-workers-2026"
 description: "Remote workers take fewer vacation days than office workers. Here's why that's a mistake, and how to plan PTO when you can work from anywhere."
 keywords: ["remote work PTO", "work from home vacation", "remote worker burnout", "PTO planning remote"]
+category: "strategy"
 draft: true
 ---
 

@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "veterans-day-thanksgiving-combo-2026"
 description: "Veterans Day (Nov 11) and Thanksgiving (Nov 26) are just two weeks apart in 2026. Here's how to connect them for a massive November break."
 keywords: ["veterans day 2026", "november 2026 vacation", "thanksgiving veterans day combo", "november PTO strategy"]
+category: "holiday-guide"
 draft: true
 ---
 

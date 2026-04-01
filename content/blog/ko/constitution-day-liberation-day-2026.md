@@ -5,6 +5,7 @@ publishDate: "2026-06-01"
 slug: "constitution-day-liberation-day-2026"
 description: "2026년 제헌절이 18년 만에 공휴일로 부활합니다. 7월 17일(금) 제헌절과 8월 17일(월) 광복절 대체공휴일을 활용한 여름 연차 전략."
 keywords: ["제헌절 공휴일 2026", "광복절 대체공휴일", "7월 연차 2026", "8월 연차 2026", "여름휴가 연차"]
+category: "holiday-guide"
 ---
 
 ## 18년 만에 돌아온 제헌절

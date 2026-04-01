@@ -5,6 +5,7 @@ publishDate: "2026-10-01"
 slug: "use-remaining-pto-2026"
 description: "55% of Americans leave PTO on the table every year. Here's exactly how to turn your remaining days into real vacations before year-end, broken down by how many you have left."
 keywords: ["use remaining PTO 2026", "leftover vacation days", "end of year PTO", "PTO planning Q4"]
+category: "strategy"
 ---
 
 ## The $2,500 Mistake

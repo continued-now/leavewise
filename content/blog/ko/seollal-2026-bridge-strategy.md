@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "seollal-2026-bridge-strategy"
 description: "2026년 설날은 2월 16~18일(월~수). 주말과 자연스럽게 연결되어 연차 효율이 매우 높은 해입니다."
 keywords: ["설날 연차 2026", "설날 연휴 계획", "설날 황금연휴", "2026 설날 여행"]
+category: "holiday-guide"
 draft: true
 ---
 

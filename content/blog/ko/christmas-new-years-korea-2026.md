@@ -5,6 +5,7 @@ publishDate: "2099-01-01"
 slug: "christmas-new-years-korea-2026"
 description: "2026년 크리스마스는 금요일, 신정은 목요일. 연차 3일이면 12일 연속 연말 대연휴가 가능합니다."
 keywords: ["크리스마스 연차 2026", "연말 연차 계획", "신정 연차", "크리스마스 여행 한국"]
+category: "holiday-guide"
 draft: true
 ---
 

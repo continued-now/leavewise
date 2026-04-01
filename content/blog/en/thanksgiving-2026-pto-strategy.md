@@ -4,6 +4,7 @@ date: "2026-03-26"
 slug: "thanksgiving-2026-pto-strategy"
 description: "Thanksgiving 2026 is November 26. Here's how to turn 3 PTO days into a 9-day break, where to go, and when to book."
 keywords: ["thanksgiving 2026 vacation", "thanksgiving 2026 long weekend", "november 2026 time off", "thanksgiving PTO strategy"]
+category: "holiday-guide"
 ---
 
 ## Thanksgiving Is the Easiest PTO Hack of the Year

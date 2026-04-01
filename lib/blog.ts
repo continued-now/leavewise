@@ -11,6 +11,8 @@ import rehypeStringify from 'rehype-stringify';
 import { visit } from 'unist-util-visit';
 import { toString } from 'hast-util-to-string';
 import type { Root, Element } from 'hast';
+import type { BlogCategory } from './blog-categories';
+import { rehypeCallouts, rehypeTableWrapper } from './rehype-blog-plugins';
 
 export interface Heading {
   id: string;
@@ -24,6 +26,9 @@ export interface BlogPost {
   date: string;
   description: string;
   keywords: string[];
+  category: BlogCategory;
+  readingTime: number;
+  updatedDate?: string;
   contentHtml: string;
   headings: Heading[];
 }
@@ -46,10 +51,21 @@ const sanitizeSchema = {
     h4: [...(defaultSchema.attributes?.h4 ?? []), 'id'],
     h5: [...(defaultSchema.attributes?.h5 ?? []), 'id'],
     h6: [...(defaultSchema.attributes?.h6 ?? []), 'id'],
+    blockquote: [...(defaultSchema.attributes?.blockquote ?? []), 'className'],
+    div: [...(defaultSchema.attributes?.div ?? []), 'className'],
   },
   // Remove 'id' from clobber so heading ids are not prefixed
   clobber: (defaultSchema.clobber ?? []).filter((c: string) => c !== 'id'),
 };
+
+function calculateReadingTime(content: string, locale: 'en' | 'ko'): number {
+  if (locale === 'ko') {
+    const charCount = content.replace(/\s/g, '').length;
+    return Math.max(1, Math.ceil(charCount / 500));
+  }
+  const wordCount = content.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(wordCount / 238));
+}
 
 /**
  * Rehype plugin that extracts heading data from the tree.
@@ -84,19 +100,23 @@ export function getAllPosts(locale: 'en' | 'ko', includeScheduled = false): Blog
 
   for (const file of files) {
     const raw = fs.readFileSync(path.join(dir, file), 'utf-8');
-    const { data } = matter(raw);
+    const { data, content } = matter(raw);
     const publishDate: string = data.publishDate ?? data.date ?? '';
 
     // Skip future-dated posts unless explicitly requested
     if (!includeScheduled && publishDate > today) continue;
 
-    posts.push({
+    const meta: BlogPostMeta = {
       slug: data.slug ?? file.replace(/\.md$/, ''),
       title: data.title ?? '',
       date: data.date ?? '',
       description: data.description ?? '',
       keywords: data.keywords ?? [],
-    });
+      category: (data.category as BlogCategory) ?? 'strategy',
+      readingTime: calculateReadingTime(content, locale),
+    };
+    if (data.updatedDate) meta.updatedDate = data.updatedDate;
+    posts.push(meta);
   }
 
   posts.sort((a, b) => (a.date > b.date ? -1 : 1));
@@ -126,6 +146,8 @@ export async function getPostBySlug(
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeSlug)
+    .use(rehypeCallouts)
+    .use(rehypeTableWrapper)
     .use(rehypeSanitize, sanitizeSchema)
     .use(rehypeExtractHeadings(headings))
     .use(rehypeStringify)
@@ -137,6 +159,9 @@ export async function getPostBySlug(
     date: data.date ?? '',
     description: data.description ?? '',
     keywords: data.keywords ?? [],
+    category: (data.category as BlogCategory) ?? 'strategy',
+    readingTime: calculateReadingTime(content, locale),
+    updatedDate: data.updatedDate ?? undefined,
     contentHtml: String(result),
     headings,
   };
