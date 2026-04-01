@@ -14,8 +14,13 @@ import { LongWeekendCard } from '@/components/optimize/LongWeekendCard';
 import { OnboardingTour } from '@/components/OnboardingTour';
 
 const ShareCard = dynamic(() => import('@/components/ShareCard').then((mod) => mod.ShareCard), { ssr: false });
+const PTOScoreCard = dynamic(() => import('@/components/PTOScoreCard').then((mod) => mod.PTOScoreCard), { ssr: false });
 const ExpandedLongWeekendModal = dynamic(() => import('@/components/optimize/ExpandedLongWeekendModal').then((mod) => mod.ExpandedLongWeekendModal), { ssr: false });
 const HolidayPanel = dynamic(() => import('@/components/HolidayPanel').then((mod) => mod.HolidayPanel), { ssr: false });
+import { YearMiniMap } from '@/components/YearMiniMap';
+import { WhatIfPanel } from '@/components/WhatIfPanel';
+import { AnimatedStat } from '@/components/AnimatedStat';
+import { CelebrationBurst } from '@/components/CelebrationBurst';
 import { useThemeLocale } from '@/hooks/useThemeLocale';
 import { useFormState, DEFAULT_FORM, encodeShareURL } from '@/hooks/useFormState';
 import { useCalendarBase } from '@/hooks/useCalendarBase';
@@ -24,7 +29,10 @@ import { useOptimizerResults } from '@/hooks/useOptimizerResults';
 import { parseDates, KR_SUBSTITUTE_HOLIDAYS_VERIFIED as KR_SUBSTITUTE_VERIFIED } from '@/lib/api';
 import { US_STATES, COUNTRY_CURRENCY } from '@/lib/countries';
 import { generatePlanSummary, getStateName } from '@/lib/planUtils';
-import { trackStrategySwitch } from '@/lib/analytics';
+import { trackStrategySwitch, trackPlanSave, trackPlanLoad, trackPlanDelete } from '@/lib/analytics';
+import { useSavedPlans } from '@/hooks/useSavedPlans';
+import { SavePlanButton } from '@/components/saved-plans/SavePlanButton';
+import { SavedPlansDrawer } from '@/components/saved-plans/SavedPlansDrawer';
 import type { CountryCode, Strategy } from '@/lib/types';
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -44,6 +52,10 @@ export default function OptimizePage() {
     if (typeof window === 'undefined') return false;
     try { return localStorage.getItem('leavewise_lw_guide_dismissed') === '1'; } catch { return false; }
   });
+  const [showScoreCard, setShowScoreCard] = useState(false);
+  const [calendarStartMonth, setCalendarStartMonth] = useState<number | undefined>(undefined);
+  const [celebrationTrigger, setCelebrationTrigger] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Interactive calendar state (selectedPTO needed before form & optimizer hooks)
   // We bootstrap with empty set, then the formState hook provides initialPTO
@@ -80,6 +92,7 @@ export default function OptimizePage() {
     expandedLW,
     setExpandedLW,
     handleDayClick,
+    handleDragSelect,
     handleApplyBridge,
     handlePreviewEnter,
     handlePreviewLeave,
@@ -120,7 +133,11 @@ export default function OptimizePage() {
     handleAdjustAllocation,
     handleExportAll,
     clearOptimizerState,
+    loadSavedResult,
   } = useOptimizerResults(form, setSelectedPTO, setActiveHoliday, setPreviewDates, setSidebarOpen, toast);
+
+  // Saved plans
+  const { plans: savedPlans, canSave, savePlan, loadPlan, deletePlan, renamePlan } = useSavedPlans();
 
   // Clear interactive + optimizer state when fundamental settings change
   useEffect(() => {
@@ -137,6 +154,15 @@ export default function OptimizePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Fire celebration burst when a new result arrives
+  useEffect(() => {
+    if (result && result.totalLeaveUsed > 0) {
+      setCelebrationTrigger(true);
+      const timer = setTimeout(() => setCelebrationTrigger(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [result]);
+
   // Keyboard shortcut: ⌘↵ / Ctrl+↵ to optimize
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -148,6 +174,21 @@ export default function OptimizePage() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [handleOptimize, loading, totalLeave]);
+
+  // Escape key to close modals (topmost first)
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (drawerOpen) { setDrawerOpen(false); return; }
+        if (showShareCard) { setShowShareCard(false); return; }
+        if (showScoreCard) { setShowScoreCard(false); return; }
+        if (expandedLW) { setExpandedLW(null); return; }
+        if (activeHoliday) { setActiveHoliday(null); return; }
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [drawerOpen, showShareCard, showScoreCard, expandedLW, activeHoliday, setShowShareCard, setExpandedLW, setActiveHoliday]);
 
   const handleSidebarInteraction = useCallback(() => {
     if (!hasInteracted) setHasInteracted(true);
@@ -182,6 +223,34 @@ export default function OptimizePage() {
     });
   }, [result, form, toast]);
 
+  const handleSavePlan = useCallback((name: string) => {
+    if (!result) return;
+    const ptoArray = Array.from(selectedPTO);
+    const success = savePlan(name, form, ptoArray, result, strategies, activeStrategy);
+    if (success) {
+      toast(l.planSaved);
+      trackPlanSave(activeStrategy);
+    } else {
+      toast(l.planLimitReached, 'info');
+    }
+  }, [result, selectedPTO, form, strategies, activeStrategy, savePlan, toast, l]);
+
+  const handleLoadSavedPlan = useCallback((id: string) => {
+    const plan = loadPlan(id);
+    if (!plan) return;
+    setForm(plan.form);
+    loadSavedResult(plan.result, plan.strategy, plan.strategies);
+    setDrawerOpen(false);
+    toast(l.planLoaded);
+    trackPlanLoad(plan.strategy);
+  }, [loadPlan, setForm, loadSavedResult, toast, l]);
+
+  const handleDeletePlan = useCallback((id: string) => {
+    deletePlan(id);
+    toast(l.planDeleted, 'info');
+    trackPlanDelete();
+  }, [deletePlan, toast, l]);
+
   // Derived display values
   const selectedStateName = getStateName(form.usState);
   const remainingBudget = result?.remainingLeave ?? 0;
@@ -196,7 +265,18 @@ export default function OptimizePage() {
     const nextYearDays = baseCalendar.filter((d) => d.date.getFullYear() > maxYear);
     return nextYearDays.length > 0 ? [...optimized, ...nextYearDays] : optimized;
   }, [result?.days, baseCalendar, form.year]);
-  const defaultStartMonth = form.year === CURRENT_YEAR ? new Date().getMonth() : 0;
+  const defaultStartMonth = calendarStartMonth ?? (form.year === CURRENT_YEAR ? new Date().getMonth() : 0);
+
+  // When hovering a window card, also scroll the calendar to that window's start month
+  const handleWindowHover = useCallback((windowId: number | null) => {
+    setHoveredWindow(windowId);
+    if (windowId != null && result) {
+      const win = result.windows.find((w) => w.id === windowId);
+      if (win) {
+        setCalendarStartMonth(win.startDate.getMonth());
+      }
+    }
+  }, [result, setHoveredWindow]);
   const hasCompanyHolidays = parseDates(form.companyHolidaysRaw).length > 0;
 
   function setPreviewDates(s: Set<string>) {
@@ -211,7 +291,7 @@ export default function OptimizePage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen((o) => !o)}
-              className="flex items-center justify-center w-11 h-11 rounded-lg text-ink-muted hover:text-teal hover:bg-cream transition-colors"
+              className="flex items-center justify-center w-11 h-11 rounded-lg text-ink-muted hover:text-teal hover:bg-cream transition-colors focus-visible:ring-2 focus-visible:ring-teal/30 active:scale-95"
               aria-label={sidebarOpen ? l.hideSettings : l.showSettings}
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -289,12 +369,27 @@ export default function OptimizePage() {
               </svg>
               <span className="hidden sm:inline">{l.print}</span>
             </button>
+            <button
+              onClick={() => setDrawerOpen((o) => !o)}
+              className="print:hidden flex items-center gap-1 text-xs text-ink-muted hover:text-teal transition-colors border border-border rounded-lg px-2.5 py-1.5 hover:border-teal/40 relative"
+              aria-label={l.myPlans}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+              </svg>
+              <span className="hidden sm:inline">{l.myPlans}</span>
+              {savedPlans.length > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-teal text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                  {savedPlans.length}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* STATS BAR */}
-      <div className="bg-white border-b border-border/60 print:hidden" aria-live="polite">
+      {/* STATS BAR — sticky when results exist */}
+      <div className={`bg-white/95 backdrop-blur-sm border-b border-border/60 print:hidden ${result ? 'sticky top-[57px] z-40' : ''}`} aria-live="polite">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3 overflow-x-auto scrollbar-none text-xs min-h-[38px]">
           {calendarLoading ? (
             <span className="text-ink-muted/60 animate-pulse">
@@ -304,21 +399,24 @@ export default function OptimizePage() {
             <>
               <div className="flex items-center gap-1.5 shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-coral inline-block" />
-                <span className="font-semibold text-coral">{result.totalDaysOff}</span>
+                <AnimatedStat value={result.totalDaysOff} className="font-semibold text-coral" />
                 <span className="text-ink-muted">{l.daysOff}</span>
               </div>
               <div className="w-px h-3 bg-border shrink-0" />
               <div className="flex items-center gap-1.5 shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-teal inline-block" />
-                <span className="font-semibold text-teal">{result.totalLeaveUsed}</span>
+                <AnimatedStat value={result.totalLeaveUsed} className="font-semibold text-teal" />
                 <span className="text-ink-muted">{l.used}</span>
               </div>
               <div className="w-px h-3 bg-border shrink-0" />
               <div className="flex items-center gap-1.5 shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-sage inline-block" />
-                <span className="font-semibold text-sage">
-                  {(result.totalDaysOff / Math.max(1, result.totalLeaveUsed)).toFixed(1)}×
-                </span>
+                <AnimatedStat
+                  value={result.totalDaysOff / Math.max(1, result.totalLeaveUsed)}
+                  className="font-semibold text-sage"
+                  suffix="×"
+                  decimals={1}
+                />
                 <span className="text-ink-muted">{locale === 'ko' ? '효율' : 'efficiency'}</span>
               </div>
               <EfficiencyBadge
@@ -677,7 +775,7 @@ export default function OptimizePage() {
                 data-tour="optimize-button"
                 onClick={() => { handleOptimize(); handleSidebarInteraction(); }}
                 disabled={loading || totalLeave === 0}
-                className={`w-full bg-teal text-white font-semibold py-3 rounded-xl hover:bg-teal-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm flex items-center justify-center gap-2 ${
+                className={`w-full bg-teal text-white font-semibold py-3 rounded-xl hover:bg-teal-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-teal/40 focus-visible:ring-offset-2 active:scale-[0.98] ${
                   !hasInteracted && !result && totalLeave > 0 ? 'animate-pulse' : ''
                 }`}
               >
@@ -808,12 +906,12 @@ export default function OptimizePage() {
           <div className="flex flex-col gap-8">
 
             {/* Results section */}
-            <div tabIndex={-1} className="w-full order-3 space-y-8 outline-none">
+            <div className="w-full order-4 space-y-8">
 
             {/* Loading skeleton while optimizing */}
             {loading && !result && (
-              <div className="space-y-5 animate-pulse">
-                <div className="bg-white rounded-xl border border-border px-5 py-4 flex items-center gap-5">
+              <div className="space-y-5 skeleton-stagger">
+                <div className="bg-white rounded-xl border border-border px-5 py-4 flex items-center gap-5 animate-skeleton">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="flex items-center gap-1.5">
                       <div className="w-8 h-6 bg-border/50 rounded" />
@@ -821,11 +919,11 @@ export default function OptimizePage() {
                     </div>
                   ))}
                 </div>
-                <div className="bg-white rounded-2xl border border-border p-6">
+                <div className="bg-white rounded-2xl border border-border p-6 animate-skeleton">
                   <div className="h-4 w-48 bg-border/50 rounded mb-4" />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 skeleton-stagger">
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className="border border-border rounded-xl p-4 space-y-3">
+                      <div key={i} className="border border-border rounded-xl p-4 space-y-3 animate-skeleton">
                         <div className="h-4 w-32 bg-border/50 rounded" />
                         <div className="h-3 w-full bg-border/40 rounded" />
                         <div className="h-3 w-2/3 bg-border/40 rounded" />
@@ -838,7 +936,7 @@ export default function OptimizePage() {
             )}
 
             {result && (
-              <div className="space-y-5">
+              <div className="space-y-5 stagger-children">
                 <div className="flex items-center gap-5 flex-wrap bg-white rounded-xl border border-border px-5 py-3">
                   {[
                     { value: result.totalDaysOff, label: l.daysOffLabel, color: 'text-coral' },
@@ -847,7 +945,7 @@ export default function OptimizePage() {
                     { value: result.remainingLeave, label: l.remainingLabel, color: 'text-ink-muted' },
                   ].map((s) => (
                     <div key={s.label} className="flex items-center gap-1.5">
-                      <span className={`text-xl font-display font-semibold ${s.color}`}>{s.value}</span>
+                      <AnimatedStat value={s.value} className={`text-xl font-display font-semibold ${s.color}`} />
                       <span className="text-[11px] text-ink-muted">{s.label}</span>
                     </div>
                   ))}
@@ -857,6 +955,34 @@ export default function OptimizePage() {
                     <span>{form.country === 'US' ? `${l.countryUSContext}${selectedStateName}` : l.southKorea} · {form.year}</span>
                     {form.companyName && <span className="text-amber font-medium">{form.companyName}</span>}
                   </div>
+                </div>
+
+                {/* What If + PTO Score row */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 items-start">
+                  <WhatIfPanel
+                    form={form}
+                    currentResult={result}
+                    locale={locale}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowScoreCard(true)}
+                    className="h-full bg-white rounded-xl border border-border px-5 py-4 flex flex-col items-center justify-center gap-1.5 hover:border-teal/40 hover:shadow-md transition-all group"
+                  >
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white font-display font-bold text-lg group-hover:scale-110 transition-transform"
+                      style={{ backgroundColor: (result.totalDaysOff / Math.max(1, result.totalLeaveUsed)) >= 2.5 ? '#1A6363' : (result.totalDaysOff / Math.max(1, result.totalLeaveUsed)) >= 2.0 ? '#4A7C5E' : '#C4872A' }}
+                    >
+                      {(result.totalDaysOff / Math.max(1, result.totalLeaveUsed)) >= 3.5 ? 'S' :
+                       (result.totalDaysOff / Math.max(1, result.totalLeaveUsed)) >= 3.0 ? 'A+' :
+                       (result.totalDaysOff / Math.max(1, result.totalLeaveUsed)) >= 2.5 ? 'A' :
+                       (result.totalDaysOff / Math.max(1, result.totalLeaveUsed)) >= 2.0 ? 'B+' :
+                       (result.totalDaysOff / Math.max(1, result.totalLeaveUsed)) >= 1.8 ? 'B' :
+                       (result.totalDaysOff / Math.max(1, result.totalLeaveUsed)) >= 1.5 ? 'C' : 'D'}
+                    </div>
+                    <span className="text-[10px] font-semibold text-ink-muted">{locale === 'ko' ? 'PTO 점수' : 'PTO Score'}</span>
+                    <span className="text-[9px] text-ink-muted/60">{locale === 'ko' ? '공유하기' : 'Share it'}</span>
+                  </button>
                 </div>
 
                 {/* Vacation windows */}
@@ -918,15 +1044,22 @@ export default function OptimizePage() {
                           </svg>
                           Share plan
                         </button>
+                        <SavePlanButton
+                          canSave={canSave}
+                          defaultName={`${activeStrategy.charAt(0).toUpperCase() + activeStrategy.slice(1)} plan — ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
+                          onSave={handleSavePlan}
+                          onLimitReached={() => toast(l.planLimitReached, 'info')}
+                          label={l.savePlan}
+                        />
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
                       {sortedWindows.map((w) => (
                         <WindowCard
                           key={w.id}
                           window={w}
                           isHighlighted={hoveredWindow === w.id}
-                          onHover={setHoveredWindow}
+                          onHover={handleWindowHover}
                           flightDeal={flightDeals[w.id]}
                           hotelDeal={hotelDeals[w.id]}
                           origin={form.homeAirport}
@@ -1117,7 +1250,7 @@ export default function OptimizePage() {
 
             {/* Strategy comparison — above calendar when results exist */}
             {result && strategies.balanced && (
-              <div ref={resultsAreaRef} className="w-full order-1" data-tour="strategy-cards">
+              <div ref={resultsAreaRef} tabIndex={-1} className="w-full order-1 outline-none" data-tour="strategy-cards">
                 <div className="bg-white rounded-2xl border border-border p-4">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-semibold text-ink">Compare strategies</span>
@@ -1141,24 +1274,43 @@ export default function OptimizePage() {
                             <span className={`text-xs font-semibold ${isActive ? 'text-teal' : 'text-ink'}`}>{label}</span>
                           </div>
                           <p className="text-[10px] text-ink-muted mb-2">{desc}</p>
-                          {s && (
-                            <div className="space-y-1">
-                              <div className="flex justify-between text-[11px]">
-                                <span className="text-ink-muted">Windows</span>
-                                <span className="font-semibold text-ink">{s.windows.length}</span>
+                          {s && (() => {
+                            const active = strategies[activeStrategy];
+                            const daysDelta = active ? s.totalDaysOff - active.totalDaysOff : 0;
+                            const windowDelta = active ? s.windows.length - active.windows.length : 0;
+                            return (
+                              <div className="space-y-1">
+                                <div className="flex justify-between text-[11px]">
+                                  <span className="text-ink-muted">Windows</span>
+                                  <span className="font-semibold text-ink">
+                                    {s.windows.length}
+                                    {!isActive && windowDelta !== 0 && (
+                                      <span className={`ml-1 text-[9px] ${windowDelta > 0 ? 'text-sage' : 'text-coral'}`}>
+                                        {windowDelta > 0 ? '+' : ''}{windowDelta}
+                                      </span>
+                                    )}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between text-[11px]">
+                                  <span className="text-ink-muted">Days off</span>
+                                  <span className="font-semibold text-ink">
+                                    {s.totalDaysOff}
+                                    {!isActive && daysDelta !== 0 && (
+                                      <span className={`ml-1 text-[9px] ${daysDelta > 0 ? 'text-sage' : 'text-coral'}`}>
+                                        {daysDelta > 0 ? '+' : ''}{daysDelta}
+                                      </span>
+                                    )}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between text-[11px]">
+                                  <span className="text-ink-muted">Avg efficiency</span>
+                                  <span className="font-semibold text-sage">
+                                    {(s.windows.reduce((a, w) => a + w.efficiency, 0) / Math.max(s.windows.length, 1)).toFixed(1)}x
+                                  </span>
+                                </div>
                               </div>
-                              <div className="flex justify-between text-[11px]">
-                                <span className="text-ink-muted">Days off</span>
-                                <span className="font-semibold text-ink">{s.totalDaysOff}</span>
-                              </div>
-                              <div className="flex justify-between text-[11px]">
-                                <span className="text-ink-muted">Avg efficiency</span>
-                                <span className="font-semibold text-sage">
-                                  {(s.windows.reduce((a, w) => a + w.efficiency, 0) / Math.max(s.windows.length, 1)).toFixed(1)}x
-                                </span>
-                              </div>
-                            </div>
-                          )}
+                            );
+                          })()}
                         </button>
                       );
                     })}
@@ -1167,8 +1319,21 @@ export default function OptimizePage() {
               </div>
             )}
 
+            {/* Year-at-a-Glance Mini Map */}
+            {calendarDays.length > 0 && !calendarLoading && (
+              <div className="w-full order-2">
+                <YearMiniMap
+                  days={calendarDays}
+                  year={form.year}
+                  hoveredWindow={hoveredWindow}
+                  onHoverWindow={setHoveredWindow}
+                  onMonthClick={(m) => setCalendarStartMonth(m)}
+                />
+              </div>
+            )}
+
             {/* Calendar — front and center */}
-            <div className="w-full order-2 space-y-3" data-tour="calendar">
+            <div className="w-full order-3 space-y-3" data-tour="calendar">
             {calendarLoading ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -1219,6 +1384,7 @@ export default function OptimizePage() {
                     previewDates={previewDates}
                     activeHolidayDateStr={activeHoliday?.dateStr ?? null}
                     onDayClick={handleDayClick}
+                    onDragSelect={handleDragSelect}
                     showCompanyHolidays={hasCompanyHolidays}
                     hoveredWindow={hoveredWindow}
                     onHoverWindow={setHoveredWindow}
@@ -1250,6 +1416,12 @@ export default function OptimizePage() {
         </div>
       </div>
 
+      {/* Celebration burst on high-efficiency results */}
+      <CelebrationBurst
+        trigger={celebrationTrigger}
+        efficiency={result ? result.totalDaysOff / Math.max(1, result.totalLeaveUsed) : 0}
+      />
+
       {/* Share card modal */}
       {showShareCard && result && (
         <ShareCard
@@ -1264,6 +1436,18 @@ export default function OptimizePage() {
             endStr: w.endStr,
           }))}
           onClose={() => setShowShareCard(false)}
+        />
+      )}
+
+      {/* PTO Score card modal */}
+      {showScoreCard && result && (
+        <PTOScoreCard
+          year={form.year}
+          totalLeave={result.totalLeaveUsed}
+          totalDaysOff={result.totalDaysOff}
+          windowCount={result.windows.length}
+          efficiency={result.totalDaysOff / Math.max(1, result.totalLeaveUsed)}
+          onClose={() => setShowScoreCard(false)}
         />
       )}
 
@@ -1305,6 +1489,17 @@ export default function OptimizePage() {
           </div>
         </>
       )}
+
+      {/* Saved plans drawer */}
+      <SavedPlansDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        plans={savedPlans}
+        onLoad={handleLoadSavedPlan}
+        onDelete={handleDeletePlan}
+        onRename={renamePlan}
+        l={l}
+      />
 
       {/* Onboarding tour */}
       <OnboardingTour />

@@ -54,3 +54,19 @@ export function trackFlightCtaView(days: number): void {
 export function trackBlogScrollDepth(depth: number): void {
   send('blog_scroll_depth', { depth });
 }
+
+export function trackPlanSave(strategy: string): void {
+  send('plan_save', { strategy });
+}
+
+export function trackPlanLoad(strategy: string): void {
+  send('plan_load', { strategy });
+}
+
+export function trackPlanDelete(): void {
+  send('plan_delete');
+}
+
+export function trackPlanCompare(): void {
+  send('plan_compare');
+}

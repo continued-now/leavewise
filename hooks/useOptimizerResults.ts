@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import type { FormState, OptimizationResult, FlightDeal, HotelDeal, Strategy, VacationWindow, DayData } from '@/lib/types';
+import type { FormState, OptimizationResult, FlightDeal, HotelDeal, Strategy, VacationWindow, DayData, SerializedDay, SerializedWindow, SerializedResult } from '@/lib/types';
 import type { LockedWindow } from '@/lib/optimizer';
 import { downloadAllICS } from '@/lib/ics';
 import { trackOptimize, trackCalendarExport } from '@/lib/analytics';
@@ -11,20 +11,6 @@ const COUNTRY_CURRENCY: Record<string, string> = { US: 'USD', KR: 'KRW' };
 // ---------------------------------------------------------------------------
 // API response types (dates arrive as ISO strings, need rehydration)
 // ---------------------------------------------------------------------------
-interface SerializedDay extends Omit<DayData, 'date'> {
-  date: string;
-}
-
-interface SerializedWindow extends Omit<VacationWindow, 'startDate' | 'endDate'> {
-  startDate: string;
-  endDate: string;
-}
-
-interface SerializedResult extends Omit<OptimizationResult, 'days' | 'windows'> {
-  days: SerializedDay[];
-  windows: SerializedWindow[];
-}
-
 interface OptimizeAPIResponse {
   balanced: SerializedResult;
   short?: SerializedResult;
@@ -32,8 +18,24 @@ interface OptimizeAPIResponse {
   error?: string;
 }
 
+/** Serialize Date objects to ISO strings for storage */
+export function serializeResult(result: OptimizationResult): SerializedResult {
+  return {
+    ...result,
+    days: result.days.map((d) => ({
+      ...d,
+      date: d.date.toISOString(),
+    })),
+    windows: result.windows.map((w) => ({
+      ...w,
+      startDate: w.startDate.toISOString(),
+      endDate: w.endDate.toISOString(),
+    })),
+  };
+}
+
 /** Rehydrate ISO date strings back to Date objects */
-function rehydrateResult(serialized: SerializedResult): OptimizationResult {
+export function rehydrateResult(serialized: SerializedResult): OptimizationResult {
   return {
     ...serialized,
     days: serialized.days.map((d) => ({
@@ -279,6 +281,14 @@ export function useOptimizerResults(
           currency,
           (id, deal) => setFlightDeals((prev) => ({ ...prev, [id]: deal }))
         ).then((flightResults) => {
+          const errorCount = Object.values(flightResults).filter((r) => r === 'error').length;
+          if (errorCount > 0) {
+            if (errorCount === optimized.windows.length) {
+              toast('Flight prices temporarily unavailable', 'info');
+            } else {
+              toast(`Flight prices unavailable for ${errorCount} window${errorCount !== 1 ? 's' : ''}`, 'info');
+            }
+          }
           fetchHotelDealsForWindows(
             optimized.windows,
             flightResults,
@@ -287,15 +297,17 @@ export function useOptimizerResults(
           );
         });
 
-        // Scroll to results with offset for sticky nav + stats bar (~100px)
-        setTimeout(() => {
-          const el = resultsAreaRef.current;
-          if (el) {
-            const top = el.getBoundingClientRect().top + window.scrollY - 110;
-            window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-            el.focus();
-          }
-        }, 200);
+        // Scroll to results after React renders — double rAF ensures paint
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const el = resultsAreaRef.current;
+            if (el) {
+              const top = el.getBoundingClientRect().top + window.scrollY - 110;
+              window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+              el.focus();
+            }
+          });
+        });
 
         setSidebarOpen(false);
 
@@ -340,6 +352,42 @@ export function useOptimizerResults(
     toast(`Exported ${result.windows.length} windows to calendar`);
   }, [result, toast]);
 
+  const loadSavedResult = useCallback((
+    serializedResult: SerializedResult,
+    strategy: Strategy,
+    extraStrategies?: { short?: SerializedResult; long?: SerializedResult }
+  ) => {
+    const optimized = rehydrateResult(serializedResult);
+    setResult(optimized);
+    resultRef.current = optimized;
+    setFlightDeals({});
+    setHotelDeals({});
+    windowAllocationsRef.current = {};
+    setWindowAllocations({});
+
+    const shortResult = extraStrategies?.short ? rehydrateResult(extraStrategies.short) : null;
+    const longResult = extraStrategies?.long ? rehydrateResult(extraStrategies.long) : null;
+
+    if (strategy === 'short' && shortResult) {
+      setStrategies({ short: shortResult, balanced: optimized, long: longResult });
+      setActiveStrategy('short');
+    } else if (strategy === 'long' && longResult) {
+      setStrategies({ short: shortResult, balanced: optimized, long: longResult });
+      setActiveStrategy('long');
+    } else {
+      setStrategies({ short: shortResult, balanced: optimized, long: longResult });
+      setActiveStrategy('balanced');
+    }
+
+    const ptoDates = new Set(
+      optimized.days.filter((d) => d.isPTO && !d.isPrebooked).map((d) => d.dateStr)
+    );
+    setSelectedPTO(ptoDates);
+    setActiveHoliday(null);
+    setPreviewDates(new Set());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const clearOptimizerState = useCallback(() => {
     setResult(null);
     resultRef.current = null;
@@ -376,5 +424,6 @@ export function useOptimizerResults(
     handleAdjustAllocation,
     handleExportAll,
     clearOptimizerState,
+    loadSavedResult,
   };
 }

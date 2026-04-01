@@ -154,3 +154,51 @@ export interface ShareableSnapshot {
 }
 
 export type Strategy = 'short' | 'balanced' | 'long';
+
+// ── Serialized types (dates as ISO strings for JSON storage) ────────────────
+
+export interface SerializedDay extends Omit<DayData, 'date'> {
+  date: string;
+}
+
+export interface SerializedWindow extends Omit<VacationWindow, 'startDate' | 'endDate'> {
+  startDate: string;
+  endDate: string;
+}
+
+export interface SerializedResult extends Omit<OptimizationResult, 'days' | 'windows'> {
+  days: SerializedDay[];
+  windows: SerializedWindow[];
+}
+
+// ── Saved Plans ─────────────────────────────────────────────────────────────
+
+export interface SavedPlanMeta {
+  id: string;
+  name: string;
+  createdAt: number;
+  updatedAt: number;
+  country: CountryCode;
+  year: number;
+  strategy: Strategy;
+  totalLeaveUsed: number;
+  totalDaysOff: number;
+  efficiency: number;
+  windowCount: number;
+  remainingLeave: number;
+}
+
+export interface SavedPlan extends SavedPlanMeta {
+  form: FormState;
+  selectedPTO: string[];
+  result: SerializedResult;
+  strategies?: {
+    short?: SerializedResult;
+    long?: SerializedResult;
+  };
+}
+
+export interface SavedPlansStore {
+  version: 1;
+  plans: SavedPlan[];
+}
