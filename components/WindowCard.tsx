@@ -1,10 +1,12 @@
 'use client';
 
+import { useMemo } from 'react';
 import { VacationWindow, FlightDeal, HotelDeal } from '@/lib/types';
-import { buildFlightSearchLink, buildHotelSearchLink, buildFlightCompareLink, buildGoogleCalendarLink, buildKlookLink, buildTiqetsLink, buildAiraloLink } from '@/lib/affiliates';
-import { downloadICS } from '@/lib/ics';
+import { buildFlightSearchLink, buildHotelSearchLink, buildFlightCompareLink, buildKlookLink, buildTiqetsLink, buildAiraloLink } from '@/lib/affiliates';
 import { useToast } from '@/components/Toast';
 import { trackAffiliateClick } from '@/lib/analytics';
+import { CalendarExportMenu } from '@/components/CalendarExportMenu';
+import { PriceAlertButton } from '@/components/PriceAlertButton';
 
 const WINDOW_COLORS = [
   'border-l-teal',
@@ -69,7 +71,7 @@ export function WindowCard({
 
   // P3-04: Estimated trip cost computation
   const nights = Math.max(w.totalDays - 1, 1);
-  const estimatedCost = (() => {
+  const estimatedCost = useMemo(() => {
     if (deal && hotel) {
       const hotelLow = hotel.minPrice * nights;
       const hotelHigh = Math.round(hotel.minPrice * 1.5) * nights;
@@ -81,7 +83,7 @@ export function WindowCard({
       return { type: 'flight_only' as const, price: deal.price, currency: deal.currency };
     }
     return null;
-  })();
+  }, [deal, hotel, nights]);
 
   function handleCopyDates() {
     const text = `${formatDate(w.startStr)} – ${formatDateLong(w.endStr)} (${w.totalDays} days, ${w.ptoDaysUsed} PTO) · ${w.label}`;
@@ -90,17 +92,12 @@ export function WindowCard({
     });
   }
 
-  function handleDownloadICS() {
-    downloadICS(w.startStr, w.endStr, w.label, w.ptoDaysUsed);
-    toast('Calendar event downloaded');
-  }
-
   return (
     <article
       role="article"
       aria-label={`${w.label} — ${w.totalDays} days off using ${w.ptoDaysUsed} PTO${isBestWindow ? ' (most efficient)' : ''}`}
       className={`bg-white rounded-2xl border-l-4 border border-border ${accentColor} p-5 transition-all duration-200 cursor-default ${
-        isHighlighted ? 'shadow-md ring-1 ring-teal/20' : 'hover:shadow-sm'
+        isHighlighted ? 'shadow-md ring-1 ring-teal/20 bg-teal/[0.02]' : 'hover:shadow-sm hover:bg-cream-dark/30 hover:border-border/80'
       } ${isBestWindow ? 'ring-2 ring-sage/20' : ''}`}
       onMouseEnter={() => onHover(w.id)}
       onMouseLeave={() => onHover(null)}
@@ -135,7 +132,7 @@ export function WindowCard({
                 aria-label="Use fewer PTO days"
                 onClick={(e) => { e.stopPropagation(); onAdjustPTO(w.id, -1); }}
                 disabled={w.ptoDaysUsed <= 1}
-                className="w-7 h-7 rounded-md border border-border bg-cream text-ink-muted hover:border-coral/40 hover:text-coral disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-xs font-medium"
+                className="w-8 h-8 sm:w-7 sm:h-7 rounded-md border border-border bg-cream text-ink-muted hover:border-coral/40 hover:text-coral hover:bg-coral-light active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center text-xs font-medium"
               >
                 −
               </button>
@@ -147,7 +144,7 @@ export function WindowCard({
                 aria-label="Use more PTO days"
                 onClick={(e) => { e.stopPropagation(); onAdjustPTO(w.id, +1); }}
                 disabled={remainingBudget <= 0}
-                className="w-7 h-7 rounded-md border border-border bg-cream text-ink-muted hover:border-teal/40 hover:text-teal disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-xs font-medium"
+                className="w-8 h-8 sm:w-7 sm:h-7 rounded-md border border-border bg-cream text-ink-muted hover:border-teal/40 hover:text-teal hover:bg-teal-light active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center text-xs font-medium"
               >
                 +
               </button>
@@ -410,13 +407,13 @@ export function WindowCard({
       )}
 
       {/* Footer actions */}
-      <div className="flex items-center justify-between pt-3 border-t border-border gap-2 flex-wrap mt-3">
-        <div className="flex items-center gap-3">
+      <div className="pt-3 border-t border-border mt-3">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-3 sm:flex-wrap">
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); handleCopyDates(); }}
             aria-label="Copy date range to clipboard"
-            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors py-1"
+            className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors min-h-[44px] sm:min-h-0 sm:py-1 rounded-lg sm:rounded-none border border-border sm:border-0 bg-cream sm:bg-transparent"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -424,31 +421,10 @@ export function WindowCard({
             Copy
           </button>
 
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); handleDownloadICS(); }}
-            aria-label="Download calendar event"
-            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors py-1"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            Calendar
-          </button>
-
-          <a
-            href={buildGoogleCalendarLink(w.startStr, w.endStr, w.label, w.ptoDaysUsed)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'google_cal'); }}
-            aria-label="Add to Google Calendar"
-            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors py-1"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-            </svg>
-            Google Cal
-          </a>
+          <CalendarExportMenu
+            windows={[{ startStr: w.startStr, endStr: w.endStr, label: w.label, ptoDaysUsed: w.ptoDaysUsed }]}
+            mode="single"
+          />
           {deal && (
             <a
               href={buildAiraloLink(deal.destination, tpMarker || undefined, w.label)}
@@ -456,7 +432,7 @@ export function WindowCard({
               rel="noopener noreferrer"
               onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'esim'); }}
               aria-label="Get eSIM for this destination"
-              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors py-1"
+              className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors min-h-[44px] sm:min-h-0 sm:py-1 rounded-lg sm:rounded-none border border-border sm:border-0 bg-cream sm:bg-transparent"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3" />
@@ -464,15 +440,27 @@ export function WindowCard({
               eSIM
             </a>
           )}
+          {deal && origin && (
+            <PriceAlertButton
+              windowLabel={w.label}
+              origin={origin}
+              startStr={w.startStr}
+              endStr={w.endStr}
+              currentPrice={deal.price}
+              currency={deal.currency}
+              destination={deal.destination}
+              className="justify-center sm:justify-start min-h-[44px] sm:min-h-0 rounded-lg sm:rounded-none border border-border sm:border-0 bg-cream sm:bg-transparent px-2"
+            />
+          )}
         </div>
 
         {!deal && flightDeal !== 'loading' && origin && (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mt-2 sm:mt-0">
             <a
               href={buildFlightSearchLink(origin, w.startStr, w.endStr, tpMarker || undefined, w.label)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-teal hover:text-teal-hover transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-teal hover:text-teal-hover transition-colors min-h-[44px] sm:min-h-0"
               onClick={(e) => { e.stopPropagation(); trackAffiliateClick(w.label, 'flight'); }}
             >
               Find flights

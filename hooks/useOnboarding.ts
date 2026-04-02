@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 const STORAGE_KEY = 'leavewise_tour_complete';
 
@@ -14,18 +14,13 @@ export interface OnboardingState {
 
 export function useOnboarding(): OnboardingState {
   const [step, setStep] = useState(0);
-  const [active, setActive] = useState(false);
-
-  useEffect(() => {
+  const [active, setActive] = useState(() => {
     try {
-      const done = localStorage.getItem(STORAGE_KEY);
-      if (!done) {
-        setActive(true);
-      }
+      return !localStorage.getItem(STORAGE_KEY);
     } catch {
-      // localStorage not available
+      return false;
     }
-  }, []);
+  });
 
   const nextStep = useCallback(() => {
     setStep((s) => Math.min(s + 1, 3));

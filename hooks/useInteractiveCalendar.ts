@@ -5,13 +5,23 @@ import type { DayData } from '@/lib/types';
 import type { BridgeOption } from '@/lib/bridge-suggestions';
 import type { LongWeekendPreview } from '@/lib/longWeekends';
 import { getBridgeSuggestions } from '@/lib/bridge-suggestions';
+import { useUndoRedo } from '@/hooks/useUndoRedo';
 
 export function useInteractiveCalendar(
   baseCalendar: DayData[] | null,
   remainingPTO: number,
   initialPTO: string[]
 ) {
-  const [selectedPTO, setSelectedPTO] = useState<Set<string>>(() => new Set(initialPTO));
+  const {
+    state: selectedPTO,
+    setState: setSelectedPTO,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    historySize,
+    clear: clearUndoHistory,
+  } = useUndoRedo<Set<string>>(new Set(initialPTO), { maxHistory: 50 });
   const [previewDates, setPreviewDates] = useState<Set<string>>(new Set());
   const [activeHoliday, setActiveHoliday] = useState<DayData | null>(null);
   const [activeSuggestions, setActiveSuggestions] = useState<BridgeOption[]>([]);
@@ -32,21 +42,13 @@ export function useInteractiveCalendar(
 
   const handleDayClick = useCallback(
     (day: DayData) => {
-      if (day.isHoliday) {
-        if (activeHoliday?.dateStr === day.dateStr) {
-          setActiveHoliday(null);
-          setPreviewDates(new Set());
-        } else {
-          setActiveHoliday(day);
-          setPreviewDates(new Set());
-        }
-      } else if (!day.isFree && !day.isPrebooked) {
-        setSelectedPTO((prev) => {
-          const next = new Set(prev);
-          if (next.has(day.dateStr)) next.delete(day.dateStr);
-          else next.add(day.dateStr);
-          return next;
-        });
+      if (!day.isHoliday) return;
+      if (activeHoliday?.dateStr === day.dateStr) {
+        setActiveHoliday(null);
+        setPreviewDates(new Set());
+      } else {
+        setActiveHoliday(day);
+        setPreviewDates(new Set());
       }
     },
     [activeHoliday]
@@ -58,7 +60,7 @@ export function useInteractiveCalendar(
       daysToAdd.forEach((d) => next.add(d));
       return next;
     });
-  }, []);
+  }, [setSelectedPTO]);
 
   const handlePreviewEnter = useCallback((dates: string[]) => {
     setPreviewDates(new Set(dates));
@@ -75,14 +77,26 @@ export function useInteractiveCalendar(
       else next.add(dateStr);
       return next;
     });
-  }, []);
+  }, [setSelectedPTO]);
+
+  const handleDragSelect = useCallback((dates: string[], mode: 'add' | 'remove') => {
+    setSelectedPTO((prev) => {
+      const next = new Set(prev);
+      for (const d of dates) {
+        if (mode === 'add') next.add(d);
+        else next.delete(d);
+      }
+      return next;
+    });
+  }, [setSelectedPTO]);
 
   const clearInteractiveState = useCallback(() => {
     setSelectedPTO(new Set());
+    clearUndoHistory();
     setActiveHoliday(null);
     setActiveSuggestions([]);
     setPreviewDates(new Set());
-  }, []);
+  }, [setSelectedPTO, clearUndoHistory]);
 
   return {
     selectedPTO,
@@ -94,10 +108,16 @@ export function useInteractiveCalendar(
     expandedLW,
     setExpandedLW,
     handleDayClick,
+    handleDragSelect,
     handleApplyBridge,
     handlePreviewEnter,
     handlePreviewLeave,
     handleTogglePTO,
     clearInteractiveState,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    historySize,
   };
 }

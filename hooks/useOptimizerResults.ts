@@ -198,6 +198,14 @@ export function useOptimizerResults(
     return ws;
   }, [result, windowSort]);
 
+  const dealProgress = useMemo(() => {
+    if (!result) return null;
+    const total = result.windows.length;
+    const flightsDone = Object.values(flightDeals).filter(d => d !== 'loading').length;
+    const hotelsDone = Object.values(hotelDeals).filter(d => d !== 'loading').length;
+    return { total, flightsDone, hotelsDone, allDone: flightsDone >= total && hotelsDone >= total };
+  }, [result, flightDeals, hotelDeals]);
+
   const bestWindowId = useMemo(() => {
     if (!result || result.windows.length === 0) return null;
     const best = result.windows.reduce((a, b) =>
@@ -420,6 +428,7 @@ export function useOptimizerResults(
     sortedWindows,
     bestWindowId,
     windowLabels,
+    dealProgress,
     handleOptimize,
     handleAdjustAllocation,
     handleExportAll,

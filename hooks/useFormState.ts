@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, type RefObject } from 'react';
 import type { FormState, StoredState, ShareableSnapshot, CountryCode } from '@/lib/types';
 import { inferAirport } from '@/lib/airports';
 import { COUNTRY_CONFIG } from '@/lib/countries-config';
@@ -86,7 +86,7 @@ function decodeShareURL(): FormState | null {
   }
 }
 
-export function useFormState(selectedPTO: Set<string>) {
+export function useFormState(selectedPTORef: RefObject<Set<string>>) {
   const urlFormRef = useRef<FormState | null | undefined>(undefined);
   const restoredFromStorage = useRef(false);
 
@@ -132,21 +132,33 @@ export function useFormState(selectedPTO: Set<string>) {
     if (getURLForm()) return [];
     const saved = loadSavedState();
     if (saved?.selectedPTO?.length) {
-      restoredFromStorage.current = true;
       return saved.selectedPTO;
     }
     return [];
   });
 
+  useEffect(() => {
+    if (initialPTO.length > 0 && !getURLForm()) {
+      restoredFromStorage.current = true;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Debounced save to localStorage
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
+
+  const scheduleSave = useCallback(() => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
-      saveState(form, selectedPTO);
+      saveState(form, selectedPTORef.current);
     }, 500);
+  }, [form, selectedPTORef]);
+
+  // Auto-save whenever form changes
+  useEffect(() => {
+    scheduleSave();
     return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
-  }, [form, selectedPTO]);
+  }, [scheduleSave]);
 
   const setLeave = useCallback((key: keyof FormState['leavePool'], value: number) => {
     setForm((f) => {
@@ -191,5 +203,6 @@ export function useFormState(selectedPTO: Set<string>) {
     setLeave,
     handleCountryChange,
     clearSavedState,
+    scheduleSave,
   };
 }

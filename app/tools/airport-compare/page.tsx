@@ -20,8 +20,21 @@ export const metadata: Metadata = {
 };
 
 export default function AirportComparePage() {
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://leavewise.app' },
+      { '@type': 'ListItem', position: 2, name: 'True Cost Airport Calculator', item: 'https://leavewise.app/tools/airport-compare' },
+    ],
+  };
+
   return (
     <main id="main-content" className="min-h-screen py-10 px-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       <div className="max-w-2xl mx-auto">
         {/* Breadcrumb */}
         <nav className="text-xs text-ink-muted mb-6">

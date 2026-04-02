@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { WindowCard } from '@/components/WindowCard';
@@ -17,10 +17,16 @@ const ShareCard = dynamic(() => import('@/components/ShareCard').then((mod) => m
 const PTOScoreCard = dynamic(() => import('@/components/PTOScoreCard').then((mod) => mod.PTOScoreCard), { ssr: false });
 const ExpandedLongWeekendModal = dynamic(() => import('@/components/optimize/ExpandedLongWeekendModal').then((mod) => mod.ExpandedLongWeekendModal), { ssr: false });
 const HolidayPanel = dynamic(() => import('@/components/HolidayPanel').then((mod) => mod.HolidayPanel), { ssr: false });
+import { MobileSettingsDrawer } from '@/components/MobileSettingsDrawer';
+import { UndoRedoControls } from '@/components/UndoRedoControls';
 import { YearMiniMap } from '@/components/YearMiniMap';
 import { WhatIfPanel } from '@/components/WhatIfPanel';
 import { AnimatedStat } from '@/components/AnimatedStat';
 import { CelebrationBurst } from '@/components/CelebrationBurst';
+import { SkeletonWindowCard } from '@/components/SkeletonWindowCard';
+import { LoadingProgress } from '@/components/LoadingProgress';
+import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
+import { useKeyboardShortcuts, type ShortcutConfig } from '@/hooks/useKeyboardShortcuts';
 import { useThemeLocale } from '@/hooks/useThemeLocale';
 import { useFormState, DEFAULT_FORM, encodeShareURL } from '@/hooks/useFormState';
 import { useCalendarBase } from '@/hooks/useCalendarBase';
@@ -33,6 +39,7 @@ import { trackStrategySwitch, trackPlanSave, trackPlanLoad, trackPlanDelete } fr
 import { useSavedPlans } from '@/hooks/useSavedPlans';
 import { SavePlanButton } from '@/components/saved-plans/SavePlanButton';
 import { SavedPlansDrawer } from '@/components/saved-plans/SavedPlansDrawer';
+import { CalendarExportMenu } from '@/components/CalendarExportMenu';
 import type { CountryCode, Strategy } from '@/lib/types';
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -56,12 +63,15 @@ export default function OptimizePage() {
   const [calendarStartMonth, setCalendarStartMonth] = useState<number | undefined>(undefined);
   const [celebrationTrigger, setCelebrationTrigger] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  // Interactive calendar state (selectedPTO needed before form & optimizer hooks)
-  // We bootstrap with empty set, then the formState hook provides initialPTO
-  const [selectedPTOProxy, setSelectedPTOProxy] = useState<Set<string>>(new Set());
+  // Ref to hold the latest selectedPTO for the formState save effect
+  // (avoids the extra render cycle of a proxy useState)
+  const selectedPTORef = useRef<Set<string>>(new Set());
 
-  // Form state — depends on selectedPTO for localStorage save
+  // Form state — depends on selectedPTORef for localStorage save
   const {
     form,
     setForm,
@@ -70,7 +80,8 @@ export default function OptimizePage() {
     setLeave,
     handleCountryChange,
     clearSavedState,
-  } = useFormState(selectedPTOProxy);
+    scheduleSave,
+  } = useFormState(selectedPTORef);
 
   // Calendar base (holidays + weekends)
   const { baseCalendar, calendarLoading, freeWeekends, boostWeekends, longWeekends } =
@@ -98,14 +109,22 @@ export default function OptimizePage() {
     handlePreviewLeave,
     handleTogglePTO,
     clearInteractiveState,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    historySize,
   } = useInteractiveCalendar(
     baseCalendar,
-    Math.max(0, totalLeave - prebookedCount - selectedPTOProxy.size),
+    Math.max(0, totalLeave - prebookedCount - selectedPTORef.current.size),
     initialPTO
   );
 
-  // Keep proxy in sync so formState saves correctly
-  useEffect(() => { setSelectedPTOProxy(selectedPTO); }, [selectedPTO]);
+  // Keep ref in sync so formState saves correctly; trigger debounced save without extra render
+  useEffect(() => {
+    selectedPTORef.current = selectedPTO;
+    scheduleSave();
+  }, [selectedPTO, scheduleSave]);
 
   const remainingPTO = Math.max(0, totalLeave - prebookedCount - selectedPTO.size);
 
@@ -129,6 +148,7 @@ export default function OptimizePage() {
     sortedWindows,
     bestWindowId,
     windowLabels,
+    dealProgress,
     handleOptimize,
     handleAdjustAllocation,
     handleExportAll,
@@ -143,8 +163,7 @@ export default function OptimizePage() {
   useEffect(() => {
     clearInteractiveState();
     clearOptimizerState();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.country, form.usState, form.year]);
+  }, [form.country, form.usState, form.year, clearInteractiveState, clearOptimizerState]);
 
   // Show restore toast on mount
   useEffect(() => {
@@ -179,6 +198,7 @@ export default function OptimizePage() {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        if (showShortcuts) { setShowShortcuts(false); return; }
         if (drawerOpen) { setDrawerOpen(false); return; }
         if (showShareCard) { setShowShareCard(false); return; }
         if (showScoreCard) { setShowScoreCard(false); return; }
@@ -188,7 +208,7 @@ export default function OptimizePage() {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [drawerOpen, showShareCard, showScoreCard, expandedLW, activeHoliday, setShowShareCard, setExpandedLW, setActiveHoliday]);
+  }, [showShortcuts, drawerOpen, showShareCard, showScoreCard, expandedLW, activeHoliday, setShowShareCard, setExpandedLW, setActiveHoliday]);
 
   const handleSidebarInteraction = useCallback(() => {
     if (!hasInteracted) setHasInteracted(true);
@@ -277,6 +297,68 @@ export default function OptimizePage() {
       }
     }
   }, [result, setHoveredWindow]);
+  // Keyboard shortcuts (centralized handler)
+  const shortcuts = useMemo<ShortcutConfig[]>(
+    () => [
+      {
+        key: '?',
+        handler: () => setShowShortcuts((o) => !o),
+        description: 'Show keyboard shortcuts',
+        group: 'actions' as const,
+      },
+      {
+        key: 's',
+        handler: () => setSidebarOpen((o) => !o),
+        description: 'Toggle sidebar',
+        group: 'navigation' as const,
+      },
+      {
+        key: '1',
+        handler: () => { if (strategies.short) setActiveStrategy('short'); },
+        description: 'Short breaks strategy',
+        group: 'navigation' as const,
+      },
+      {
+        key: '2',
+        handler: () => { if (strategies.balanced) setActiveStrategy('balanced'); },
+        description: 'Balanced strategy',
+        group: 'navigation' as const,
+      },
+      {
+        key: '3',
+        handler: () => { if (strategies.long) setActiveStrategy('long'); },
+        description: 'Long trips strategy',
+        group: 'navigation' as const,
+      },
+      {
+        key: 'e',
+        handler: () => { if (result) handleExportAll(); },
+        description: 'Export all to calendar',
+        group: 'actions' as const,
+      },
+      {
+        key: 'p',
+        handler: () => window.print(),
+        description: 'Print plan',
+        group: 'actions' as const,
+      },
+      {
+        key: 'ArrowLeft',
+        handler: () => setCalendarStartMonth((m) => Math.max(0, (m ?? defaultStartMonth) - 3)),
+        description: 'Previous calendar months',
+        group: 'calendar' as const,
+      },
+      {
+        key: 'ArrowRight',
+        handler: () => setCalendarStartMonth((m) => Math.min(11, (m ?? defaultStartMonth) + 3)),
+        description: 'Next calendar months',
+        group: 'calendar' as const,
+      },
+    ],
+    [strategies, result, handleExportAll, setActiveStrategy, defaultStartMonth]
+  );
+  useKeyboardShortcuts(shortcuts, !showShortcuts);
+
   const hasCompanyHolidays = parseDates(form.companyHolidaysRaw).length > 0;
 
   function setPreviewDates(s: Set<string>) {
@@ -290,7 +372,14 @@ export default function OptimizePage() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setSidebarOpen((o) => !o)}
+              onClick={() => {
+                // On mobile: open bottom sheet; on desktop: toggle inline sidebar
+                if (window.innerWidth < 1024) {
+                  setMobileSettingsOpen((o) => !o);
+                } else {
+                  setSidebarOpen((o) => !o);
+                }
+              }}
               className="flex items-center justify-center w-11 h-11 rounded-lg text-ink-muted hover:text-teal hover:bg-cream transition-colors focus-visible:ring-2 focus-visible:ring-teal/30 active:scale-95"
               aria-label={sidebarOpen ? l.hideSettings : l.showSettings}
             >
@@ -327,6 +416,15 @@ export default function OptimizePage() {
           </div>
 
           <div className="flex items-center gap-1.5">
+            {/* Desktop-only nav buttons */}
+            <button
+              onClick={() => setShowShortcuts(true)}
+              className="print:hidden hidden sm:flex items-center justify-center w-8 h-8 text-ink-muted hover:text-teal transition-colors rounded-lg hover:bg-cream border border-border hover:border-teal/40 text-xs font-bold"
+              aria-label="Keyboard shortcuts"
+              title="Keyboard shortcuts (?)"
+            >
+              ?
+            </button>
             <button
               onClick={toggleLocale}
               className="print:hidden h-8 px-2 text-[11px] font-semibold text-ink-muted hover:text-teal transition-colors rounded-lg hover:bg-cream border border-border hover:border-teal/40"
@@ -351,7 +449,7 @@ export default function OptimizePage() {
             </button>
             <button
               onClick={handleSharePlan}
-              className="print:hidden flex items-center gap-1 text-xs text-ink-muted hover:text-teal transition-colors border border-border rounded-lg px-2.5 py-1.5 hover:border-teal/40"
+              className="print:hidden hidden sm:flex items-center gap-1 text-xs text-ink-muted hover:text-teal transition-colors border border-border rounded-lg px-2.5 py-1.5 hover:border-teal/40"
               aria-label={l.sharePlanLink}
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -361,7 +459,7 @@ export default function OptimizePage() {
             </button>
             <button
               onClick={() => window.print()}
-              className="print:hidden flex items-center gap-1 text-xs text-ink-muted hover:text-teal transition-colors border border-border rounded-lg px-2.5 py-1.5 hover:border-teal/40"
+              className="print:hidden hidden sm:flex items-center gap-1 text-xs text-ink-muted hover:text-teal transition-colors border border-border rounded-lg px-2.5 py-1.5 hover:border-teal/40"
               aria-label={l.printPlan}
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -384,6 +482,53 @@ export default function OptimizePage() {
                 </span>
               )}
             </button>
+
+            {/* Mobile overflow menu */}
+            <div className="relative sm:hidden print:hidden">
+              <button
+                onClick={() => setMobileNavOpen((o) => !o)}
+                className="flex items-center justify-center w-8 h-8 text-ink-muted hover:text-teal transition-colors rounded-lg hover:bg-cream border border-border"
+                aria-label="More actions"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                </svg>
+              </button>
+              {mobileNavOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setMobileNavOpen(false)} aria-hidden="true" />
+                  <div className="absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-border shadow-lg py-1 min-w-[180px] animate-fade-in">
+                    <button
+                      onClick={() => { handleSharePlan(); setMobileNavOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-ink hover:bg-cream transition-colors text-left"
+                    >
+                      <svg className="w-4 h-4 text-ink-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.886-3.497l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                      </svg>
+                      {l.share}
+                    </button>
+                    <button
+                      onClick={() => { window.print(); setMobileNavOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-ink hover:bg-cream transition-colors text-left"
+                    >
+                      <svg className="w-4 h-4 text-ink-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.056 48.056 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
+                      </svg>
+                      {l.print}
+                    </button>
+                    <button
+                      onClick={() => { setShowShortcuts(true); setMobileNavOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-ink hover:bg-cream transition-colors text-left"
+                    >
+                      <svg className="w-4 h-4 text-ink-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                      </svg>
+                      Shortcuts
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </nav>
@@ -488,8 +633,80 @@ export default function OptimizePage() {
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
           {/* ── SIDEBAR FORM ── */}
+          {/* Mobile settings bottom sheet */}
+          <MobileSettingsDrawer open={mobileSettingsOpen} onClose={() => setMobileSettingsOpen(false)}>
+            <div className="space-y-5" onPointerDown={handleSidebarInteraction}>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h2 className="text-xl font-display font-semibold text-ink">{l.planHeading}</h2>
+                  <p className="text-xs text-ink-muted mt-1 leading-relaxed">{l.planSubheading}</p>
+                </div>
+                <button type="button" onClick={handleReset} className="text-[10px] font-semibold text-ink-muted hover:text-coral transition-colors px-2 py-1 rounded-lg hover:bg-coral-light shrink-0 mt-0.5" aria-label={l.resetAll}>{l.reset}</button>
+              </div>
+              {/* PTO Budget */}
+              <div>
+                <SectionLabel>{locale === 'ko' ? 'PTO 예산' : 'PTO budget'}</SectionLabel>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1">
+                      <div className="relative h-3 group">
+                        <div className="absolute inset-0 rounded-full bg-border/40 overflow-hidden flex">
+                          {prebookedCount > 0 && <div className="bg-ink-muted/40 h-full shrink-0 transition-all duration-200" style={{ width: `${(prebookedCount / 40) * 100}%` }} />}
+                          {selectedPTO.size > 0 && <div className="bg-coral h-full shrink-0 transition-all duration-200" style={{ width: `${(selectedPTO.size / 40) * 100}%` }} />}
+                          <div className="bg-teal/30 h-full shrink-0 transition-all duration-200" style={{ width: `${(Math.max(0, form.leavePool.ptoDays - selectedPTO.size - prebookedCount) / 40) * 100}%` }} />
+                        </div>
+                        <input type="range" min={0} max={40} value={form.leavePool.ptoDays} onChange={(e) => { const v = parseInt(e.target.value, 10); setLeave('ptoDays', v); setForm((f) => ({ ...f, daysToAllocate: v })); }} className="absolute inset-0 w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-teal [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md" />
+                      </div>
+                      <div className="flex items-center justify-between mt-1.5">
+                        <span className="text-[10px] font-semibold text-ink-muted">0</span>
+                        <span className="text-xs font-bold text-teal">{form.leavePool.ptoDays} {locale === 'ko' ? '일' : 'days'}</span>
+                        <span className="text-[10px] font-semibold text-ink-muted">40</span>
+                      </div>
+                    </div>
+                  </div>
+                  {totalLeave > 0 && (
+                    <div className="flex items-center justify-between bg-teal-light rounded-lg px-3 py-2 border border-teal/10">
+                      <span className="text-xs font-semibold text-teal">{l.totalAvailable}</span>
+                      <span className="text-base font-display font-semibold text-teal">{totalLeave} {l.days}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* Location */}
+              <div>
+                <SectionLabel>{l.location}</SectionLabel>
+                <div className="flex gap-2 mb-3">
+                  {([{ code: 'US' as CountryCode, label: l.countryUS }, { code: 'KR' as CountryCode, label: l.countryKR }] as { code: CountryCode; label: string }[]).map(({ code, label }) => (
+                    <button key={code} onClick={() => handleCountryChange(code)} className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition-all ${form.country === code ? 'bg-teal text-white border-teal' : 'bg-cream text-ink-muted border-border hover:border-teal/40'}`}>{label}</button>
+                  ))}
+                </div>
+                <div className="mb-3">
+                  <label className="block text-xs font-semibold text-ink-soft mb-1.5">{l.homeAirport}</label>
+                  <input type="text" value={form.homeAirport} onChange={(e) => { const val = e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3); setForm((f) => ({ ...f, homeAirport: val, airportManuallySet: true })); }} placeholder={l.airportPlaceholder} maxLength={3} className="w-full bg-cream border border-border rounded-lg px-3 py-2.5 text-sm text-ink font-mono uppercase placeholder:text-ink-muted/50 placeholder:normal-case focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-colors" />
+                </div>
+                {form.country === 'US' && (
+                  <div>
+                    <label className="block text-xs font-semibold text-ink-soft mb-1.5">{l.state}</label>
+                    <select value={form.usState} onChange={(e) => setForm((f) => ({ ...f, usState: e.target.value }))} className="w-full bg-cream border border-border rounded-lg px-3 py-2.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-colors">
+                      {US_STATES.map((s) => <option key={s.code} value={s.code}>{s.name}</option>)}
+                    </select>
+                  </div>
+                )}
+              </div>
+              {/* Optimize button */}
+              <button
+                onClick={() => { handleOptimize(); handleSidebarInteraction(); setMobileSettingsOpen(false); }}
+                disabled={loading || totalLeave === 0}
+                className="w-full bg-teal text-white font-semibold py-3 rounded-xl hover:bg-teal-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm flex items-center justify-center gap-2 min-h-[48px]"
+              >
+                {loading ? l.findingWindows : l.optimizeMyLeave}
+              </button>
+            </div>
+          </MobileSettingsDrawer>
+
+          {/* Desktop sidebar */}
           <aside
-            className={`shrink-0 transition-all duration-500 ease-in-out ${
+            className={`hidden lg:block shrink-0 transition-all duration-500 ease-in-out ${
               sidebarOpen
                 ? 'lg:w-80 xl:w-88 max-h-[2000px] opacity-100 pointer-events-auto'
                 : 'lg:w-0 max-h-0 lg:max-h-[2000px] overflow-hidden opacity-0 lg:opacity-0 pointer-events-none'
@@ -880,29 +1097,69 @@ export default function OptimizePage() {
             </div>
           </aside>
 
-          {/* Mobile sticky CTA */}
-          {!sidebarOpen && !result && (
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-cream/95 backdrop-blur-sm border-t border-border px-4 py-3 safe-area-pb">
+          {/* Mobile sticky bottom bar */}
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-sm border-t border-border px-4 py-3 print:hidden" style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}>
+            {result ? (
+              <div className="flex items-center gap-3">
+                <div className="flex-1 flex items-center gap-3 min-w-0 overflow-x-auto scrollbar-none">
+                  <div className="flex items-center gap-1 shrink-0">
+                    <span className="text-sm font-display font-semibold text-coral">{result.totalDaysOff}</span>
+                    <span className="text-[10px] text-ink-muted">{l.daysOff}</span>
+                  </div>
+                  <div className="w-px h-3 bg-border shrink-0" />
+                  <div className="flex items-center gap-1 shrink-0">
+                    <span className="text-sm font-display font-semibold text-sage">{(result.totalDaysOff / Math.max(1, result.totalLeaveUsed)).toFixed(1)}x</span>
+                    <span className="text-[10px] text-ink-muted">{locale === 'ko' ? '효율' : 'eff.'}</span>
+                  </div>
+                  <div className="w-px h-3 bg-border shrink-0" />
+                  <div className="flex items-center gap-1 shrink-0">
+                    <span className="text-sm font-display font-semibold text-teal">{result.totalLeaveUsed}</span>
+                    <span className="text-[10px] text-ink-muted">{l.used}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => setMobileSettingsOpen(true)}
+                    className="flex items-center justify-center w-10 h-10 rounded-xl border border-border text-ink-muted hover:text-teal transition-colors"
+                    aria-label={l.settings}
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={handleSharePlan}
+                    className="flex items-center gap-1.5 bg-teal text-white font-semibold text-sm px-4 py-2.5 rounded-xl hover:bg-teal-hover transition-colors min-h-[44px]"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.886-3.497l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                    </svg>
+                    {l.share}
+                  </button>
+                </div>
+              </div>
+            ) : (
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => setSidebarOpen(true)}
-                  className="text-xs font-semibold text-ink-muted border border-border rounded-xl px-3 py-2.5 hover:border-teal/40 transition-colors"
+                  onClick={() => setMobileSettingsOpen(true)}
+                  className="text-xs font-semibold text-ink-muted border border-border rounded-xl px-3 min-h-[44px] hover:border-teal/40 transition-colors"
                 >
                   {l.settings}
                 </button>
                 <button
                   onClick={() => handleOptimize()}
                   disabled={loading || totalLeave === 0}
-                  className="flex-1 bg-teal text-white font-semibold py-2.5 rounded-xl hover:bg-teal-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm"
+                  className="flex-1 bg-teal text-white font-semibold min-h-[44px] rounded-xl hover:bg-teal-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm"
                 >
                   {loading ? l.findingWindows : l.optimizeMyLeave}
                 </button>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* ── MAIN CONTENT ── */}
-          <main id="main-content" className="flex-1 min-w-0" role="main" aria-label="Calendar and results">
+          <main id="main-content" className="flex-1 min-w-0 pb-20 lg:pb-0" role="main" aria-label="Calendar and results">
           <div className="flex flex-col gap-8">
 
             {/* Results section */}
@@ -914,21 +1171,16 @@ export default function OptimizePage() {
                 <div className="bg-white rounded-xl border border-border px-5 py-4 flex items-center gap-5 animate-skeleton">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="flex items-center gap-1.5">
-                      <div className="w-8 h-6 bg-border/50 rounded" />
-                      <div className="w-14 h-3 bg-border/40 rounded" />
+                      <div className="w-8 h-6 bg-border/50 rounded skeleton-shimmer" />
+                      <div className="w-14 h-3 bg-border/40 rounded skeleton-shimmer" />
                     </div>
                   ))}
                 </div>
-                <div className="bg-white rounded-2xl border border-border p-6 animate-skeleton">
-                  <div className="h-4 w-48 bg-border/50 rounded mb-4" />
+                <div className="bg-white rounded-2xl border border-border p-6">
+                  <div className="h-4 w-48 bg-border/50 rounded mb-4 skeleton-shimmer" />
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 skeleton-stagger">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="border border-border rounded-xl p-4 space-y-3 animate-skeleton">
-                        <div className="h-4 w-32 bg-border/50 rounded" />
-                        <div className="h-3 w-full bg-border/40 rounded" />
-                        <div className="h-3 w-2/3 bg-border/40 rounded" />
-                        <div className="h-8 w-20 bg-border/50 rounded-lg" />
-                      </div>
+                    {[0, 1, 2].map((i) => (
+                      <SkeletonWindowCard key={i} colorIndex={i} />
                     ))}
                   </div>
                 </div>
@@ -937,7 +1189,7 @@ export default function OptimizePage() {
 
             {result && (
               <div className="space-y-5 stagger-children">
-                <div className="flex items-center gap-5 flex-wrap bg-white rounded-xl border border-border px-5 py-3">
+                <div className="flex items-center gap-3 sm:gap-5 flex-wrap bg-white rounded-xl border border-border px-3 sm:px-5 py-3">
                   {[
                     { value: result.totalDaysOff, label: l.daysOffLabel, color: 'text-coral' },
                     { value: result.totalLeaveUsed, label: l.leaveUsed, color: 'text-teal' },
@@ -1022,17 +1274,15 @@ export default function OptimizePage() {
                           </svg>
                           {l.copyPlan}
                         </button>
-                        <button
-                          type="button"
-                          onClick={handleExportAll}
-                          className="text-[10px] font-semibold text-teal hover:text-teal-hover transition-colors flex items-center gap-1 px-2 py-1 rounded-lg border border-teal/20 hover:border-teal/40 bg-teal-light"
-                          aria-label={l.exportAllCalendar}
-                        >
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                          </svg>
-                          {l.exportAll}
-                        </button>
+                        <CalendarExportMenu
+                          windows={sortedWindows.map((win) => ({
+                            startStr: win.startStr,
+                            endStr: win.endStr,
+                            label: win.label,
+                            ptoDaysUsed: win.ptoDaysUsed,
+                          }))}
+                          mode="bulk"
+                        />
                         <button
                           type="button"
                           onClick={() => setShowShareCard(true)}
@@ -1053,7 +1303,14 @@ export default function OptimizePage() {
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
+                    {dealProgress && !dealProgress.allDone && (
+                      <LoadingProgress
+                        total={dealProgress.total}
+                        loaded={dealProgress.flightsDone}
+                        label="Loading flight deals"
+                      />
+                    )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-fade-in">
                       {sortedWindows.map((w) => (
                         <WindowCard
                           key={w.id}
@@ -1197,7 +1454,7 @@ export default function OptimizePage() {
                       <span className="text-xs font-semibold text-sage">{l.alreadyFree}</span>
                       <span className="text-[10px] text-ink-muted">{l.noPTONeeded}</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       {freeWeekends.map((lw) => (
                         <LongWeekendCard key={lw.id} lw={lw} onClick={() => setExpandedLW(lw)} l={l} />
                       ))}
@@ -1211,7 +1468,7 @@ export default function OptimizePage() {
                       <span className="text-xs font-semibold text-ink-soft">{l.addAFewDays}</span>
                       <span className="text-[10px] text-ink-muted">{l.use1to3PTO}</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       {boostWeekends.map((lw) => (
                         <LongWeekendCard key={lw.id} lw={lw} onClick={() => setExpandedLW(lw)} l={l} />
                       ))}
@@ -1231,7 +1488,7 @@ export default function OptimizePage() {
               <div className="w-full order-1 animate-pulse">
                 <div className="bg-white rounded-2xl border border-border p-4">
                   <div className="h-4 w-32 bg-border/50 rounded mb-3" />
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
                     {[1, 2, 3].map((i) => (
                       <div key={i} className="p-3 rounded-xl border border-border space-y-2">
                         <div className="h-4 w-24 bg-border/50 rounded" />
@@ -1255,7 +1512,7 @@ export default function OptimizePage() {
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-semibold text-ink">Compare strategies</span>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
                     {([
                       { key: 'short' as Strategy, label: 'Short breaks', desc: 'Many mini-trips', icon: String.fromCodePoint(0x26A1) },
                       { key: 'balanced' as Strategy, label: 'Balanced', desc: 'Mix of short & long', icon: String.fromCodePoint(0x2696, 0xFE0F) },
@@ -1384,6 +1641,7 @@ export default function OptimizePage() {
                     previewDates={previewDates}
                     activeHolidayDateStr={activeHoliday?.dateStr ?? null}
                     onDayClick={handleDayClick}
+                    onTogglePTO={handleTogglePTO}
                     onDragSelect={handleDragSelect}
                     showCompanyHolidays={hasCompanyHolidays}
                     hoveredWindow={hoveredWindow}
@@ -1499,6 +1757,18 @@ export default function OptimizePage() {
         onDelete={handleDeletePlan}
         onRename={renamePlan}
         l={l}
+      />
+
+      {/* Keyboard shortcuts help */}
+      <KeyboardShortcutsHelp open={showShortcuts} onClose={() => setShowShortcuts(false)} />
+
+      {/* Undo/redo controls */}
+      <UndoRedoControls
+        undo={undo}
+        redo={redo}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        historySize={historySize}
       />
 
       {/* Onboarding tour */}

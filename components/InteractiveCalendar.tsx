@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef, memo } from 'react';
 import { DayData } from '@/lib/types';
 import { buildFlightSearchLink } from '@/lib/affiliates';
 import { trackCalendarDayClick } from '@/lib/analytics';
+import { CalendarTooltip } from '@/components/CalendarTooltip';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April',
@@ -12,6 +13,10 @@ const MONTH_NAMES = [
 ];
 const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const DAY_ABBR = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+// Stable default instances to avoid creating new objects every render
+const EMPTY_SET = new Set<string>();
+const EMPTY_MAP = new Map<number, string>();
 
 function getDayClasses(
   day: DayData,
@@ -24,7 +29,7 @@ function getDayClasses(
   isToday: boolean
 ): string {
   const base =
-    'aspect-square flex items-center justify-center text-base rounded-lg transition-all duration-100 select-none font-semibold';
+    'aspect-square flex items-center justify-center text-base rounded-lg transition-all duration-100 select-none font-semibold min-h-[44px] sm:min-h-0';
   const todayRing = isToday ? ' ring-2 ring-teal ring-offset-1' : '';
 
   if (isPast) {
@@ -88,12 +93,21 @@ interface MonthGridProps {
   today: string;
   windowLabels: Map<number, string>;
   showYear: boolean;
+  // Drag-to-select
+  isDragging: boolean;
+  dragDates: Set<string>;
+  dragMode: 'add' | 'remove';
+  onDragStart: (day: DayData) => void;
+  onDragEnter: (day: DayData) => void;
+  dragJustEndedRef: React.RefObject<boolean>;
+  onTogglePTO?: (dateStr: string) => void;
 }
 
-function MonthGrid({
+const MonthGrid = memo(function MonthGrid({
   year, month, days, selectedPTO, previewDates,
   activeHolidayDateStr, onDayClick,
   hoveredWindow, onHoverWindow, today, windowLabels, showYear,
+  isDragging, dragDates, dragMode, onDragStart, onDragEnter, dragJustEndedRef, onTogglePTO,
 }: MonthGridProps) {
   const monthDays = days.filter((d) => d.date.getFullYear() === year && d.date.getMonth() === month);
   if (monthDays.length === 0) return null;
@@ -149,26 +163,58 @@ function MonthGrid({
             tooltip = 'Click to add PTO';
           }
 
+          const isDragTarget = isDragging && dragDates.has(day.dateStr);
+          const canDrag = !isPast && !day.isFree && !day.isPrebooked && !day.isHoliday;
+
           return (
-            <div
-              key={day.dateStr}
-              role="gridcell"
-              aria-label={`${MONTH_NAMES[month]} ${day.date.getDate()}${day.holidayName ? ` — ${day.holidayName}` : ''}${isSelected ? ' (PTO)' : ''}`}
-              title={tooltip}
-              tabIndex={day.isHoliday || (!isPast && !day.isFree) ? 0 : -1}
-              onClick={() => { if (!isPast && onDayClick) { onDayClick(day); trackCalendarDayClick(); } }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  if (!isPast && onDayClick) { onDayClick(day); trackCalendarDayClick(); }
-                }
-              }}
-              onMouseEnter={() => !isPast && isInWindow && onHoverWindow(day.windowId!)}
-              onMouseLeave={() => onHoverWindow(null)}
-              className={getDayClasses(day, isSelected, isPreview, isActive, isInWindow, isPast, isHighlighted, isToday)}
-            >
-              {day.date.getDate()}
-            </div>
+            <CalendarTooltip key={day.dateStr} content={isDragging ? undefined : tooltip}>
+              <div
+                role="gridcell"
+                aria-label={`${MONTH_NAMES[month]} ${day.date.getDate()}${day.holidayName ? ` — ${day.holidayName}` : ''}${isSelected ? ' (PTO)' : ''}`}
+                tabIndex={day.isHoliday || (!isPast && !day.isFree) ? 0 : -1}
+                onMouseDown={(e) => {
+                  if (canDrag && e.button === 0) {
+                    e.preventDefault();
+                    onDragStart(day);
+                  }
+                }}
+                onMouseEnter={() => {
+                  if (isDragging && canDrag) {
+                    onDragEnter(day);
+                  } else if (!isPast && isInWindow) {
+                    onHoverWindow(day.windowId!);
+                  }
+                }}
+                onMouseLeave={() => { if (!isDragging) onHoverWindow(null); }}
+                onClick={() => {
+                  if (dragJustEndedRef.current) return;
+                  if (!isDragging && !isPast && onDayClick) {
+                    onDayClick(day); trackCalendarDayClick();
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (isPast) return;
+                    if (day.isHoliday && onDayClick) {
+                      onDayClick(day);
+                    } else if (canDrag && onTogglePTO) {
+                      onTogglePTO(day.dateStr);
+                    }
+                    trackCalendarDayClick();
+                  }
+                }}
+                className={`${getDayClasses(day, isSelected, isPreview, isActive, isInWindow, isPast, isHighlighted, isToday)} ${
+                  isDragTarget
+                    ? dragMode === 'add'
+                      ? '!bg-coral/40 !border-coral !border-dashed ring-1 ring-coral/30'
+                      : '!bg-border/60 !border-border !border-dashed ring-1 ring-border'
+                    : ''
+                } ${canDrag ? 'cursor-crosshair' : ''}`}
+              >
+                {day.date.getDate()}
+              </div>
+            </CalendarTooltip>
           );
         })}
       </div>
@@ -197,7 +243,7 @@ function MonthGrid({
       )}
     </div>
   );
-}
+});
 
 interface Streak {
   days: number;
@@ -299,6 +345,10 @@ interface InteractiveCalendarProps {
   previewDates?: Set<string>;
   activeHolidayDateStr?: string | null;
   onDayClick?: (day: DayData) => void;
+  /** Called when user toggles PTO via keyboard */
+  onTogglePTO?: (dateStr: string) => void;
+  /** Called when user completes a drag-select gesture */
+  onDragSelect?: (dates: string[], mode: 'add' | 'remove') => void;
   showCompanyHolidays?: boolean;
   hoveredWindow?: number | null;
   onHoverWindow?: (id: number | null) => void;
@@ -314,14 +364,16 @@ interface InteractiveCalendarProps {
 
 export function InteractiveCalendar({
   days,
-  selectedPTO = new Set(),
-  previewDates = new Set(),
+  selectedPTO = EMPTY_SET,
+  previewDates = EMPTY_SET,
   activeHolidayDateStr = null,
   onDayClick,
+  onTogglePTO,
+  onDragSelect,
   showCompanyHolidays = false,
   hoveredWindow = null,
   onHoverWindow,
-  windowLabels = new Map(),
+  windowLabels = EMPTY_MAP,
   today,
   defaultStartMonth = 0,
   origin = '',
@@ -329,6 +381,43 @@ export function InteractiveCalendar({
   const todayStr = today ?? new Date().toISOString().slice(0, 10);
   const [startMonth, setStartMonth] = useState(defaultStartMonth);
   const [showMonthPicker, setShowMonthPicker] = useState(false);
+
+  // Drag-to-select state
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragMode, setDragMode] = useState<'add' | 'remove'>('add');
+  const [dragDates, setDragDates] = useState<Set<string>>(new Set());
+  const dragJustEndedRef = useRef(false);
+
+  const handleDragStart = useCallback((day: DayData) => {
+    const mode = selectedPTO.has(day.dateStr) ? 'remove' : 'add';
+    setIsDragging(true);
+    setDragMode(mode);
+    setDragDates(new Set([day.dateStr]));
+  }, [selectedPTO]);
+
+  const handleDragEnter = useCallback((day: DayData) => {
+    setDragDates((prev) => {
+      const next = new Set(prev);
+      next.add(day.dateStr);
+      return next;
+    });
+  }, []);
+
+  // Commit drag on mouseup (attached to window)
+  useEffect(() => {
+    if (!isDragging) return;
+    const handleMouseUp = () => {
+      if (dragDates.size > 0 && onDragSelect) {
+        onDragSelect([...dragDates], dragMode);
+      }
+      setIsDragging(false);
+      setDragDates(new Set());
+      dragJustEndedRef.current = true;
+      setTimeout(() => { dragJustEndedRef.current = false; }, 0);
+    };
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => window.removeEventListener('mouseup', handleMouseUp);
+  }, [isDragging, dragDates, dragMode, onDragSelect]);
 
   useEffect(() => {
     setStartMonth(defaultStartMonth);
@@ -446,10 +535,10 @@ export function InteractiveCalendar({
         </div>
 
         {/* Legend — inline right */}
-        <div className="flex flex-wrap gap-x-5 gap-y-2">
+        <div className="flex flex-wrap gap-x-3 gap-y-1.5 sm:gap-x-5 sm:gap-y-2">
           {legendItems.map((l) => (
-            <span key={l.label} className="flex items-center gap-2 text-sm text-ink-muted font-medium">
-              <span className={`w-3.5 h-3.5 rounded shrink-0 ${l.color}`} />
+            <span key={l.label} className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-ink-muted font-medium">
+              <span className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded shrink-0 ${l.color}`} />
               {l.label}
             </span>
           ))}
@@ -457,7 +546,7 @@ export function InteractiveCalendar({
       </div>
 
       {/* Month grid + flight message boxes */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-x-8 gap-y-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-x-4 gap-y-6 sm:gap-x-8 sm:gap-y-8">
         {visibleMonths.map(({ year: y, month: m }) => (
           <MonthGrid
             key={`${y}-${m}`}
@@ -473,6 +562,13 @@ export function InteractiveCalendar({
             today={todayStr}
             windowLabels={windowLabels}
             showYear={y !== baseYear}
+            isDragging={isDragging}
+            dragDates={dragDates}
+            dragMode={dragMode}
+            onDragStart={handleDragStart}
+            onDragEnter={handleDragEnter}
+            dragJustEndedRef={dragJustEndedRef}
+            onTogglePTO={onTogglePTO}
           />
         ))}
       </div>
