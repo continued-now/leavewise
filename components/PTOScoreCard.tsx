@@ -191,6 +191,8 @@ export function PTOScoreCard({ year, totalLeave, totalDaysOff, windowCount, effi
     navigator.clipboard.writeText(text).then(() => {
       trackSharePlan();
       toast('Score copied to clipboard');
+    }).catch(() => {
+      toast('Could not copy to clipboard', 'info');
     });
   }, [year, totalLeave, totalDaysOff, efficiency, grade, toast]);
 

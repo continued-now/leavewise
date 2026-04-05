@@ -47,7 +47,7 @@ export function TeamSetup({ onCreateTeam, onJoinTeam }: TeamSetupProps) {
         </div>
         <button
           onClick={() => {
-            navigator.clipboard.writeText(createdCode);
+            navigator.clipboard.writeText(createdCode).catch(() => {});
           }}
           className="text-sm font-semibold text-teal hover:text-teal-hover transition-colors"
         >

@@ -51,7 +51,7 @@ export default function TeamPage() {
 
   const handleCopyCode = useCallback(() => {
     if (!currentTeam) return;
-    navigator.clipboard.writeText(currentTeam.code);
+    navigator.clipboard.writeText(currentTeam.code).catch(() => {});
     setCodeCopied(true);
     setTimeout(() => setCodeCopied(false), 2000);
   }, [currentTeam]);

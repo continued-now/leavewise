@@ -29,6 +29,8 @@ export default function SocialShareBar({ url, title, description, locale }: Soci
     if (platform === 'copy') {
       navigator.clipboard.writeText(url).then(() => {
         toast(copiedLabel);
+      }).catch(() => {
+        toast('Could not copy link', 'info');
       });
       return;
     }

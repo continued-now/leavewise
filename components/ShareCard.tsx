@@ -232,6 +232,8 @@ export function ShareCard(props: ShareCardProps) {
     navigator.clipboard.writeText(lines.join('\n')).then(() => {
       trackSharePlan();
       toast('Summary copied to clipboard');
+    }).catch(() => {
+      toast('Could not copy to clipboard', 'info');
     });
   }, [year, totalLeave, totalDaysOff, multiplier, sortedWindows, toast]);
 

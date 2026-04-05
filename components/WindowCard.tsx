@@ -89,6 +89,8 @@ export function WindowCard({
     const text = `${formatDate(w.startStr)} – ${formatDateLong(w.endStr)} (${w.totalDays} days, ${w.ptoDaysUsed} PTO) · ${w.label}`;
     navigator.clipboard.writeText(text).then(() => {
       toast('Dates copied to clipboard');
+    }).catch(() => {
+      toast('Could not copy to clipboard', 'info');
     });
   }
 

@@ -231,6 +231,8 @@ export default function OptimizePage() {
     const url = encodeShareURL(form);
     navigator.clipboard.writeText(url).then(() => {
       toast('Share link copied to clipboard');
+    }).catch(() => {
+      toast('Could not copy to clipboard', 'info');
     });
   }, [form, toast]);
 
@@ -240,6 +242,8 @@ export default function OptimizePage() {
     const summary = generatePlanSummary(result, form, stateName);
     navigator.clipboard.writeText(summary).then(() => {
       toast('Plan summary copied to clipboard');
+    }).catch(() => {
+      toast('Could not copy to clipboard', 'info');
     });
   }, [result, form, toast]);
 
